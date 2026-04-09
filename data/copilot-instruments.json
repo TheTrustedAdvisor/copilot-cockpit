@@ -237,7 +237,7 @@
           "date": "2024-10"
         }
       ],
-      "description": "Codebase-wide context participant that searches your entire workspace to answer questions. Uses semantic code search and workspace indexing to find relevant files, symbols, and patterns.",
+      "description": "Codebase-wide context for Copilot Chat. In VS Code, workspace context is now provided implicitly \u2014 the @workspace prefix is optional. Copilot searches across all files in your workspace to answer questions about project structure, dependencies, and code relationships.",
       "shortDescription": "Codebase-wide context for Copilot Chat",
       "planAvailability": {
         "free": "limited",
@@ -315,7 +315,7 @@
       "terminalRecordings": [],
       "videos": [],
       "lastVerified": "2026-04-09",
-      "confidenceScore": 80
+      "confidenceScore": 75
     },
     {
       "id": "code-review",
@@ -340,7 +340,7 @@
       "description": "AI-powered pull request reviewer that analyzes diffs for bugs, security issues, and style problems. Leaves inline comments with suggested fixes directly on your PR.",
       "shortDescription": "AI code review on pull requests",
       "planAvailability": {
-        "free": false,
+        "free": "limited",
         "pro": true,
         "pro-plus": true,
         "business": true,
@@ -424,7 +424,7 @@
       "terminalRecordings": [],
       "videos": [],
       "lastVerified": "2026-04-09",
-      "confidenceScore": 90
+      "confidenceScore": 88
     },
     {
       "id": "slash-explain",
@@ -513,7 +513,7 @@
       "terminalRecordings": [],
       "videos": [],
       "lastVerified": "2026-04-09",
-      "confidenceScore": 88
+      "confidenceScore": 90
     },
     {
       "id": "mcp",
@@ -570,11 +570,6 @@
           "code": "7500",
           "title": "Trust Boundary",
           "description": "MCP servers execute with local permissions. Only install servers from trusted sources \u2014 a malicious server could access your file system."
-        },
-        {
-          "code": "7600",
-          "title": "JetBrains Support",
-          "description": "MCP support in JetBrains IDEs is still in preview. Some server types may not work reliably."
         }
       ],
       "securityRelevance": {
@@ -616,7 +611,7 @@
       "terminalRecordings": [],
       "videos": [],
       "lastVerified": "2026-04-09",
-      "confidenceScore": 92
+      "confidenceScore": 88
     },
     {
       "id": "copilot-chat",
