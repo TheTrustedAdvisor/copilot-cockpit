@@ -2319,7 +2319,7 @@
       "perspectives": [
         "cockpit"
       ],
-      "status": "ga",
+      "status": "deprecated",
       "shortDescription": "Third-party integrations that extend Copilot with specialized tools and knowledge",
       "planAvailability": {
         "free": true,
@@ -2330,26 +2330,50 @@
       },
       "ideSupport": {
         "vscode": "ga",
-        "jetbrains": null,
+        "jetbrains": "ga",
+        "visual-studio": "ga",
         "neovim": null,
-        "visual-studio": null,
-        "eclipse": null,
-        "xcode": null,
+        "eclipse": "ga",
+        "xcode": "ga",
         "github-com": "ga",
-        "cli": null
+        "cli": "ga"
       },
       "flightMode": [
         "advanced"
       ],
       "capabilities": [
-        "Third-party tool integration",
-        "Chat participant extensions",
-        "Marketplace distribution",
-        "Custom AI capabilities"
+        "Invoke third-party tools via @-mentions in Copilot Chat (e.g., @docker, @sentry) — NOW DEPRECATED",
+        "Replaced by Model Context Protocol (MCP) servers — an open standard for AI agent integration",
+        "Former marketplace included Docker, Sentry, Perplexity, Stack Overflow, Mermaid Chart, Arm",
+        "Custom extensions used Copilot skillsets (lightweight) or full agents via GitHub Apps",
+        "OpenID Connect (OIDC) authentication for secure extension-to-user identity verification"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "6001",
+          "title": "Extension Deprecated",
+          "description": "GitHub App-based Copilot Extensions were sunset Nov 10, 2025. @-mentions of retired extensions are treated as plain text."
+        },
+        {
+          "code": "6002",
+          "title": "MCP Migration Required",
+          "description": "All third-party integrations must migrate to Model Context Protocol (MCP) servers. New extension creation was blocked Sep 24, 2025."
+        },
+        {
+          "code": "6003",
+          "title": "MCP Policy Disabled by Default",
+          "description": "MCP servers in Copilot are disabled by default for organizations. Admins must enable the 'MCP servers in Copilot' policy."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Extensions → MCP migration",
+          "language": "markdown",
+          "context": "migration-guide",
+          "code": "# Old Extensions approach (deprecated Nov 2025):\n@sentry what are the latest unresolved issues?\n\n# New MCP approach:\n# 1. Configure MCP server in IDE settings\n# 2. In Copilot Chat, select 'Agent' mode\n# 3. Ask naturally — Copilot invokes MCP tools"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2360,8 +2384,18 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 90,
+      "proTip": "Copilot Extensions (GitHub App-based) were sunset November 10, 2025. All integrations now use MCP servers, which are cross-platform — build an MCP server once and it works with any compatible AI agent, not just Copilot.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Organization-level policy controls for MCP access (disabled by default)",
+          "MCP server permissions scoped to configured toolsets",
+          "Push protection prevents secrets in AI-generated responses"
+        ],
+        "complianceNotes": "Organizations can control which MCP servers are accessible. Only affects Business/Enterprise subscriptions."
+      }
     },
     {
       "id": "copilot-spark",
@@ -2383,8 +2417,8 @@
       "ideSupport": {
         "vscode": null,
         "jetbrains": null,
-        "neovim": null,
         "visual-studio": null,
+        "neovim": null,
         "eclipse": null,
         "xcode": null,
         "github-com": "preview",
@@ -2394,14 +2428,34 @@
         "beginner"
       ],
       "capabilities": [
-        "Natural language app creation",
-        "No-code development",
-        "Live preview",
-        "Step-by-step guided building"
+        "Build full-stack web apps from natural language descriptions — no coding knowledge required",
+        "Generates React + TypeScript apps with live interactive previews",
+        "Built-in AI integration via GitHub Models (text summarization, image tagging) through simple prompts",
+        "Automatic managed data storage (Azure Cosmos DB key-value store, up to 512 KB per entry)",
+        "One-click deployment to Azure Container Apps with automatic infrastructure provisioning",
+        "Two-way sync with GitHub repositories, Codespaces support, and standard GitHub workflows"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "6010",
+          "title": "Pro+/Enterprise Only",
+          "description": "GitHub Spark requires a Copilot Pro+ or Enterprise subscription. Not available on Free, Pro, or Business plans."
+        },
+        {
+          "code": "6011",
+          "title": "Premium Request Cost",
+          "description": "Each Spark prompt consumes 4 Copilot premium requests. Monitor usage to avoid exhausting your allocation."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Creating a Spark App",
+          "language": "text",
+          "context": "github-spark",
+          "code": "Prompt: Build a task tracker app where I can add tasks\nwith priority levels (high, medium, low), mark them\ncomplete, and filter by priority. Use a clean dark theme.\n\n# Spark generates:\n# - React + TypeScript frontend\n# - Azure Cosmos DB data store\n# - GitHub authentication\n# - Live preview to iterate on\n# Each prompt costs 4 Copilot premium requests"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2411,8 +2465,18 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 88,
+      "proTip": "Each Spark prompt consumes 4 Copilot premium requests. Advanced users can edit generated code directly or open it in Codespaces — but Spark always generates React + TypeScript, so plan accordingly.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "GitHub authentication required for all app users",
+          "Admin controls over app visibility and data access",
+          "Data stores are shared across published app users"
+        ],
+        "complianceNotes": "Sensitive information must be removed before sharing/publishing Spark apps, as data stores are shared across all users of a published app."
+      }
     },
     {
       "id": "byok",
@@ -2432,27 +2496,51 @@
         "enterprise": true
       },
       "ideSupport": {
-        "vscode": null,
-        "jetbrains": null,
-        "neovim": null,
+        "vscode": "preview",
+        "jetbrains": "preview",
         "visual-studio": null,
-        "eclipse": null,
-        "xcode": null,
-        "github-com": "preview",
-        "cli": null
+        "neovim": null,
+        "eclipse": "preview",
+        "xcode": "preview",
+        "github-com": null,
+        "cli": "preview"
       },
       "flightMode": [
         "advanced"
       ],
       "capabilities": [
-        "Custom API key configuration",
-        "Azure OpenAI integration",
-        "Model endpoint control",
-        "Data routing compliance"
+        "Connect API keys from 7+ providers: OpenAI, Anthropic, Microsoft Foundry, xAI, AWS Bedrock, Google AI Studio, and OpenAI-compatible endpoints",
+        "Usage billed directly by chosen provider — does not count against GitHub Copilot premium request quotas",
+        "Works in Agent, Plan, Ask, and Edit modes within supported IDEs",
+        "Admin controls: enterprise/org-level key management, per-org model access, configurable max context window",
+        "Responses API support for structured outputs and multimodal interactions"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "6020",
+          "title": "Static Credentials Only",
+          "description": "BYOK authentication supports only static API keys or bearer tokens. No Entra ID, managed identities, or OIDC/SAML federation."
+        },
+        {
+          "code": "6021",
+          "title": "Enterprise/Business Only",
+          "description": "BYOK is available in public preview for Enterprise and Business customers only. Not available on Free, Pro, or Pro+ plans."
+        },
+        {
+          "code": "6022",
+          "title": "Provider Billing",
+          "description": "BYOK usage is billed directly by the model provider. Rate limits and quotas are governed by the provider, not GitHub."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "BYOK model in Copilot CLI",
+          "language": "bash",
+          "context": "cli",
+          "code": "# Enterprise admin configures BYOK at org level\n# Users see additional models in the model picker\n\n# In Copilot CLI:\ncopilot --model my-azure-gpt4o\n\n# In VS Code: select BYOK model from model picker\n# dropdown in Copilot Chat"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2462,8 +2550,19 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 92,
+      "proTip": "BYOK uses static credentials only — no Entra ID, managed identities, or OIDC/SAML. For long-running workloads needing Entra auth, implement custom token refresh logic. Admins can set a max context window per BYOK model to balance cost vs. quality.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Static credential management — API keys must be securely stored and rotated",
+          "Enterprise admin controls over which orgs can access connected models",
+          "Provider-side rate limiting and usage tracking",
+          "API keys configured at enterprise/org level, not individual user level"
+        ],
+        "complianceNotes": "Organizations retain full control over model selection and API key distribution. Enterprises should audit connected models for data residency and compliance."
+      }
     },
     {
       "id": "github-mobile-copilot",
@@ -2535,8 +2634,8 @@
       "ideSupport": {
         "vscode": null,
         "jetbrains": null,
-        "neovim": null,
         "visual-studio": null,
+        "neovim": null,
         "eclipse": null,
         "xcode": null,
         "github-com": null,
@@ -2546,14 +2645,39 @@
         "advanced"
       ],
       "capabilities": [
-        "Command suggestions from natural language",
-        "Command explanation",
-        "Shell-aware completions",
-        "gh copilot suggest and explain"
+        "Agentic AI assistant in the terminal: chat-based coding, debugging, building, and code understanding",
+        "Four built-in agents: Explore (codebase analysis), Task (tests/builds), General-purpose, Code-review",
+        "File context with @ syntax (e.g., @src/app.js), Plan mode (Shift+Tab) for implementation planning",
+        "MCP server integration: GitHub MCP pre-configured, add custom servers via /mcp add",
+        "Programmatic mode (copilot -p 'prompt') for scripts and CI pipelines",
+        "Custom instructions (.github/copilot-instructions.md), custom agents (AGENTS.md), and custom skills"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "6040",
+          "title": "gh copilot Deprecated",
+          "description": "The gh copilot extension (suggest/explain) was deprecated Oct 25, 2025. Use the standalone 'copilot' command instead."
+        },
+        {
+          "code": "6041",
+          "title": "Tool Approval Required",
+          "description": "File-modifying operations require explicit approval. Use --yolo flag only in trusted environments."
+        },
+        {
+          "code": "6042",
+          "title": "Directory Trust Boundary",
+          "description": "Copilot CLI prompts for trust confirmation when entering a new directory. Trusted directories can be managed via /add-dir."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Copilot CLI agentic coding",
+          "language": "bash",
+          "context": "cli",
+          "code": "# Start interactive session\ncopilot\n\n# Programmatic mode (for scripts/CI)\ncopilot -p \"Explain the error in src/auth.ts\"\n\n# File context: @src/auth.ts what does validateToken do?\n# Plan mode: press Shift+Tab to toggle\n# Shell passthrough: !git status\n\n# Legacy (still works but deprecated Oct 2025):\ngh copilot suggest \"undo the last git commit\""
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2563,8 +2687,19 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "The standalone 'copilot' command replaces the old 'gh copilot' extension (deprecated Oct 2025). Use --yolo to auto-approve all tool permissions in trusted environments, and --continue to resume your most recent session.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Tool approval system for file-modifying operations",
+          "Directory trust boundaries with explicit user confirmation",
+          "--yolo flag bypasses all permission checks — use only in trusted environments",
+          "Custom MCP server access controlled via allowed_urls/denied_urls in config"
+        ],
+        "complianceNotes": "Copilot CLI has a granular permission model. Organizations should establish policies around --yolo/--allow-all usage."
+      }
     },
     {
       "id": "copilot-instructions",
