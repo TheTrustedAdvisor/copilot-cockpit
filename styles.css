@@ -224,7 +224,7 @@ body.light-theme .legend-item { color: rgba(0, 0, 0, 0.4); }
 /* --- Theme Toggle Button --- */
 .theme-toggle {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 1.0rem;
     padding: 4px 10px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     background: transparent;
@@ -286,7 +286,7 @@ body::after {
 .cockpit-title .icon { font-size: 1.6rem; }
 
 .cockpit-title h1 {
-    font-size: 0.85rem;
+    font-size: 1.0rem;
     font-weight: 500;
     letter-spacing: 6px;
     text-transform: uppercase;
@@ -294,7 +294,7 @@ body::after {
 }
 
 .cockpit-title .subtitle {
-    font-size: 0.65rem;
+    font-size: 0.95rem;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: rgba(0, 255, 136, 0.4);
@@ -304,7 +304,7 @@ body::after {
 .header-right { display: flex; align-items: center; gap: 20px; }
 
 .header-status {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: rgba(0, 255, 136, 0.5);
@@ -324,7 +324,7 @@ body::after {
 
 .search-input {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     letter-spacing: 1px;
     padding: 5px 12px 5px 28px;
     width: 220px;
@@ -345,7 +345,7 @@ body::after {
     position: absolute;
     left: 8px; top: 50%;
     transform: translateY(-50%);
-    font-size: 0.65rem;
+    font-size: 0.95rem;
     opacity: 0.3;
 }
 
@@ -360,7 +360,7 @@ body::after {
 }
 
 .filter-label {
-    font-size: 0.55rem;
+    font-size: 1.0rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.3);
@@ -368,7 +368,7 @@ body::after {
 
 .filter-btn {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     letter-spacing: 1px;
     padding: 4px 12px;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -418,7 +418,7 @@ body::after {
 }
 
 .zone-label {
-    font-size: 0.55rem;
+    font-size: 1.0rem;
     font-weight: 500;
     letter-spacing: 3px;
     text-transform: uppercase;
@@ -504,7 +504,7 @@ body::after {
 
 .instrument-top { display: flex; align-items: center; justify-content: space-between; }
 
-.instrument-symbol { font-size: 1.1rem; font-weight: 600; }
+.instrument-symbol { font-size: 1.3rem; font-weight: 600; }
 
 .zone-pfd .instrument-symbol { color: var(--color-pfd); }
 .zone-nd .instrument-symbol { color: var(--color-nd); }
@@ -536,14 +536,14 @@ body::after {
 }
 
 .instrument-name {
-    font-size: 0.65rem;
+    font-size: 0.95rem;
     font-weight: 400;
     color: rgba(192, 200, 216, 0.8);
     line-height: 1.3;
 }
 
 .instrument-meta {
-    font-size: 0.5rem;
+    font-size: 0.95rem;
     color: rgba(192, 200, 216, 0.35);
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -558,19 +558,19 @@ body::after {
     flex-direction: row; align-items: center; gap: 10px;
     min-width: 150px; padding: 8px 14px;
 }
-.zone-glareshield .instrument-symbol { font-size: 0.8rem; }
-.zone-glareshield .instrument-name { font-size: 0.6rem; }
+.zone-glareshield .instrument-symbol { font-size: 0.95rem; }
+.zone-glareshield .instrument-name { font-size: 0.75rem; }
 
 .zone-fms .instruments { align-items: center; }
 .fms-chain { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.fms-arrow { color: var(--color-fms); opacity: 0.4; font-size: 0.8rem; }
+.fms-arrow { color: var(--color-fms); opacity: 0.4; font-size: 0.95rem; }
 .zone-fms .instrument { min-width: 100px; flex: 0 1 auto; }
 
 /* --- Engine gauge style --- */
 .engine-cluster { display: flex; flex-direction: column; gap: 6px; }
 
 .engine-cluster-label {
-    font-size: 0.5rem; letter-spacing: 2px; text-transform: uppercase;
+    font-size: 0.95rem; letter-spacing: 2px; text-transform: uppercase;
     opacity: 0.5; padding-bottom: 4px;
     border-bottom: 1px solid rgba(255, 102, 68, 0.1);
 }
@@ -578,7 +578,7 @@ body::after {
 .engine-models { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .engine-model {
-    font-size: 0.55rem; padding: 3px 8px;
+    font-size: 1.0rem; padding: 3px 8px;
     border: 1px solid rgba(255, 102, 68, 0.2);
     color: rgba(255, 102, 68, 0.7);
     cursor: pointer; transition: all 0.2s;
@@ -623,12 +623,12 @@ body::after {
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.detail-symbol { font-size: 2rem; font-weight: 700; line-height: 1; }
-.detail-name { font-size: 0.9rem; font-weight: 400; color: rgba(255, 255, 255, 0.9); margin-top: 4px; }
-.detail-zone-badge { font-size: 0.5rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; margin-top: 6px; }
+.detail-symbol { font-size: 2.2rem; font-weight: 700; line-height: 1; }
+.detail-name { font-size: 1.05rem; font-weight: 400; color: rgba(255, 255, 255, 0.9); margin-top: 4px; }
+.detail-zone-badge { font-size: 0.95rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; margin-top: 6px; }
 
 .detail-close {
-    font-family: var(--font-mono); font-size: 0.7rem;
+    font-family: var(--font-mono); font-size: 1.0rem;
     padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.15);
     background: transparent; color: rgba(255, 255, 255, 0.5);
     cursor: pointer; transition: all 0.2s;
@@ -645,7 +645,7 @@ body::after {
 
 .detail-tab {
     font-family: var(--font-mono);
-    font-size: 0.55rem; letter-spacing: 1px; text-transform: uppercase;
+    font-size: 1.0rem; letter-spacing: 1px; text-transform: uppercase;
     padding: 10px 14px; border: none; background: transparent;
     color: rgba(255, 255, 255, 0.35); cursor: pointer;
     border-bottom: 2px solid transparent;
@@ -662,20 +662,20 @@ body::after {
 .detail-section { margin-bottom: 24px; }
 
 .detail-section-title {
-    font-size: 0.5rem; letter-spacing: 2px; text-transform: uppercase;
+    font-size: 0.95rem; letter-spacing: 2px; text-transform: uppercase;
     color: rgba(255, 255, 255, 0.3); margin-bottom: 10px;
     padding-bottom: 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.detail-description { font-size: 0.7rem; line-height: 1.7; color: rgba(255, 255, 255, 0.7); }
+.detail-description { font-size: 1.0rem; line-height: 1.7; color: rgba(255, 255, 255, 0.7); }
 .detail-status-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.detail-status-label { font-size: 0.55rem; color: rgba(255, 255, 255, 0.4); min-width: 70px; }
-.detail-status-value { font-size: 0.6rem; color: rgba(255, 255, 255, 0.8); }
+.detail-status-label { font-size: 1.0rem; color: rgba(255, 255, 255, 0.4); min-width: 70px; }
+.detail-status-value { font-size: 0.75rem; color: rgba(255, 255, 255, 0.8); }
 
 .ide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 
 .ide-item {
-    font-size: 0.55rem; padding: 4px 8px; text-align: center;
+    font-size: 1.0rem; padding: 4px 8px; text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -685,7 +685,7 @@ body::after {
 
 .capability-list { list-style: none; }
 .capability-list li {
-    font-size: 0.6rem; padding: 4px 0;
+    font-size: 0.75rem; padding: 4px 0;
     color: rgba(255, 255, 255, 0.6);
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
@@ -699,11 +699,11 @@ body::after {
 }
 
 .squawk-code {
-    font-size: 0.55rem; font-weight: 600;
+    font-size: 1.0rem; font-weight: 600;
     color: var(--color-glareshield); margin-bottom: 4px;
 }
 
-.squawk-text { font-size: 0.6rem; color: rgba(255, 255, 255, 0.6); line-height: 1.5; }
+.squawk-text { font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); line-height: 1.5; }
 
 /* --- Code Examples --- */
 .code-block {
@@ -719,18 +719,18 @@ body::after {
     background: rgba(255, 255, 255, 0.02);
 }
 
-.code-block-title { font-size: 0.55rem; color: rgba(255, 255, 255, 0.4); }
-.code-block-lang { font-size: 0.5rem; color: rgba(255, 255, 255, 0.25); text-transform: uppercase; letter-spacing: 1px; }
+.code-block-title { font-size: 1.0rem; color: rgba(255, 255, 255, 0.4); }
+.code-block-lang { font-size: 0.95rem; color: rgba(255, 255, 255, 0.25); text-transform: uppercase; letter-spacing: 1px; }
 
 .code-block pre {
     padding: 12px; margin: 0; overflow-x: auto;
-    font-size: 0.6rem; line-height: 1.6; color: rgba(255, 255, 255, 0.75);
+    font-size: 0.75rem; line-height: 1.6; color: rgba(255, 255, 255, 0.75);
 }
 
 .code-block code { font-family: var(--font-mono); }
 
 .copy-btn {
-    font-family: var(--font-mono); font-size: 0.5rem;
+    font-family: var(--font-mono); font-size: 0.95rem;
     padding: 2px 8px; border: 1px solid rgba(255, 255, 255, 0.15);
     background: transparent; color: rgba(255, 255, 255, 0.4);
     cursor: pointer; transition: all 0.2s;
@@ -741,7 +741,7 @@ body::after {
 
 /* --- Mermaid Diagrams --- */
 .mermaid-container { margin-bottom: 16px; }
-.mermaid-title { font-size: 0.6rem; color: rgba(255, 255, 255, 0.5); margin-bottom: 8px; }
+.mermaid-title { font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); margin-bottom: 8px; }
 
 .mermaid-container .mermaid {
     background: rgba(0, 0, 0, 0.2);
@@ -753,7 +753,7 @@ body::after {
 .related-grid { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .related-chip {
-    font-size: 0.55rem; padding: 3px 10px;
+    font-size: 1.0rem; padding: 3px 10px;
     border: 1px solid rgba(0, 255, 136, 0.2);
     color: var(--color-pfd); cursor: pointer;
     transition: all 0.2s; text-decoration: none;
@@ -768,7 +768,7 @@ body::after {
 .detail-links { display: flex; gap: 10px; margin-top: 20px; }
 
 .detail-link {
-    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 1px;
+    font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 1px;
     padding: 6px 14px; border: 1px solid rgba(0, 255, 136, 0.25);
     background: transparent; color: var(--color-pfd);
     text-decoration: none; transition: all 0.2s;
@@ -786,7 +786,7 @@ body::after {
 
 .legend-item {
     display: flex; align-items: center; gap: 6px;
-    font-size: 0.5rem; letter-spacing: 1px; text-transform: uppercase;
+    font-size: 0.95rem; letter-spacing: 1px; text-transform: uppercase;
     color: rgba(255, 255, 255, 0.35);
 }
 
