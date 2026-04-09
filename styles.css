@@ -114,6 +114,8 @@ body.light-theme .instrument:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+body.light-theme .instrument-led.deprecated { border-color: rgba(0, 0, 0, 0.2); }
+
 body.light-theme .instrument-name { color: rgba(0, 0, 0, 0.7); }
 body.light-theme .instrument-meta { color: rgba(0, 0, 0, 0.4); }
 
@@ -523,14 +525,14 @@ body::after {
 
 .instrument-led.preview {
     background: var(--status-preview);
-    box-shadow: 0 0 6px var(--status-preview);
-    animation: pulse-led 1.5s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--status-preview);
+    animation: pulse-led 2s ease-in-out infinite;
 }
 
 .instrument-led.deprecated {
-    background: var(--status-deprecated);
-    box-shadow: 0 0 6px var(--status-deprecated);
-    animation: blink 1s step-end infinite;
+    background: transparent;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    box-shadow: none;
 }
 
 .instrument-name {
