@@ -212,7 +212,7 @@ function openDetailPanel(instrumentId, pushState = true) {
     const zoneColor = zone ? zone.color : '#00ff88';
     const zoneName = zone ? zone.name : instrument.zone;
 
-    const overlay = document.getElementById('detail-overlay');
+    const body = document.getElementById('cockpit-body');
     const panel = document.getElementById('detail-panel');
 
     // Build detail content
@@ -228,7 +228,7 @@ function openDetailPanel(instrumentId, pushState = true) {
         ${renderDetailTabs(instrument, zoneColor)}
     `;
 
-    overlay.classList.add('open');
+    body.classList.add('blade-open');
 
     if (pushState) {
         history.pushState({ instrumentId }, '', `#instrument-${instrumentId}`);
@@ -241,8 +241,8 @@ function openDetailPanel(instrumentId, pushState = true) {
 }
 
 function closeDetailPanel() {
-    const overlay = document.getElementById('detail-overlay');
-    overlay.classList.remove('open');
+    const body = document.getElementById('cockpit-body');
+    body.classList.remove('blade-open');
 
     if (location.hash.startsWith('#instrument-')) {
         history.pushState({}, '', location.pathname);

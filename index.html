@@ -63,21 +63,24 @@
         <button class="filter-btn" data-filter-type="status" data-filter-value="preview">Preview</button>
     </div>
 
-    <!-- ==================== COCKPIT GRID ==================== -->
-    <main id="cockpit-grid" class="cockpit-grid">
-        <!-- Rendered by app.js from data/copilot-instruments.json -->
-    </main>
+    <!-- ==================== BLADE LAYOUT ==================== -->
+    <div id="cockpit-body" class="cockpit-body">
 
-    <!-- ==================== LEGEND ==================== -->
-    <footer id="cockpit-legend" class="cockpit-legend">
-        <!-- Rendered by app.js -->
-    </footer>
-
-    <!-- ==================== DETAIL PANEL (slide-in overlay) ==================== -->
-    <div id="detail-overlay" class="detail-overlay" onclick="if(event.target===this)closeDetailPanel()">
-        <div id="detail-panel" class="detail-panel">
-            <!-- Populated dynamically by openDetailPanel() -->
+        <!-- Main content area (shrinks when blade opens) -->
+        <div class="cockpit-main" onclick="if(document.getElementById('cockpit-body').classList.contains('blade-open'))closeDetailPanel()">
+            <main id="cockpit-grid" class="cockpit-grid">
+                <!-- Rendered by app.js from data/copilot-instruments.json -->
+            </main>
+            <footer id="cockpit-legend" class="cockpit-legend">
+                <!-- Rendered by app.js -->
+            </footer>
         </div>
+
+        <!-- Detail blade (slides in from right) -->
+        <aside id="detail-panel" class="detail-blade">
+            <!-- Populated dynamically by openDetailPanel() -->
+        </aside>
+
     </div>
 
     <!-- App Logic -->
