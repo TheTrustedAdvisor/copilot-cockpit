@@ -664,9 +664,10 @@ function handleDeepLink() {
 function initMermaid() {
     if (typeof mermaid === 'undefined' || mermaidReady) return;
 
+    const isLight = document.body.classList.contains('light-theme');
     mermaid.initialize({
         startOnLoad: false,
-        theme: 'dark',
+        theme: isLight ? 'default' : 'dark',
         themeVariables: {
             primaryColor: '#1a2233',
             primaryTextColor: '#c0c8d8',
@@ -741,6 +742,42 @@ function escapeHtml(str) {
     div.textContent = str;
     return div.innerHTML;
 }
+
+// ============================================================
+// THEME TOGGLE
+// ============================================================
+
+function toggleTheme() {
+    const body = document.body;
+    const btn = document.getElementById('theme-toggle');
+    body.classList.toggle('light-theme');
+
+    if (body.classList.contains('light-theme')) {
+        btn.textContent = 'NIGHT';
+        localStorage.setItem('cockpit-theme', 'light');
+    } else {
+        btn.textContent = 'DAY';
+        localStorage.setItem('cockpit-theme', 'dark');
+    }
+
+    // Re-initialize Mermaid with correct theme for any visible diagrams
+    mermaidReady = false;
+    const visibleDiagrams = document.querySelector('.detail-tab-content.active [data-tab-content="diagrams"]');
+    if (visibleDiagrams) renderMermaidDiagrams(visibleDiagrams);
+}
+
+function loadSavedTheme() {
+    const saved = localStorage.getItem('cockpit-theme');
+    const btn = document.getElementById('theme-toggle');
+    if (saved === 'light') {
+        document.body.classList.add('light-theme');
+        if (btn) btn.textContent = 'NIGHT';
+    }
+}
+
+// Load theme immediately (before DOMContentLoaded to prevent flash)
+loadSavedTheme();
+
 
 function statusLabel(status) {
     const labels = { ga: 'Generally Available', preview: 'Preview', deprecated: 'Deprecated' };

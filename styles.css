@@ -30,6 +30,225 @@
     --card-padding: 14px;
 }
 
+/* --- Light Theme Override --- */
+body.light-theme {
+    --bg-primary: #eef0f4;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.8);
+    --bg-card-hover: rgba(240, 243, 248, 0.95);
+
+    /* Darkened zone colors for contrast on light bg */
+    --color-pfd: #00994d;
+    --color-nd: #0088aa;
+    --color-glareshield: #cc8800;
+    --color-eicas: #cc4422;
+    --color-pedestal: #333333;
+    --color-overhead: #555577;
+    --color-side: #7755cc;
+    --color-fms: #22aa77;
+
+    --status-ga: #00994d;
+    --status-preview: #cc8800;
+    --status-deprecated: #cc2222;
+}
+
+body.light-theme {
+    color: #2a2e38;
+}
+
+/* Remove scan-lines in light mode */
+body.light-theme::after { display: none; }
+
+/* Light header */
+body.light-theme .cockpit-header {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .cockpit-title .subtitle {
+    color: rgba(0, 153, 77, 0.5);
+}
+
+body.light-theme .header-status { color: rgba(0, 0, 0, 0.4); }
+
+/* Light search */
+body.light-theme .search-input {
+    border-color: rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.03);
+    color: var(--color-pfd);
+}
+
+body.light-theme .search-input:focus {
+    box-shadow: 0 0 10px rgba(0, 153, 77, 0.15);
+}
+
+/* Light filter bar */
+body.light-theme .filter-bar { border-bottom-color: rgba(0, 0, 0, 0.06); }
+
+body.light-theme .filter-btn {
+    border-color: rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.5);
+}
+
+body.light-theme .filter-btn:hover,
+body.light-theme .filter-btn.active {
+    border-color: var(--color-pfd);
+    color: var(--color-pfd);
+    box-shadow: 0 0 8px rgba(0, 153, 77, 0.15);
+}
+
+/* Light zones */
+body.light-theme .zone {
+    border-color: rgba(0, 0, 0, 0.08);
+    background: var(--bg-secondary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Light instrument cards */
+body.light-theme .instrument {
+    background: var(--bg-card);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .instrument:hover {
+    background: var(--bg-card-hover);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .instrument-name { color: rgba(0, 0, 0, 0.7); }
+body.light-theme .instrument-meta { color: rgba(0, 0, 0, 0.4); }
+
+/* Light engine models */
+body.light-theme .engine-model {
+    border-color: rgba(204, 68, 34, 0.25);
+    color: rgba(204, 68, 34, 0.8);
+}
+
+body.light-theme .engine-model.included {
+    border-color: rgba(0, 153, 77, 0.3);
+    color: rgba(0, 153, 77, 0.8);
+}
+
+/* Light detail panel */
+body.light-theme .detail-overlay { background: rgba(0, 0, 0, 0.3); }
+
+body.light-theme .detail-panel {
+    background: #ffffff;
+    border-left-color: rgba(0, 153, 77, 0.2);
+}
+
+body.light-theme .detail-header { border-bottom-color: rgba(0, 0, 0, 0.08); }
+body.light-theme .detail-name { color: rgba(0, 0, 0, 0.85); }
+
+body.light-theme .detail-close {
+    border-color: rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.5);
+}
+
+body.light-theme .detail-close:hover { border-color: #cc2222; color: #cc2222; }
+
+body.light-theme .detail-tabs { border-bottom-color: rgba(0, 0, 0, 0.08); }
+
+body.light-theme .detail-tab { color: rgba(0, 0, 0, 0.4); }
+body.light-theme .detail-tab:hover { color: rgba(0, 0, 0, 0.6); }
+body.light-theme .detail-tab.active { color: var(--color-pfd); border-bottom-color: var(--color-pfd); }
+
+body.light-theme .detail-section-title {
+    color: rgba(0, 0, 0, 0.35);
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .detail-description { color: rgba(0, 0, 0, 0.7); }
+body.light-theme .detail-status-label { color: rgba(0, 0, 0, 0.4); }
+body.light-theme .detail-status-value { color: rgba(0, 0, 0, 0.75); }
+
+body.light-theme .ide-item { border-color: rgba(0, 0, 0, 0.08); }
+body.light-theme .ide-item.available { border-color: rgba(0, 153, 77, 0.3); color: var(--status-ga); }
+body.light-theme .ide-item.preview-ide { border-color: rgba(204, 136, 0, 0.3); color: var(--status-preview); }
+
+body.light-theme .capability-list li {
+    color: rgba(0, 0, 0, 0.6);
+    border-bottom-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Light squawk codes */
+body.light-theme .squawk-card {
+    border-color: rgba(204, 136, 0, 0.25);
+    background: rgba(204, 136, 0, 0.05);
+}
+
+body.light-theme .squawk-text { color: rgba(0, 0, 0, 0.6); }
+
+/* Light code blocks */
+body.light-theme .code-block {
+    border-color: rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+body.light-theme .code-block-header { background: rgba(0, 0, 0, 0.03); border-bottom-color: rgba(0, 0, 0, 0.06); }
+body.light-theme .code-block-title { color: rgba(0, 0, 0, 0.4); }
+body.light-theme .code-block pre { color: rgba(0, 0, 0, 0.75); }
+
+body.light-theme .copy-btn {
+    border-color: rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme .copy-btn:hover { border-color: var(--color-pfd); color: var(--color-pfd); }
+
+/* Light Mermaid */
+body.light-theme .mermaid-container .mermaid {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Light related chips */
+body.light-theme .related-chip {
+    border-color: rgba(0, 153, 77, 0.25);
+    color: var(--color-pfd);
+}
+
+body.light-theme .related-chip:hover { background: rgba(0, 153, 77, 0.08); }
+
+/* Light detail links */
+body.light-theme .detail-link {
+    border-color: rgba(0, 153, 77, 0.3);
+    color: var(--color-pfd);
+}
+
+body.light-theme .detail-link:hover { background: rgba(0, 153, 77, 0.08); }
+
+/* Light legend */
+body.light-theme .cockpit-legend { border-top-color: rgba(0, 0, 0, 0.06); }
+body.light-theme .legend-item { color: rgba(0, 0, 0, 0.4); }
+
+/* --- Theme Toggle Button --- */
+.theme-toggle {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+}
+
+.theme-toggle:hover {
+    border-color: var(--color-pfd);
+    color: var(--color-pfd);
+}
+
+body.light-theme .theme-toggle {
+    border-color: rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.5);
+}
+
+body.light-theme .theme-toggle:hover {
+    border-color: var(--color-pfd);
+    color: var(--color-pfd);
+}
+
 /* --- Reset & Base --- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
