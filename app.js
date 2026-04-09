@@ -276,15 +276,19 @@ function renderDetailTabs(instrument, zoneColor) {
         { id: 'overview', label: 'Overview' },
         { id: 'diagrams', label: 'Diagrams' },
         { id: 'code', label: 'Code' },
+        { id: 'media', label: 'Media' },
         { id: 'resources', label: 'Resources' }
     ];
 
     // Only show tabs that have content
     const hasDiagrams = instrument.mermaidDiagrams && instrument.mermaidDiagrams.length > 0;
     const hasCode = instrument.codeExamples && instrument.codeExamples.length > 0;
+    const hasMedia = (instrument.terminalRecordings && instrument.terminalRecordings.length > 0)
+                  || (instrument.videos && instrument.videos.length > 0);
     const availableTabs = tabs.filter(t => {
         if (t.id === 'diagrams') return hasDiagrams;
         if (t.id === 'code') return hasCode;
+        if (t.id === 'media') return hasMedia;
         return true;
     });
 
@@ -339,6 +343,7 @@ function renderTabContent(instrument, tabId, zoneColor) {
         case 'overview': return renderOverviewTab(instrument, zoneColor);
         case 'diagrams': return renderDiagramsTab(instrument);
         case 'code': return renderCodeTab(instrument);
+        case 'media': return renderMediaTab(instrument);
         case 'resources': return renderResourcesTab(instrument, zoneColor);
         default: return '';
     }
@@ -505,6 +510,57 @@ function renderCodeTab(instrument) {
             <pre><code class="language-${ex.language || 'text'}">${escapeHtml(ex.code || '')}</code></pre>
         </div>
     `).join('');
+}
+
+// --- Media Tab ---
+function renderMediaTab(instrument) {
+    let html = '';
+
+    // Terminal Recordings (GIFs from asciinema + agg)
+    if (instrument.terminalRecordings && instrument.terminalRecordings.length > 0) {
+        html += `
+            <div class="detail-section">
+                <div class="detail-section-title">Terminal Recordings</div>
+                ${instrument.terminalRecordings.map(rec => `
+                    <div class="media-recording">
+                        <div class="media-recording-header">
+                            <span class="media-recording-title">${rec.title || ''}</span>
+                            ${rec.duration ? `<span class="media-recording-duration">${rec.duration}</span>` : ''}
+                        </div>
+                        <img src="${rec.gifPath}" alt="${rec.title || 'Terminal recording'}"
+                             class="media-recording-gif" loading="lazy">
+                    </div>
+                `).join('')}
+            </div>`;
+    }
+
+    // YouTube Videos
+    if (instrument.videos && instrument.videos.length > 0) {
+        html += `
+            <div class="detail-section">
+                <div class="detail-section-title">Videos</div>
+                ${instrument.videos.map(vid => `
+                    <div class="media-video">
+                        <div class="media-recording-header">
+                            <span class="media-recording-title">${vid.title || ''}</span>
+                            ${vid.duration ? `<span class="media-recording-duration">${vid.duration}</span>` : ''}
+                        </div>
+                        <div class="media-video-embed">
+                            <iframe src="https://www.youtube-nocookie.com/embed/${vid.youtubeId}"
+                                    title="${vid.title || ''}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen loading="lazy"></iframe>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>`;
+    }
+
+    if (!html) {
+        return '<p style="opacity:0.4">No media available.</p>';
+    }
+
+    return html;
 }
 
 // --- Resources Tab ---

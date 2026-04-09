@@ -180,6 +180,46 @@ test.describe('Syntax Highlighting', () => {
 
 
 // ============================================================
+// MEDIA TAB
+// ============================================================
+
+test.describe('Media Tab', () => {
+    test('shows Media tab for instruments with terminal recordings', async ({ page }) => {
+        await page.goto('/');
+
+        // agent-mode has terminalRecordings
+        await page.locator('.instrument[data-id="agent-mode"]').click();
+        await expect(page.locator('#cockpit-body')).toHaveClass(/blade-open/);
+
+        const mediaTab = page.locator('.detail-tab', { hasText: 'Media' });
+        await expect(mediaTab).toBeVisible();
+    });
+
+    test('Media tab renders recording with title and GIF', async ({ page }) => {
+        await page.goto('/');
+
+        await page.locator('.instrument[data-id="agent-mode"]').click();
+        const mediaTab = page.locator('.detail-tab', { hasText: 'Media' });
+        await mediaTab.click();
+
+        await expect(page.locator('.media-recording-title')).not.toBeEmpty();
+        await expect(page.locator('.media-recording-gif')).toBeVisible();
+    });
+
+    test('does NOT show Media tab for instruments without recordings', async ({ page }) => {
+        await page.goto('/');
+
+        // code-review has no terminalRecordings
+        await page.locator('.instrument[data-id="code-review"]').click();
+        await expect(page.locator('#cockpit-body')).toHaveClass(/blade-open/);
+
+        const mediaTab = page.locator('.detail-tab', { hasText: 'Media' });
+        await expect(mediaTab).toHaveCount(0);
+    });
+});
+
+
+// ============================================================
 // DEEP LINKING
 // ============================================================
 

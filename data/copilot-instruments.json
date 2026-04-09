@@ -207,7 +207,13 @@
           "code": "# .github/copilot-agents.yml\nagents:\n  - name: \"security-reviewer\"\n    description: \"Reviews code for OWASP Top 10 vulnerabilities\"\n    instructions: |\n      Focus on: SQL injection, XSS, CSRF, auth bypass.\n      Check all user inputs are validated.\n      Flag any hardcoded secrets."
         }
       ],
-      "terminalRecordings": [],
+      "terminalRecordings": [
+        {
+          "title": "Agent Mode \u2014 Creating a REST API endpoint",
+          "gifPath": "media/recordings/agent-mode.gif",
+          "duration": "25s"
+        }
+      ],
       "videos": [],
       "lastVerified": "2026-04-09",
       "confidenceScore": 92
