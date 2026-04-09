@@ -249,9 +249,23 @@ function closeDetailPanel() {
     }
 }
 
-// Close on overlay click or Escape
+// Close on Escape
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeDetailPanel();
+});
+
+// Close blade when clicking the dimmed main area (but not instrument cards inside it)
+document.addEventListener('click', (e) => {
+    const body = document.getElementById('cockpit-body');
+    if (!body || !body.classList.contains('blade-open')) return;
+
+    const main = document.getElementById('cockpit-main');
+    if (!main) return;
+
+    // Only close if the click is inside cockpit-main but NOT on an instrument card
+    if (main.contains(e.target) && !e.target.closest('.instrument')) {
+        closeDetailPanel();
+    }
 });
 
 function renderDetailTabs(instrument, zoneColor) {
