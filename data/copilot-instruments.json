@@ -632,10 +632,10 @@
       "ideSupport": {
         "vscode": "ga",
         "jetbrains": "ga",
-        "neovim": null,
         "visual-studio": "ga",
-        "eclipse": null,
-        "xcode": null,
+        "neovim": null,
+        "eclipse": "ga",
+        "xcode": "ga",
         "github-com": "ga",
         "cli": null
       },
@@ -643,15 +643,39 @@
         "beginner"
       ],
       "capabilities": [
-        "Natural language code generation",
-        "Code explanation and debugging",
-        "Participant and slash command support",
-        "Multi-turn conversation",
-        "Context from files, workspace, and terminal"
+        "Three conversation modes: Ask (read-only exploration), Plan (structured implementation planning), and Agent (autonomous code modification with terminal commands)",
+        "Context-aware slash commands, chat participants (@github for web search), and chat variables (#filename for file references)",
+        "Image attachment support (JPEG, PNG, GIF, WEBP) for analyzing screenshots, mockups, flowcharts, and error messages",
+        "Subagents: isolated agents with independent context windows for delegated specialized tasks",
+        "Model Context Protocol (MCP) integration to extend chat with external tools and data sources",
+        "Inline chat (Cmd+i / Ctrl+i) for quick edits without leaving the editor"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7601",
+          "title": "Organization Lockout",
+          "description": "Enterprise/org admins can disable Copilot Chat entirely or restrict Agent mode access. If chat is unresponsive, check org-level Copilot policy settings."
+        },
+        {
+          "code": "7602",
+          "title": "Image Blindness",
+          "description": "Image attachment requires org-level feature enablement for Business/Enterprise plans. Individual plan users have it by default."
+        },
+        {
+          "code": "7604",
+          "title": "Premium Request Multiplier",
+          "description": "Each user prompt in Agent mode counts as one premium request multiplied by the model's multiplier. Tool calls and follow-up actions do NOT incur additional charges."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Using Plan mode to architect a feature",
+          "language": "text",
+          "context": "chat-prompt",
+          "code": "I need to add user authentication to this Express.js app\nusing JWT tokens. The app currently has no auth.\n\nPlan the implementation including middleware,\nlogin/register routes, and token refresh logic."
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -662,8 +686,18 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "Use chat variables like #filename to reference specific files, and type @ to invoke specialized participants like @github for web search. Copilot can auto-select the right participant, but explicit invocation gives more predictable results.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Repository custom instructions are auto-included in context — review .github/copilot-instructions.md for unintended prompt injection vectors",
+          "Agent mode can execute terminal commands autonomously; user approval may be required depending on IDE settings",
+          "MCP server connections extend Copilot's reach to external services — each integration is an additional trust boundary"
+        ],
+        "complianceNotes": "Enterprise admins can restrict agent mode and MCP access via org-level policies. Chat responses are not stored by GitHub for training on Business/Enterprise plans."
+      }
     },
     {
       "id": "copilot-edits",
@@ -685,8 +719,8 @@
       "ideSupport": {
         "vscode": "ga",
         "jetbrains": "ga",
+        "visual-studio": "ga",
         "neovim": null,
-        "visual-studio": null,
         "eclipse": null,
         "xcode": null,
         "github-com": null,
@@ -696,14 +730,38 @@
         "advanced"
       ],
       "capabilities": [
-        "Multi-file diff generation",
-        "Review and apply workflow",
-        "Working set management",
-        "Iterative refinement"
+        "Edit Mode: controlled multi-file editing where you choose which files Copilot can modify, review diffs per turn, and accept/reject each change",
+        "Agent Mode: autonomous editing where Copilot determines files to modify, runs terminal commands, and iterates until the task is complete",
+        "Plan Mode integration: create detailed implementation plans before executing edits, with option to hand off plan to agent",
+        "MCP server support in Agent Mode for integrating external tools during autonomous editing",
+        "Diff-based review: all changes shown as diffs that can be accepted, rejected, or iterated on before saving"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7610",
+          "title": "Edit Mode IDE Lock",
+          "description": "Edit mode is only available in VS Code and JetBrains IDEs. Visual Studio supports Agent mode but NOT Edit mode."
+        },
+        {
+          "code": "7611",
+          "title": "Agent Mode Org Block",
+          "description": "Enterprise administrators can restrict agent mode access at the org level. If the Agent dropdown option is missing, check your org's Copilot policy."
+        },
+        {
+          "code": "7613",
+          "title": "No Undo Stack",
+          "description": "Once you accept edits, they are applied to your files. Use version control (git) as your safety net — commit before large edit sessions."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Multi-file refactor in Edit Mode",
+          "language": "text",
+          "context": "chat-prompt",
+          "code": "Refactor both files to use a shared BaseController class.\nExtract common error handling and response formatting\ninto the base class. Keep the existing API contracts identical."
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -714,8 +772,18 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "Use Edit mode (not Agent mode) when you want guardrails — it forces you to explicitly add files to the working set, preventing Copilot from touching unexpected files. Switch to Agent mode only when you genuinely want Copilot to discover and modify files on its own.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Agent mode can execute arbitrary terminal commands in your local environment",
+          "Edit mode provides a safer alternative with explicit file scoping and per-change review",
+          "MCP integrations in agent mode may access external services with your credentials"
+        ],
+        "complianceNotes": "Agent mode terminal execution is sandboxed to the IDE's terminal. Enterprise orgs can disable agent mode entirely via policy."
+      }
     },
     {
       "id": "inline-completions",
@@ -737,8 +805,8 @@
       "ideSupport": {
         "vscode": "ga",
         "jetbrains": "ga",
-        "neovim": "ga",
         "visual-studio": "ga",
+        "neovim": "ga",
         "eclipse": "ga",
         "xcode": "ga",
         "github-com": null,
@@ -748,15 +816,38 @@
         "beginner"
       ],
       "capabilities": [
-        "Single-line completions",
-        "Multi-line completions",
-        "Fill-in-the-middle completions",
-        "Comment-to-code generation",
-        "Context from open tabs"
+        "Ghost text completions: dimmed inline suggestions appear at cursor position, accepted with Tab, rejected with Esc",
+        "Comment-driven generation: describe desired functionality in a code comment and Copilot suggests the implementing code",
+        "Partial acceptance: accept word-by-word (Cmd+Right / Ctrl+Right) or line-by-line for granular control",
+        "Alternative suggestions: cycle through multiple completion options (Option+] / Alt+] for next, Option+[ / Alt+[ for previous)",
+        "Multi-suggestion panel: open a dedicated tab showing all alternatives at once (Ctrl+Enter)"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7620",
+          "title": "Public Code Filter Active",
+          "description": "Duplication detection may silently suppress suggestions that match publicly available code. Check Settings > Copilot > 'Suggestions matching public code' on GitHub.com."
+        },
+        {
+          "code": "7621",
+          "title": "Quota Exhaustion (Free Tier)",
+          "description": "Copilot Free plan has a monthly completions quota. When exhausted, suggestions stop until the next billing cycle."
+        },
+        {
+          "code": "7623",
+          "title": "Xcode Double Suggestion",
+          "description": "Xcode's native predictive text completion can conflict with Copilot suggestions. Disable Xcode's native predictive completions to avoid confusion."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Comment-driven function generation",
+          "language": "python",
+          "context": "editor",
+          "code": "# Calculate the Levenshtein distance between two strings\n# using dynamic programming with O(min(m,n)) space complexity\ndef levenshtein_distance(s1: str, s2: str) -> int:"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -766,8 +857,18 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "If you're getting sparse suggestions, check if duplication detection is enabled (GitHub.com > Settings > Copilot). This setting blocks suggestions matching public code, which can significantly reduce suggestion volume in common patterns.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Public code matching: Copilot checks suggestions against publicly available code and can discard matches, configurable per org",
+          "Code sent to GitHub servers for processing includes surrounding context from open files",
+          "Suggestions may inadvertently include patterns with security anti-patterns"
+        ],
+        "complianceNotes": "Orgs can enforce the 'block suggestions matching public code' policy. Business/Enterprise telemetry data is not retained for model training."
+      }
     },
     {
       "id": "next-edit-suggestions",
@@ -787,12 +888,12 @@
         "enterprise": true
       },
       "ideSupport": {
-        "vscode": "preview",
+        "vscode": "ga",
         "jetbrains": null,
-        "neovim": null,
         "visual-studio": null,
-        "eclipse": null,
-        "xcode": null,
+        "neovim": null,
+        "eclipse": "ga",
+        "xcode": "ga",
         "github-com": null,
         "cli": null
       },
@@ -800,14 +901,37 @@
         "advanced"
       ],
       "capabilities": [
-        "Predicts next edit location",
-        "Context-aware follow-up suggestions",
-        "Multi-cursor edit chains",
-        "Pattern recognition from recent edits"
+        "Predicts the location of your next likely edit based on changes you are currently making, then suggests a completion at that location",
+        "Gutter arrow indicator: an arrow in the editor gutter shows where a predicted edit is available, direction indicates above or below",
+        "Tab-Tab workflow: press Tab to navigate to the predicted edit location, press Tab again to accept the suggestion",
+        "Pattern propagation: after making a change in one location, NES predicts the same type of change elsewhere (e.g., renaming a variable in all usages)"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7630",
+          "title": "Limited IDE Coverage",
+          "description": "NES is GA only in VS Code, Xcode, and Eclipse. NOT available in JetBrains, Visual Studio, or Neovim."
+        },
+        {
+          "code": "7632",
+          "title": "Requires Active Editing",
+          "description": "NES only activates when you are actively making edits. It does not trigger on passive file browsing or reading."
+        },
+        {
+          "code": "7633",
+          "title": "Gutter Arrow Blindness",
+          "description": "The gutter arrow indicator can be easy to miss, especially with dense gutter decorations (breakpoints, git markers)."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "NES: consistent rename propagation",
+          "language": "typescript",
+          "context": "editor",
+          "code": "// Line 5: you rename manually\nconst accountId = getUserId(); // was: userId\n\n// Line 12: NES predicts and offers via gutter arrow\nconsole.log(`Processing: ${accountId}`); // Tab to jump, Tab to accept"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -817,8 +941,16 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "The arrow direction tells you whether the predicted edit is above or below your current viewport — useful in large files so you know which way to expect the jump. Hover over the gutter arrow for keyboard shortcuts.",
+      "securityRelevance": {
+        "relevant": false,
+        "aspects": [
+          "NES operates on the same context model as inline completions — no additional data is sent beyond what inline completions already use"
+        ],
+        "complianceNotes": "Same data handling and retention policies as inline completions."
+      }
     },
     {
       "id": "coding-agent",
@@ -838,28 +970,56 @@
         "enterprise": true
       },
       "ideSupport": {
-        "vscode": null,
-        "jetbrains": null,
+        "vscode": "ga",
+        "jetbrains": "ga",
+        "visual-studio": "ga",
         "neovim": null,
-        "visual-studio": null,
         "eclipse": null,
         "xcode": null,
-        "github-com": "preview",
+        "github-com": "ga",
         "cli": null
       },
       "flightMode": [
         "advanced"
       ],
       "capabilities": [
-        "Autonomous issue resolution",
-        "Creates PRs from issues",
-        "Runs in cloud environment",
-        "CI/CD integration",
-        "Assign via @copilot in issues"
+        "Fully autonomous development: researches repository, creates plan, writes code, runs tests/linters, and iterates — all in an ephemeral GitHub Actions environment",
+        "Multiple trigger points: GitHub Issues, agents panel on GitHub.com, Copilot Chat in IDEs, GitHub CLI, and @copilot mentions on PRs",
+        "Automated git workflow: creates branches, writes commit messages, pushes changes, and opens pull requests — no local checkout needed",
+        "Custom agents: create specialized agents for different task types with domain-specific instructions and tools via copilot-agents.yml",
+        "MCP and hooks integration: extend capabilities with external tools (Jira, Slack, Linear, Azure Boards) and custom shell commands"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7700",
+          "title": "Single-Repo Constraint",
+          "description": "The coding agent can only make changes in ONE repository per task. Cross-repo changes require separate tasks."
+        },
+        {
+          "code": "7701",
+          "title": "Branch Protection Conflict",
+          "description": "Repository rulesets or branch protection that restrict commit authors will block the agent. Ensure Copilot's commit identity is allowed."
+        },
+        {
+          "code": "7702",
+          "title": "Content Exclusions Ignored",
+          "description": "The coding agent does NOT respect Copilot content exclusion settings. Files excluded from Copilot may still be read/modified by the agent."
+        },
+        {
+          "code": "7703",
+          "title": "GitHub-Hosted Only",
+          "description": "Only works with GitHub-hosted repositories. GitHub Enterprise Server (GHES) on-premises repos are not supported."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Assigning a task via GitHub Issue",
+          "language": "markdown",
+          "context": "github-issue",
+          "code": "## Add rate limiting to /api/search\n\n### Requirements\n- Rate limiting middleware (100 req/min per API key)\n- Return 429 with Retry-After header when exceeded\n- Add unit tests for the rate limiter\n- Update API docs in docs/api.md\n\n/assign @copilot"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -870,8 +1030,19 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "The coding agent runs in GitHub Actions, so your monthly Actions minutes and premium request quotas apply. It works best on well-scoped, incremental tasks — avoid assigning broad 'rewrite the whole module' issues.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Runs in an ephemeral GitHub Actions environment with access to your repository code",
+          "Organizations can customize firewall rules controlling which domains/URLs the agent can reach",
+          "Content exclusion settings are NOT respected — the agent may access files intended to be excluded",
+          "Custom hooks allow execution of arbitrary shell commands at agent execution checkpoints"
+        ],
+        "complianceNotes": "Enterprise admins must explicitly enable the feature. Repository owners can opt out specific repos. All agent actions are logged via GitHub Actions. PRs always require human review before merge."
+      }
     },
     {
       "id": "file-participant",
@@ -944,25 +1115,50 @@
       "ideSupport": {
         "vscode": "ga",
         "jetbrains": null,
+        "visual-studio": "preview",
         "neovim": null,
-        "visual-studio": null,
         "eclipse": null,
         "xcode": null,
-        "github-com": "ga",
+        "github-com": null,
         "cli": null
       },
       "flightMode": [
         "advanced"
       ],
       "capabilities": [
-        "Query issues and PRs",
-        "Repository information",
-        "GitHub API knowledge base",
-        "Cross-repo context"
+        "Dynamically selects appropriate GitHub skills based on the content of your question",
+        "Web search capability via natural language or explicit #web variable for real-time information",
+        "Repository operations including create_branch, create_or_update_file, push_files, and merge_pull_request",
+        "Query GitHub data: open PRs, issues, users, and repository information",
+        "Supports MCP skills for extensible GitHub operations",
+        "Discover available skills by asking '@github What skills are available?'"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "3010",
+          "title": "Preview in Visual Studio",
+          "description": "@github is in public preview in Visual Studio and subject to change. Feature availability and supported skills may vary between releases."
+        },
+        {
+          "code": "3011",
+          "title": "Skill Auto-Selection",
+          "description": "Copilot dynamically selects skills based on question content, which means it may not always invoke the intended skill. Use explicit syntax when precision matters."
+        },
+        {
+          "code": "3012",
+          "title": "VS Code Primary Support",
+          "description": "Chat participants using @ syntax are primarily documented for VS Code. Other IDEs may not support the @github participant."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Search the web for current information",
+          "language": "text",
+          "context": "chat-prompt",
+          "code": "@github #web What is the latest LTS version of Node.js?"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -973,8 +1169,18 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 90,
+      "proTip": "You can invoke web search two ways: naturally ('Search the web to find...') or explicitly with the #web variable. The #web variable is more reliable for ensuring web search is actually triggered.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Can perform write operations (create branches, push files, merge PRs) on your repositories",
+          "Web search results are processed by the model and could influence code suggestions",
+          "Requires appropriate GitHub permissions for repository operations"
+        ],
+        "complianceNotes": "Write operations via @github act with your GitHub permissions. Review suggested operations before confirming, especially in production repositories."
+      }
     },
     {
       "id": "terminal-context",
@@ -1046,8 +1252,8 @@
       "ideSupport": {
         "vscode": "ga",
         "jetbrains": null,
-        "neovim": null,
         "visual-studio": null,
+        "neovim": null,
         "eclipse": null,
         "xcode": null,
         "github-com": null,
@@ -1057,14 +1263,32 @@
         "beginner"
       ],
       "capabilities": [
-        "VS Code settings assistance",
-        "Extension recommendations",
-        "Keybinding configuration",
-        "Editor feature guidance"
+        "Has context about VS Code commands, features, and settings",
+        "Helps discover and configure VS Code settings like word wrap, themes, and keybindings",
+        "Provides guidance on VS Code extension development via the Extension API",
+        "Answers questions about VS Code keyboard shortcuts and command palette actions"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "3030",
+          "title": "VS Code Exclusive",
+          "description": "@vscode is exclusively a VS Code chat participant. It provides no value in other IDEs and is not available outside VS Code."
+        },
+        {
+          "code": "3031",
+          "title": "Editor Knowledge Only",
+          "description": "@vscode knows about VS Code the editor, not your codebase. Don't confuse it with @workspace which understands your project code."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Discover VS Code settings",
+          "language": "text",
+          "context": "chat-prompt",
+          "code": "@vscode How do I enable word wrapping\nand set the tab size to 2 spaces?"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1073,8 +1297,16 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "Use @vscode for questions about the editor itself, not your code. It knows VS Code internals — ask it about obscure settings, multi-cursor tricks, or how to configure tasks.json. For code questions, use @workspace instead.",
+      "securityRelevance": {
+        "relevant": false,
+        "aspects": [
+          "Limited security surface as it primarily deals with editor configuration"
+        ],
+        "complianceNotes": "Minimal security relevance. @vscode deals with editor configuration, not code or repository data."
+      }
     },
     {
       "id": "codebase-indexing",
@@ -1095,9 +1327,9 @@
       },
       "ideSupport": {
         "vscode": "ga",
-        "jetbrains": "ga",
-        "neovim": null,
+        "jetbrains": null,
         "visual-studio": null,
+        "neovim": null,
         "eclipse": null,
         "xcode": null,
         "github-com": "ga",
@@ -1108,14 +1340,38 @@
         "advanced"
       ],
       "capabilities": [
-        "Semantic code indexing",
-        "Embedding generation",
-        "Incremental re-indexing",
-        "Multi-language support"
+        "Semantic code search finds code by meaning rather than exact keywords, invoked via #codebase",
+        "Three index types: Remote (GitHub-hosted), Local (on-machine semantic index), and Basic (simpler algorithms for large codebases)",
+        "Automatic indexing runs in the background — initial indexing takes up to 60 seconds, re-indexing updates within seconds",
+        "Indexes all files except those in .gitignore, files.exclude settings, and binary files",
+        "Agents combine semantic search with text search, grep, file search, and Find All References for comprehensive understanding"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "3040",
+          "title": "Initial Indexing Delay",
+          "description": "First-time indexing of a large repository can take up to 60 seconds. Semantic search queries during this period may return incomplete results."
+        },
+        {
+          "code": "3041",
+          "title": "GHES Not Supported",
+          "description": "Remote indexing supports GitHub.com and GitHub Enterprise Cloud but NOT GitHub Enterprise Server. GHES users are limited to local indexing."
+        },
+        {
+          "code": "3042",
+          "title": "Binary Files Excluded",
+          "description": "Binary files (images, PDFs, compiled assets) are never indexed. .gitignore'd files are also excluded from the workspace index."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Search codebase for error handling patterns",
+          "language": "text",
+          "context": "chat-prompt",
+          "code": "#codebase How is error handling implemented in the\npayment processing service? Show me all retry logic\nand fallback patterns."
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1125,8 +1381,19 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "Even without semantic indexing, Copilot agents still function using text search, grep, and language intelligence. But for meaning-based queries ('find code that handles authentication') rather than keyword queries ('find AuthService class'), semantic indexing makes a dramatic difference.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Indexed repository data is NOT used for model training, per official documentation",
+          "Enterprise/organization owners can define content exclusions that filter indexed data before it reaches Copilot Chat",
+          "Indexed data may be stored both locally and on remote servers depending on index type",
+          ".gitignore is bypassed if you have a file open or have text selected within an ignored file"
+        ],
+        "complianceNotes": "Copilot will not use indexed repository data for model training. Enterprise admins can configure content exclusion policies. Note the .gitignore bypass caveat for open/selected files."
+      }
     },
     {
       "id": "copilot-autofix",
