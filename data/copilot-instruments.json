@@ -6,7 +6,7 @@
       "id": "pfd",
       "name": "Primary Flight Display",
       "label": "PFD",
-      "description": "Core AI surfaces — where you fly",
+      "description": "Core AI surfaces \u2014 where you fly",
       "color": "#00ff88",
       "gridArea": "pfd"
     },
@@ -14,7 +14,7 @@
       "id": "nd",
       "name": "Navigation Display",
       "label": "ND",
-      "description": "Context sources — where you navigate",
+      "description": "Context sources \u2014 where you navigate",
       "color": "#00d4ff",
       "gridArea": "nd"
     },
@@ -115,7 +115,7 @@
           "date": "2025-06"
         }
       ],
-      "description": "Autonomous agentic coding loop that iterates on multi-file edits, runs terminal commands, and self-corrects. The AI plans, implements, tests, and fixes — you review the result.",
+      "description": "Autonomous agentic coding loop that iterates on multi-file edits, runs terminal commands, and self-corrects. The AI plans, implements, tests, and fixes \u2014 you review the result.",
       "shortDescription": "Autonomous multi-file coding with terminal access",
       "planAvailability": {
         "free": "limited",
@@ -477,7 +477,7 @@
         "aspects": [],
         "complianceNotes": ""
       },
-      "proTip": "Select just the confusing part, not the entire file. /explain works best on focused selections — a single function, a regex pattern, or a complex conditional chain.",
+      "proTip": "Select just the confusing part, not the entire file. /explain works best on focused selections \u2014 a single function, a regex pattern, or a complex conditional chain.",
       "links": {
         "docs": "https://docs.github.com/en/copilot/how-tos/chat-with-copilot/chat-in-ide",
         "changelog": "https://github.blog/changelog/label/copilot/",
@@ -529,7 +529,7 @@
           "date": "2025-04"
         }
       ],
-      "description": "Open protocol for connecting Copilot to external tools and data sources. MCP servers expose tools that Agent Mode can invoke — databases, APIs, design systems, deployment pipelines, and more.",
+      "description": "Open protocol for connecting Copilot to external tools and data sources. MCP servers expose tools that Agent Mode can invoke \u2014 databases, APIs, design systems, deployment pipelines, and more.",
       "shortDescription": "Connect Copilot to external tools via open protocol",
       "planAvailability": {
         "free": "limited",
@@ -563,7 +563,7 @@
         {
           "code": "7500",
           "title": "Trust Boundary",
-          "description": "MCP servers execute with local permissions. Only install servers from trusted sources — a malicious server could access your file system."
+          "description": "MCP servers execute with local permissions. Only install servers from trusted sources \u2014 a malicious server could access your file system."
         },
         {
           "code": "7600",
@@ -692,9 +692,9 @@
       "securityRelevance": {
         "relevant": true,
         "aspects": [
-          "Repository custom instructions are auto-included in context — review .github/copilot-instructions.md for unintended prompt injection vectors",
+          "Repository custom instructions are auto-included in context \u2014 review .github/copilot-instructions.md for unintended prompt injection vectors",
           "Agent mode can execute terminal commands autonomously; user approval may be required depending on IDE settings",
-          "MCP server connections extend Copilot's reach to external services — each integration is an additional trust boundary"
+          "MCP server connections extend Copilot's reach to external services \u2014 each integration is an additional trust boundary"
         ],
         "complianceNotes": "Enterprise admins can restrict agent mode and MCP access via org-level policies. Chat responses are not stored by GitHub for training on Business/Enterprise plans."
       }
@@ -750,7 +750,7 @@
         {
           "code": "7613",
           "title": "No Undo Stack",
-          "description": "Once you accept edits, they are applied to your files. Use version control (git) as your safety net — commit before large edit sessions."
+          "description": "Once you accept edits, they are applied to your files. Use version control (git) as your safety net \u2014 commit before large edit sessions."
         }
       ],
       "mermaidDiagrams": [],
@@ -774,7 +774,7 @@
       },
       "lastVerified": "2026-04-09",
       "confidenceScore": 95,
-      "proTip": "Use Edit mode (not Agent mode) when you want guardrails — it forces you to explicitly add files to the working set, preventing Copilot from touching unexpected files. Switch to Agent mode only when you genuinely want Copilot to discover and modify files on its own.",
+      "proTip": "Use Edit mode (not Agent mode) when you want guardrails \u2014 it forces you to explicitly add files to the working set, preventing Copilot from touching unexpected files. Switch to Agent mode only when you genuinely want Copilot to discover and modify files on its own.",
       "securityRelevance": {
         "relevant": true,
         "aspects": [
@@ -943,11 +943,11 @@
       },
       "lastVerified": "2026-04-09",
       "confidenceScore": 95,
-      "proTip": "The arrow direction tells you whether the predicted edit is above or below your current viewport — useful in large files so you know which way to expect the jump. Hover over the gutter arrow for keyboard shortcuts.",
+      "proTip": "The arrow direction tells you whether the predicted edit is above or below your current viewport \u2014 useful in large files so you know which way to expect the jump. Hover over the gutter arrow for keyboard shortcuts.",
       "securityRelevance": {
         "relevant": false,
         "aspects": [
-          "NES operates on the same context model as inline completions — no additional data is sent beyond what inline completions already use"
+          "NES operates on the same context model as inline completions \u2014 no additional data is sent beyond what inline completions already use"
         ],
         "complianceNotes": "Same data handling and retention policies as inline completions."
       }
@@ -983,9 +983,9 @@
         "advanced"
       ],
       "capabilities": [
-        "Fully autonomous development: researches repository, creates plan, writes code, runs tests/linters, and iterates — all in an ephemeral GitHub Actions environment",
+        "Fully autonomous development: researches repository, creates plan, writes code, runs tests/linters, and iterates \u2014 all in an ephemeral GitHub Actions environment",
         "Multiple trigger points: GitHub Issues, agents panel on GitHub.com, Copilot Chat in IDEs, GitHub CLI, and @copilot mentions on PRs",
-        "Automated git workflow: creates branches, writes commit messages, pushes changes, and opens pull requests — no local checkout needed",
+        "Automated git workflow: creates branches, writes commit messages, pushes changes, and opens pull requests \u2014 no local checkout needed",
         "Custom agents: create specialized agents for different task types with domain-specific instructions and tools via copilot-agents.yml",
         "MCP and hooks integration: extend capabilities with external tools (Jira, Slack, Linear, Azure Boards) and custom shell commands"
       ],
@@ -1032,13 +1032,13 @@
       },
       "lastVerified": "2026-04-09",
       "confidenceScore": 95,
-      "proTip": "The coding agent runs in GitHub Actions, so your monthly Actions minutes and premium request quotas apply. It works best on well-scoped, incremental tasks — avoid assigning broad 'rewrite the whole module' issues.",
+      "proTip": "The coding agent runs in GitHub Actions, so your monthly Actions minutes and premium request quotas apply. It works best on well-scoped, incremental tasks \u2014 avoid assigning broad 'rewrite the whole module' issues.",
       "securityRelevance": {
         "relevant": true,
         "aspects": [
           "Runs in an ephemeral GitHub Actions environment with access to your repository code",
           "Organizations can customize firewall rules controlling which domains/URLs the agent can reach",
-          "Content exclusion settings are NOT respected — the agent may access files intended to be excluded",
+          "Content exclusion settings are NOT respected \u2014 the agent may access files intended to be excluded",
           "Custom hooks allow execution of arbitrary shell commands at agent execution checkpoints"
         ],
         "complianceNotes": "Enterprise admins must explicitly enable the feature. Repository owners can opt out specific repos. All agent actions are logged via GitHub Actions. PRs always require human review before merge."
@@ -1079,9 +1079,44 @@
         "Multiple file references",
         "Focused context for precise answers"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7600",
+          "title": "Token window still applies",
+          "description": "Attaching very large files via #file may exceed Copilot's context window, causing truncation. Prefer attaching focused, smaller files or use #selection for specific code regions."
+        },
+        {
+          "code": "7600",
+          "title": "File must be in the workspace",
+          "description": "The #file context variable only resolves files within the currently open VS Code workspace. Files outside the workspace or binary files are not supported."
+        },
+        {
+          "code": "7500",
+          "title": "Sensitive file content sent to Copilot",
+          "description": "Any file attached via #file has its full contents sent to the Copilot backend. Avoid attaching files containing secrets, credentials, API keys, or .env files."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Attach a file for targeted code review",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "#file:src/utils/auth.ts Review this authentication helper for security issues and suggest improvements."
+        },
+        {
+          "title": "Reference multiple files for cross-file analysis",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "#file:src/models/user.ts #file:src/routes/userRoutes.ts Explain how the User model is used in the route handlers and check for missing validation."
+        },
+        {
+          "title": "Generate tests based on a specific file",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "#file:src/services/paymentService.ts Write unit tests for this payment service covering edge cases like failed transactions and currency conversion."
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1093,7 +1128,17 @@
         "docs": null
       },
       "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "confidenceScore": 50,
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "File contents are transmitted to GitHub Copilot's cloud service",
+          "Sensitive files (secrets, credentials) should never be attached via #file",
+          "Content exclusion policies can block specific files at the org level"
+        ],
+        "complianceNotes": "Copilot for Business and Enterprise offer data retention controls. Content exclusion settings at the org level can prevent specific file patterns from being sent."
+      },
+      "proTip": "Combine #file with #selection for surgical precision: attach a full file for context, then highlight a specific function and ask Copilot to refactor just that selection in the context of the whole module."
     },
     {
       "id": "github-participant",
@@ -1217,9 +1262,44 @@
         "Error message analysis",
         "Build output understanding"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7600",
+          "title": "VS Code only",
+          "description": "The @terminal chat participant is VS Code-specific. JetBrains IDEs do not support @terminal \u2014 users must manually copy terminal output into chat."
+        },
+        {
+          "code": "7600",
+          "title": "Limited terminal buffer",
+          "description": "Only the most recent terminal output is captured. Long-running commands with verbose output may be partially truncated."
+        },
+        {
+          "code": "7500",
+          "title": "Terminal may contain secrets",
+          "description": "Terminal output can contain environment variables, connection strings, API responses with tokens, or database query results. All captured terminal content is sent to Copilot."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Debug a build error from terminal output",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "@terminal Explain the error in my last command and suggest a fix."
+        },
+        {
+          "title": "Analyze test failures from terminal output",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "@terminal My test suite just failed. Summarize which tests failed and suggest likely causes based on the error output."
+        },
+        {
+          "title": "Suggest next steps from terminal history",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "@terminal I just cloned this repo and ran the setup. What should I do next based on the terminal output?"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1230,7 +1310,17 @@
         "docs": null
       },
       "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "confidenceScore": 50,
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Terminal output often contains environment variables and auth tokens",
+          "Shell history may reveal server addresses and infrastructure details",
+          "Content exclusion policies do not cover terminal buffer content"
+        ],
+        "complianceNotes": "Organizations should train developers to clear sensitive terminal output before using @terminal. Content exclusion policies only cover file-based content, not terminal buffers."
+      },
+      "proTip": "Run your failing command, then immediately use @terminal before running anything else \u2014 the context is freshest right after the error. Keep one terminal dedicated to the failing process so @terminal picks up the relevant output without noise."
     },
     {
       "id": "vscode-participant",
@@ -1299,7 +1389,7 @@
       },
       "lastVerified": "2026-04-09",
       "confidenceScore": 95,
-      "proTip": "Use @vscode for questions about the editor itself, not your code. It knows VS Code internals — ask it about obscure settings, multi-cursor tricks, or how to configure tasks.json. For code questions, use @workspace instead.",
+      "proTip": "Use @vscode for questions about the editor itself, not your code. It knows VS Code internals \u2014 ask it about obscure settings, multi-cursor tricks, or how to configure tasks.json. For code questions, use @workspace instead.",
       "securityRelevance": {
         "relevant": false,
         "aspects": [
@@ -1342,7 +1432,7 @@
       "capabilities": [
         "Semantic code search finds code by meaning rather than exact keywords, invoked via #codebase",
         "Three index types: Remote (GitHub-hosted), Local (on-machine semantic index), and Basic (simpler algorithms for large codebases)",
-        "Automatic indexing runs in the background — initial indexing takes up to 60 seconds, re-indexing updates within seconds",
+        "Automatic indexing runs in the background \u2014 initial indexing takes up to 60 seconds, re-indexing updates within seconds",
         "Indexes all files except those in .gitignore, files.exclude settings, and binary files",
         "Agents combine semantic search with text search, grep, file search, and Find All References for comprehensive understanding"
       ],
@@ -1431,7 +1521,7 @@
         "Supports C#, C/C++, Go, Java/Kotlin, Swift, JavaScript/TypeScript, Python, Ruby, and Rust",
         "Uses GPT-5.1 to translate alert descriptions and code locations into concrete code change suggestions",
         "Provides explanatory text alongside suggested code changes to help developers understand the fix",
-        "Enabled by default for all repositories using CodeQL — no Copilot subscription required",
+        "Enabled by default for all repositories using CodeQL \u2014 no Copilot subscription required",
         "Configurable (enabled/disabled) at enterprise, organization, or repository levels"
       ],
       "squawkCodes": [
@@ -1443,12 +1533,12 @@
         {
           "code": "4002",
           "title": "Fabricated Dependencies",
-          "description": "Suggested fixes may reference fabricated or insecure dependency versions — always verify package names and versions."
+          "description": "Suggested fixes may reference fabricated or insecure dependency versions \u2014 always verify package names and versions."
         },
         {
           "code": "4003",
           "title": "Non-Deterministic",
-          "description": "The LLM may produce different suggestions for identical alerts across runs — results are not guaranteed to be reproducible."
+          "description": "The LLM may produce different suggestions for identical alerts across runs \u2014 results are not guaranteed to be reproducible."
         }
       ],
       "mermaidDiagrams": [],
@@ -1457,7 +1547,7 @@
           "title": "Autofix workflow on a pull request",
           "language": "yaml",
           "context": "github-actions",
-          "code": "# No config needed — Autofix activates automatically\n# when CodeQL code scanning is enabled.\n#\n# To disable at org level:\n# Settings > Code security > Code scanning\n#   > Copilot Autofix > Disable\n#\n# Autofix suggestions appear inline on PR alerts\n# as commit-ready code changes."
+          "code": "# No config needed \u2014 Autofix activates automatically\n# when CodeQL code scanning is enabled.\n#\n# To disable at org level:\n# Settings > Code security > Code scanning\n#   > Copilot Autofix > Disable\n#\n# Autofix suggestions appear inline on PR alerts\n# as commit-ready code changes."
         }
       ],
       "terminalRecordings": [],
@@ -1471,14 +1561,14 @@
       },
       "lastVerified": "2026-04-09",
       "confidenceScore": 95,
-      "proTip": "Always run CI tests after committing an Autofix suggestion — the fix may resolve the security alert but could introduce semantic changes that break existing functionality.",
+      "proTip": "Always run CI tests after committing an Autofix suggestion \u2014 the fix may resolve the security alert but could introduce semantic changes that break existing functionality.",
       "securityRelevance": {
         "relevant": true,
         "aspects": [
           "Directly remediates security vulnerabilities found by CodeQL static analysis",
           "Data sent to GPT-5.1 includes code snippets around alert locations",
-          "Customer data is NOT used for LLM training — governed by Advanced Security terms",
-          "Generated fixes may themselves introduce new vulnerabilities — human review mandatory"
+          "Customer data is NOT used for LLM training \u2014 governed by Advanced Security terms",
+          "Generated fixes may themselves introduce new vulnerabilities \u2014 human review mandatory"
         ],
         "complianceNotes": "No Copilot subscription required for public repos. Private/internal repos require GitHub Code Security license."
       }
@@ -1518,19 +1608,19 @@
         "Supports 12 languages: C/C++, C#, Go, Java, Kotlin, JS, TS, Python, Ruby, Rust, Swift, and GitHub Actions YAML",
         "Default setup (one-click) and advanced setup (custom GitHub Actions workflow with third-party tools)",
         "Integrates with pull requests to surface alerts before merge, with optional merge protection rules",
-        "Interoperable with third-party SARIF-compliant tools — results uploadable from any CI system",
+        "Interoperable with third-party SARIF-compliant tools \u2014 results uploadable from any CI system",
         "Organization-wide security overview for monitoring results across all repositories"
       ],
       "squawkCodes": [
         {
           "code": "4010",
           "title": "SARIF Open Standard",
-          "description": "Code scanning uses SARIF — you can integrate any SARIF-compliant tool, not just CodeQL."
+          "description": "Code scanning uses SARIF \u2014 you can integrate any SARIF-compliant tool, not just CodeQL."
         },
         {
           "code": "4011",
           "title": "Actions Minutes",
-          "description": "Code scanning consumes GitHub Actions minutes — private repos require sufficient Actions quota and a Code Security license."
+          "description": "Code scanning consumes GitHub Actions minutes \u2014 private repos require sufficient Actions quota and a Code Security license."
         },
         {
           "code": "4012",
@@ -1562,7 +1652,7 @@
       "securityRelevance": {
         "relevant": true,
         "aspects": [
-          "Core security analysis tool — identifies vulnerabilities via static analysis",
+          "Core security analysis tool \u2014 identifies vulnerabilities via static analysis",
           "CodeQL treats code as data, querying it for vulnerability patterns across control and data flow",
           "Supports variant analysis to find similar vulnerabilities across multiple repositories",
           "Organization security overview provides centralized vulnerability monitoring"
@@ -1611,12 +1701,12 @@
         {
           "code": "4020",
           "title": "Not an Approval",
-          "description": "Copilot code review always leaves a 'Comment' review, never 'Approve' or 'Request changes' — it cannot satisfy required review rules."
+          "description": "Copilot code review always leaves a 'Comment' review, never 'Approve' or 'Request changes' \u2014 it cannot satisfy required review rules."
         },
         {
           "code": "4021",
           "title": "Human Review Required",
-          "description": "Agent self-review supplements but does not replace human review — developers must validate all agent-generated code."
+          "description": "Agent self-review supplements but does not replace human review \u2014 developers must validate all agent-generated code."
         },
         {
           "code": "4022",
@@ -1644,13 +1734,13 @@
       },
       "lastVerified": "2026-04-09",
       "confidenceScore": 85,
-      "description": "Not a standalone feature — the combination of the Copilot coding agent creating PRs and automatic Copilot code review rulesets reviewing those PRs. When both are active, Copilot effectively reviews its own generated code.",
-      "proTip": "Enable 'Review draft pull requests' in your auto-review ruleset so Copilot reviews agent-generated PRs while they are still drafts — catching issues before any human reviewer is assigned.",
+      "description": "Not a standalone feature \u2014 the combination of the Copilot coding agent creating PRs and automatic Copilot code review rulesets reviewing those PRs. When both are active, Copilot effectively reviews its own generated code.",
+      "proTip": "Enable 'Review draft pull requests' in your auto-review ruleset so Copilot reviews agent-generated PRs while they are still drafts \u2014 catching issues before any human reviewer is assigned.",
       "securityRelevance": {
         "relevant": true,
         "aspects": [
           "Adds automated review layer to catch security issues in AI-generated code before human review",
-          "Review may miss complex security issues — not a substitute for security-focused human review",
+          "Review may miss complex security issues \u2014 not a substitute for security-focused human review",
           "Custom instructions can include security checklists for reviews"
         ],
         "complianceNotes": "Requires Copilot Enterprise or Pro+. Copilot review reads only the first 4,000 characters of custom instruction files."
@@ -1691,9 +1781,32 @@
         "Configurable trigger rules",
         "Team workflow integration"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7600",
+          "title": "Not a replacement for human review",
+          "description": "Copilot auto-review provides AI-generated feedback but cannot approve or merge PRs. Human reviewers are still required for final approval in protected branch workflows."
+        },
+        {
+          "code": "7600",
+          "title": "Org-level configuration only",
+          "description": "This feature is configured at the organization level by admins. Individual users cannot enable or disable it for their own repositories without org permissions."
+        },
+        {
+          "code": "7500",
+          "title": "Sensitive code exposure",
+          "description": "Copilot will analyze all code in reviewed PRs. Ensure your organization's data handling policies permit AI analysis of the codebase."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Enabling Copilot as automatic PR reviewer",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "Navigate to: Organization Settings \u2192 Copilot \u2192 Policies \u2192 Pull Request Reviews \u2192 Enable 'Automatically request Copilot review on pull requests'"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1704,7 +1817,17 @@
         "docs": null
       },
       "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "confidenceScore": 50,
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Copilot reviews may flag security vulnerabilities like SQL injection or hardcoded secrets",
+          "Review comments are visible to all PR participants, becoming part of the audit trail",
+          "Does not replace dedicated SAST/DAST tooling"
+        ],
+        "complianceNotes": "Organizations subject to SOC 2 or ISO 27001 should document that AI-assisted reviews supplement, not replace, mandatory human security reviews."
+      },
+      "proTip": "Combine auto-review-assign with branch protection rules that still require at least one human approval \u2014 Copilot catches style and bug issues early so human reviewers can focus on architecture and business logic."
     },
     {
       "id": "pr-summaries",
@@ -1747,7 +1870,7 @@
         {
           "code": "4040",
           "title": "Blank Description Best",
-          "description": "Copilot ignores existing PR description text when generating summaries — start with a blank description for best results."
+          "description": "Copilot ignores existing PR description text when generating summaries \u2014 start with a blank description for best results."
         },
         {
           "code": "4041",
@@ -1757,7 +1880,7 @@
         {
           "code": "4042",
           "title": "GitHub.com Only",
-          "description": "PR summaries are only available on GitHub.com — no IDE or CLI integration exists for this feature."
+          "description": "PR summaries are only available on GitHub.com \u2014 no IDE or CLI integration exists for this feature."
         }
       ],
       "mermaidDiagrams": [],
@@ -1780,13 +1903,13 @@
       },
       "lastVerified": "2026-04-09",
       "confidenceScore": 95,
-      "proTip": "Start with a blank PR description before generating a summary — Copilot does not account for existing content, so pre-existing text may lead to redundant or conflicting descriptions.",
+      "proTip": "Start with a blank PR description before generating a summary \u2014 Copilot does not account for existing content, so pre-existing text may lead to redundant or conflicting descriptions.",
       "securityRelevance": {
         "relevant": false,
         "aspects": [
           "PR summaries describe code changes but do not perform security analysis"
         ],
-        "complianceNotes": "Available with Copilot subscription plans. Descriptive only — does not evaluate code security."
+        "complianceNotes": "Available with Copilot subscription plans. Descriptive only \u2014 does not evaluate code security."
       }
     },
     {
@@ -1824,9 +1947,38 @@
         "Diagnostic-based repairs",
         "Quick fix generation"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7600",
+          "title": "Fixes are suggestions, not guarantees",
+          "description": "Copilot proposes a fix based on the visible code and error description. It may not account for runtime state, external dependencies, or side effects in other files."
+        },
+        {
+          "code": "7700",
+          "title": "Vague prompts produce vague fixes",
+          "description": "Typing just '/fix' without selecting code or describing the error often yields generic refactoring rather than a targeted fix. Always select the problematic code and describe the symptom."
+        },
+        {
+          "code": "7500",
+          "title": "Fix may mask deeper issues",
+          "description": "A suggested fix might suppress an error (e.g., adding a null check) without addressing the root cause, potentially hiding security-relevant bugs."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Fix a null reference error",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "/fix Why is this throwing a null reference exception?"
+        },
+        {
+          "title": "Fix with selected code context",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "/fix The loop index is off by one and causes an ArrayIndexOutOfBoundsException"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1837,7 +1989,17 @@
         "docs": null
       },
       "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "confidenceScore": 50,
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Fixes may introduce unsafe patterns such as broad exception swallowing",
+          "A fix that silences a security warning without resolving the vulnerability creates false safety",
+          "Always review suggested fixes against secure coding guidelines"
+        ],
+        "complianceNotes": "Treat AI-suggested fixes with the same review rigor as human-authored code. Audit logs should reflect that the change was AI-assisted."
+      },
+      "proTip": "Select the exact lines containing the bug before invoking /fix and include the error message verbatim \u2014 Copilot performs dramatically better with precise context than with an entire file and a vague complaint."
     },
     {
       "id": "slash-doc",
@@ -1875,9 +2037,38 @@
         "Return type documentation",
         "Language-aware formatting"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7600",
+          "title": "Only available in Visual Studio and Xcode",
+          "description": "The /doc slash command is NOT available in VS Code or JetBrains IDEs. In those editors, use inline chat with a prompt like 'Add documentation comments to this function' instead."
+        },
+        {
+          "code": "7700",
+          "title": "Generated docs may be inaccurate",
+          "description": "Copilot infers parameter purposes and return values from code patterns. Complex business logic or non-obvious side effects may be described incorrectly."
+        },
+        {
+          "code": "7600",
+          "title": "Does not update existing docs",
+          "description": "If documentation already exists, /doc may duplicate or conflict with it rather than intelligently merging. Remove existing doc comments before regenerating."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Generate XML documentation for a C# method",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "/doc Generate documentation for the selected method including parameter descriptions and return value"
+        },
+        {
+          "title": "Document a Swift class in Xcode",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "/doc Add documentation comments to this class explaining its purpose and public API"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1888,7 +2079,16 @@
         "docs": null
       },
       "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "confidenceScore": 50,
+      "securityRelevance": {
+        "relevant": false,
+        "aspects": [
+          "Documentation generation is read-only analysis",
+          "Generated docs could inadvertently describe internal security mechanisms in detail"
+        ],
+        "complianceNotes": "Review generated documentation to ensure it does not expose sensitive implementation details such as encryption algorithms or authentication flows."
+      },
+      "proTip": "In VS Code or JetBrains where /doc is unavailable, select your function and use inline chat with 'Write a JSDoc/docstring for this function' \u2014 you get the same result, just without the shortcut."
     },
     {
       "id": "slash-tests",
@@ -1926,9 +2126,38 @@
         "Edge case coverage",
         "Mock and stub generation"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7700",
+          "title": "Framework mismatch",
+          "description": "Copilot may generate tests using a different testing framework than your project uses (e.g., Jest instead of Vitest). Always specify your framework in the prompt."
+        },
+        {
+          "code": "7600",
+          "title": "Assertions may be superficial",
+          "description": "Generated tests often verify that a function returns 'something' rather than testing specific business rules. Treat generated tests as a skeleton that needs assertion hardening."
+        },
+        {
+          "code": "7700",
+          "title": "Missing dependency mocks",
+          "description": "Tests for code with external dependencies may fail immediately because Copilot did not generate the necessary mocks or test fixtures."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Generate unit tests for a selected function",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "/tests Generate unit tests for the selected function covering edge cases and error handling"
+        },
+        {
+          "title": "Specify a testing framework",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "/tests Write tests using Jest with describe/it blocks and include mocks for the database dependency"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1939,7 +2168,17 @@
         "docs": null
       },
       "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "confidenceScore": 50,
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Generated tests rarely include security-specific test cases",
+          "Test data may include hardcoded credentials or realistic PII",
+          "Passing AI-generated tests can create false coverage confidence"
+        ],
+        "complianceNotes": "Review AI-generated tests to ensure they do not contain hardcoded secrets or realistic personal data that would violate data protection policies."
+      },
+      "proTip": "After generating tests with /tests, immediately run them \u2014 roughly half will need adjustment. Fix failures first, then add edge cases Copilot missed, especially around null inputs, boundary values, and authorization checks."
     },
     {
       "id": "slash-new",
@@ -1977,9 +2216,38 @@
         "Component boilerplate",
         "Multi-file creation"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7700",
+          "title": "Outdated dependencies",
+          "description": "Scaffolded projects may reference outdated package versions or deprecated APIs. Always run 'npm audit' or equivalent and update dependencies."
+        },
+        {
+          "code": "7600",
+          "title": "No workspace context",
+          "description": "/new creates files based on the prompt alone and does not consider your existing project structure, linting rules, or conventions."
+        },
+        {
+          "code": "7500",
+          "title": "Insecure defaults possible",
+          "description": "Scaffolded projects may include permissive CORS settings, disabled CSRF protection, or debug mode enabled by default."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Scaffold a new Express API project",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "/new Create a Node.js Express API with TypeScript, a health check endpoint, and Jest configured for testing"
+        },
+        {
+          "title": "Scaffold a React component",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "/new Create a React component for a sortable data table with pagination using TypeScript and CSS modules"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1990,7 +2258,17 @@
         "docs": null
       },
       "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "confidenceScore": 50,
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Scaffolded projects may include overly permissive configurations (CORS '*', debug mode)",
+          "Generated package files may pin vulnerable dependency versions",
+          "Boilerplate auth code may use insecure defaults"
+        ],
+        "complianceNotes": "Treat scaffolded code as untrusted. Run dependency vulnerability scanning and configuration review before promoting beyond local dev."
+      },
+      "proTip": "Use /new to generate the boilerplate, then immediately compare against your team's project template \u2014 it's far faster to adjust a scaffold than to write one from scratch, but never ship it unreviewed."
     },
     {
       "id": "slash-search",
@@ -2028,9 +2306,38 @@
         "Up-to-date API information",
         "Bing-powered search results"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7600",
+          "title": "Workspace indexing required",
+          "description": "Semantic search quality depends on workspace indexing. In large or newly opened workspaces, results may be incomplete until indexing finishes."
+        },
+        {
+          "code": "7600",
+          "title": "Not a replacement for exact search",
+          "description": "/search uses semantic understanding but may miss exact string matches. Use both /search and Ctrl+Shift+F for thorough results."
+        },
+        {
+          "code": "7700",
+          "title": "Results may include false positives",
+          "description": "Semantic search can surface code that is conceptually similar but functionally unrelated."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Find authentication-related code",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "/search Where is the user authentication logic that validates JWT tokens?"
+        },
+        {
+          "title": "Locate error handling patterns",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "/search Find all places where database connection errors are caught and retried"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2041,7 +2348,16 @@
         "docs": null
       },
       "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "confidenceScore": 50,
+      "securityRelevance": {
+        "relevant": false,
+        "aspects": [
+          "Search is a read-only operation",
+          "Useful for security audits \u2014 quickly locate all instances of crypto usage or input validation across a codebase"
+        ],
+        "complianceNotes": "Leverage /search during security reviews to locate patterns like raw SQL queries, hardcoded credentials, or disabled security checks."
+      },
+      "proTip": "Phrase your /search queries in terms of what the code does, not what it is named \u2014 'where do we check if a user has admin privileges' finds more results than 'isAdmin function' because semantic search understands intent."
     },
     {
       "id": "feature-policies",
@@ -2075,14 +2391,33 @@
         "atc"
       ],
       "capabilities": [
-        "Feature toggle management",
-        "Organization-wide policies",
-        "Granular feature control",
-        "Agent Mode governance"
+        "Enable or disable Copilot features per organization",
+        "Control third-party coding agent access (Claude, Codex)",
+        "Enterprise-level policy enforcement with org override prevention",
+        "Manage MCP server availability for Copilot",
+        "Toggle preview features and user feedback collection"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7001",
+          "title": "Enterprise Override Lock",
+          "description": "If your enterprise has set explicit policies, organization admins cannot override them. Check enterprise settings first when a policy toggle appears greyed out."
+        },
+        {
+          "code": "7002",
+          "title": "Third-Party Agent Control",
+          "description": "Enabling third-party coding agents (Claude, Codex) requires explicit org policy opt-in. These are disabled by default on Business and Enterprise plans."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Policy Configuration via REST API",
+          "language": "bash",
+          "context": "terminal",
+          "code": "# Get current Copilot policies for an organization\ncurl -L \\\n  -H \"Accept: application/vnd.github+json\" \\\n  -H \"Authorization: Bearer $GITHUB_TOKEN\" \\\n  https://api.github.com/orgs/ORG/copilot/billing"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2091,10 +2426,24 @@
         "audit-logs"
       ],
       "links": {
-        "docs": null
+        "docs": "https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-policies-for-copilot-in-your-organization",
+        "changelog": "https://github.blog/changelog/label/copilot/",
+        "learn": null,
+        "video": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 88,
+      "description": "Organization and enterprise-level policy controls that govern which Copilot features are available to members. Admins configure policies via Settings > Copilot > Policies, with enterprise settings taking precedence over org-level overrides.",
+      "proTip": "Enterprise policies override org policies \u2014 if a feature is disabled at the enterprise level, org admins cannot re-enable it. Start with restrictive enterprise defaults and selectively open features per org.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Controls which AI features are accessible to developers",
+          "Prevents unauthorized agent or MCP server usage",
+          "Enterprise-level governance enforcement"
+        ],
+        "complianceNotes": "Use enterprise policies to enforce consistent AI governance across all organizations. Disable preview features in regulated environments."
+      }
     },
     {
       "id": "content-exclusion",
@@ -2114,12 +2463,12 @@
         "enterprise": true
       },
       "ideSupport": {
-        "vscode": null,
-        "jetbrains": null,
-        "neovim": null,
-        "visual-studio": null,
-        "eclipse": null,
-        "xcode": null,
+        "vscode": "ga",
+        "jetbrains": "ga",
+        "neovim": "ga",
+        "visual-studio": "ga",
+        "eclipse": "ga",
+        "xcode": "ga",
         "github-com": "ga",
         "cli": null
       },
@@ -2127,14 +2476,38 @@
         "atc"
       ],
       "capabilities": [
-        "File-level exclusion rules",
-        "Repository-level exclusion",
-        "Pattern-based filtering",
-        "Organization-wide enforcement"
+        "File and directory exclusion via fnmatch glob patterns",
+        "Repository, organization, and enterprise-level configuration",
+        "Wildcard patterns for broad exclusion (e.g., '**/.env')",
+        "Propagation to IDEs within 30 minutes or on reload",
+        "Organization-wide rules across all repositories with '*' target"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7003",
+          "title": "Agent Mode Bypass",
+          "description": "Content exclusions are NOT enforced in Copilot CLI, cloud agent, or Agent Mode in IDEs. Sensitive files may still be read by agentic features."
+        },
+        {
+          "code": "7004",
+          "title": "Propagation Delay",
+          "description": "Exclusion rules take up to 30 minutes to reach IDEs. Reload your editor or restart to force immediate pickup. Vim/Neovim refetches on each file open."
+        },
+        {
+          "code": "7005",
+          "title": "Fnmatch Pattern Scope",
+          "description": "Patterns use fnmatch notation with case-insensitive matching. The '#' character starts a comment line \u2014 use quotes if your path contains '#'."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Organization Content Exclusion Config",
+          "language": "yaml",
+          "context": "config-file",
+          "code": "# Organization Settings > Copilot > Content exclusion\n# Exclude secrets across ALL repos:\n\"*\":\n  - \"**/.env\"\n  - \"**/secrets.json\"\n  - \"**/*.pem\"\n\n# Exclude entire internal repo:\nmy-org/internal-configs:\n  - \"**\"\n\n# Exclude specific paths in a repo:\nmy-org/api-server:\n  - \"/config/production/**\"\n  - \"/scripts/deploy*\""
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2142,10 +2515,24 @@
         "workspace-participant"
       ],
       "links": {
-        "docs": null
+        "docs": "https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/configuring-content-exclusions-for-github-copilot",
+        "changelog": "https://github.blog/changelog/label/copilot/",
+        "learn": null,
+        "video": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 90,
+      "description": "Exclude specific files, directories, and repositories from being used as Copilot context. Configured at repository, organization, or enterprise level using fnmatch glob patterns. Excluded content receives no inline suggestions and is invisible to Copilot Chat.",
+      "proTip": "Use the wildcard repository target '*' at the org level to exclude sensitive file patterns (like .env and *.pem) across every repository. Changes take up to 30 minutes to propagate \u2014 restart your IDE to force an immediate update.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Prevents sensitive files from leaking into AI context",
+          "Enforces data boundaries for compliance",
+          "Does NOT cover agentic features (CLI, cloud agent, Agent Mode)"
+        ],
+        "complianceNotes": "Critical for regulated environments. Exclude credentials, PII-containing configs, and proprietary algorithms. Note the agent mode gap \u2014 pair with feature policies to disable agent features if full exclusion is required."
+      }
     },
     {
       "id": "ip-indemnity",
@@ -2165,26 +2552,51 @@
         "enterprise": true
       },
       "ideSupport": {
-        "vscode": null,
-        "jetbrains": null,
-        "neovim": null,
-        "visual-studio": null,
-        "eclipse": null,
-        "xcode": null,
-        "github-com": null,
-        "cli": null
+        "vscode": "ga",
+        "jetbrains": "ga",
+        "neovim": "ga",
+        "visual-studio": "ga",
+        "eclipse": "ga",
+        "xcode": "ga",
+        "github-com": "ga",
+        "cli": "ga"
       },
       "flightMode": [
         "atc"
       ],
       "capabilities": [
-        "Code origin filtering",
-        "Duplicate detection",
-        "License compliance support"
+        "Legal defense against third-party IP infringement claims",
+        "Duplicate detection filter to block public code matches",
+        "Code referencing to surface original source and license info",
+        "Coverage for unmodified Copilot suggestions only",
+        "Liability cap removal for volume licensing customers (Aug 2025)"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7006",
+          "title": "Filter Required for Coverage",
+          "description": "IP indemnity only applies when the duplicate detection filter is set to 'Block'. Without it, indemnification does not cover generated suggestions."
+        },
+        {
+          "code": "7007",
+          "title": "Unmodified Output Only",
+          "description": "Indemnity covers Copilot's suggestions as-is. If a developer substantially modifies the suggestion before using it, the indemnity protection may not apply."
+        },
+        {
+          "code": "7008",
+          "title": "Plan Restriction",
+          "description": "Only Business and Enterprise plans include IP indemnity. Free, Pro, and Pro+ users have no indemnification coverage regardless of filter settings."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Enable Duplicate Detection Filter",
+          "language": "bash",
+          "context": "terminal",
+          "code": "# Via REST API: set the code referencing / duplicate detection policy\ncurl -L -X PATCH \\\n  -H \"Accept: application/vnd.github+json\" \\\n  -H \"Authorization: Bearer $GITHUB_TOKEN\" \\\n  https://api.github.com/orgs/ORG/copilot/billing \\\n  -d '{\"public_code_suggestions\":\"block\"}'"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2192,10 +2604,24 @@
         "content-exclusion"
       ],
       "links": {
-        "docs": null
+        "docs": "https://resources.github.com/copilot-trust-center/",
+        "changelog": "https://github.blog/changelog/2025-08-08-defense-of-third-party-claims-added-for-volume-licensing-customers/",
+        "learn": "https://docs.github.com/en/copilot/concepts/completions/code-referencing",
+        "video": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 85,
+      "description": "Intellectual property indemnification that protects Business and Enterprise customers against third-party copyright claims for Copilot's unmodified output. Requires the duplicate detection filter to be enabled. GitHub/Microsoft will defend covered customers in court.",
+      "proTip": "IP indemnity only applies when the duplicate detection filter is set to 'Block'. Enable it in org policies under Copilot > Policies > Suggestions matching public code. Individual and Pro plans do NOT include indemnity coverage.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Legal protection against copyright infringement claims",
+          "Duplicate detection blocks suggestions matching public code",
+          "Code referencing surfaces license and attribution info"
+        ],
+        "complianceNotes": "Essential for enterprises in regulated industries. Enable the duplicate detection filter to qualify for indemnity. Review code referencing logs to track public code matches accepted by developers."
+      }
     },
     {
       "id": "audit-logs",
@@ -2222,20 +2648,44 @@
         "eclipse": null,
         "xcode": null,
         "github-com": "ga",
-        "cli": null
+        "cli": "ga"
       },
       "flightMode": [
         "atc"
       ],
       "capabilities": [
-        "Usage event tracking",
-        "API access logging",
-        "Compliance reporting",
-        "SIEM integration"
+        "Track Copilot plan, policy, and license change events",
+        "Monitor cloud agent activity on GitHub.com",
+        "Filter by action:copilot or actor:Copilot for targeted queries",
+        "Stream to SIEM platforms for retention beyond 180 days",
+        "Search specific events like seat assignments (cfb_seat_assignment_created)"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7009",
+          "title": "No Local Session Data",
+          "description": "Audit logs do not include prompts, completions, or chat messages sent locally from IDEs. Only server-side admin and agent events are recorded."
+        },
+        {
+          "code": "7010",
+          "title": "180-Day Retention Limit",
+          "description": "Audit log events are retained for 180 days only. Stream logs to a SIEM platform (Splunk, Sentinel, etc.) for long-term compliance retention."
+        },
+        {
+          "code": "7011",
+          "title": "Enterprise-Level Only",
+          "description": "Full audit log access requires an Enterprise plan. Organization-level Business plans have limited audit visibility compared to enterprise-wide logging."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Query Copilot Audit Events via API",
+          "language": "bash",
+          "context": "terminal",
+          "code": "# Search enterprise audit log for all Copilot events\ncurl -L \\\n  -H \"Accept: application/vnd.github+json\" \\\n  -H \"Authorization: Bearer $GITHUB_TOKEN\" \\\n  \"https://api.github.com/enterprises/ENTERPRISE/audit-log?phrase=action:copilot&per_page=50\""
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2243,10 +2693,24 @@
         "feature-policies"
       ],
       "links": {
-        "docs": null
+        "docs": "https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-audit-logs-for-copilot-business",
+        "changelog": "https://github.blog/changelog/label/copilot/",
+        "learn": null,
+        "video": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 88,
+      "description": "Enterprise audit logging for Copilot that records plan changes, policy modifications, license assignments, and agent activity. Logs are retained for 180 days and can be streamed to a SIEM for long-term retention. Does not capture local prompts or session content.",
+      "proTip": "Audit logs do NOT capture local IDE prompts or suggestions \u2014 only admin actions and agent activity on GitHub.com. For local telemetry, configure custom hooks to send Copilot CLI events to your own logging service.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Tracks administrative changes to Copilot configuration",
+          "Monitors agent actions on GitHub.com",
+          "Supports compliance auditing and incident investigation"
+        ],
+        "complianceNotes": "Stream audit logs to a SIEM for SOC 2 and ISO 27001 evidence collection. Combine with usage metrics for comprehensive Copilot oversight. Local prompt data requires separate tooling."
+      }
     },
     {
       "id": "usage-metrics",
@@ -2369,14 +2833,33 @@
         "atc"
       ],
       "capabilities": [
-        "License assignment",
-        "Team-based provisioning",
-        "Auto-assignment rules",
-        "Seat utilization reporting"
+        "Grant access to all current and future org members or selected users/teams",
+        "Bulk seat assignment via CSV upload with usernames or emails",
+        "REST API endpoints to add users and teams to Copilot subscriptions",
+        "Access request approval and denial workflows",
+        "Self-serve licensing model for developer-initiated seat claims"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7052",
+          "title": "Immediate Billing",
+          "description": "Billing starts immediately when a seat is granted, prorated for mid-cycle assignments. Accidental bulk grants can cause unexpected charges."
+        },
+        {
+          "code": "7053",
+          "title": "Outside Collaborator Access",
+          "description": "Outside collaborators receive Copilot access without requiring an org membership invitation, which may bypass expected onboarding flows."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Add a Team to Copilot via API",
+          "language": "bash",
+          "context": "terminal",
+          "code": "# Add an entire team to the Copilot subscription\ncurl -X POST \\\n  -H \"Authorization: Bearer $GITHUB_TOKEN\" \\\n  -H \"Accept: application/vnd.github+json\" \\\n  \"https://api.github.com/orgs/YOUR_ORG/copilot/billing/selected_teams\" \\\n  -d '{\"selected_teams\": [\"engineering\", \"platform\"]}'"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2385,10 +2868,30 @@
         "copilot-plans"
       ],
       "links": {
-        "docs": null
+        "docs": "https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-access-to-github-copilot-in-your-organization",
+        "changelog": "https://github.blog/changelog/label/copilot/",
+        "learn": null,
+        "video": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 85,
+      "statusHistory": [
+        {
+          "status": "ga",
+          "date": "2023-03"
+        }
+      ],
+      "description": "Centralized license management for Copilot Business and Enterprise. Organization owners can grant access to all members or selectively assign seats to specific users and teams. Supports bulk CSV upload, REST API seat assignment, access request approval workflows, and self-serve licensing models.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Controls which users can access AI code generation",
+          "Org owner permissions required for seat changes",
+          "API-based seat management needs scoped tokens"
+        ],
+        "complianceNotes": "Restrict seat assignment to approved teams for compliance. Use access request workflows to maintain approval trails."
+      },
+      "proTip": "Use team-based assignment rather than individual seats. When a developer joins a Copilot-enabled team, they automatically get access \u2014 no manual seat management needed."
     },
     {
       "id": "data-residency",
@@ -2398,7 +2901,7 @@
       "perspectives": [
         "security"
       ],
-      "status": "preview",
+      "status": "ga",
       "shortDescription": "Control where Copilot data is processed and stored geographically",
       "planAvailability": {
         "free": false,
@@ -2414,31 +2917,82 @@
         "visual-studio": null,
         "eclipse": null,
         "xcode": null,
-        "github-com": null,
+        "github-com": "ga",
         "cli": null
       },
       "flightMode": [
         "atc"
       ],
       "capabilities": [
-        "Geographic data processing control",
-        "Regional compliance",
-        "Data sovereignty support"
+        "Enterprise data stored within the EU region (including EFTA, Norway, Switzerland)",
+        "Copilot available on GHE.com with data residency enabled",
+        "Geographic control over code and user data storage location",
+        "GDPR and EU data sovereignty alignment",
+        "Some Copilot telemetry and logs may still be processed outside the region"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7055",
+          "title": "Telemetry Outside Region",
+          "description": "Copilot telemetry data and logs may be stored and processed outside your chosen data residency region. Contact your account manager for specifics."
+        },
+        {
+          "code": "7056",
+          "title": "Feature Parity Gaps",
+          "description": "Some Copilot features (e.g., GitHub Spark) are currently unavailable on GHE.com with data residency. Check the feature overview before adopting."
+        },
+        {
+          "code": "7057",
+          "title": "GHE.com Required",
+          "description": "Data residency requires GitHub Enterprise Cloud on GHE.com \u2014 not available on standard github.com Enterprise Cloud plans."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Check Enterprise Data Residency Status",
+          "language": "bash",
+          "context": "terminal",
+          "code": "# Verify your enterprise's data residency configuration\ngh api \\\n  -H \"Accept: application/vnd.github+json\" \\\n  /enterprises/YOUR_ENTERPRISE \\\n  | jq '{slug: .slug, data_residency: .data_residency_region}'"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
         "feature-policies",
-        "content-exclusion"
+        "content-exclusion",
+        "seat-management"
       ],
       "links": {
-        "docs": null
+        "docs": "https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/about-storage-of-your-data-with-data-residency",
+        "changelog": "https://github.blog/changelog/label/copilot/",
+        "learn": "https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/feature-overview-for-github-enterprise-cloud-with-data-residency",
+        "video": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 80,
+      "statusHistory": [
+        {
+          "status": "preview",
+          "date": "2024-10"
+        },
+        {
+          "status": "ga",
+          "date": "2025-05"
+        }
+      ],
+      "description": "EU data residency for GitHub Enterprise Cloud ensures enterprise data is stored within the European Union. Copilot is available on GHE.com with data residency, though Copilot telemetry and logs may be processed outside the chosen region. Requires GitHub Enterprise Cloud with data residency (GHE.com).",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Ensures code and user data remain in EU jurisdiction",
+          "Copilot logs may still transit outside region",
+          "Supports GDPR and data sovereignty requirements",
+          "Requires enterprise-level deployment on GHE.com"
+        ],
+        "complianceNotes": "Addresses EU data protection regulations. Some data transfers outside region may still occur for Copilot telemetry \u2014 review with your DPO and GitHub account manager."
+      },
+      "proTip": "If you are in doubt about any aspect of data residency, contact your GitHub account manager. The feature overview page lists exactly which Copilot capabilities are available, limited, or unavailable on GHE.com."
     },
     {
       "id": "copilot-plans",
@@ -2471,14 +3025,33 @@
         "atc"
       ],
       "capabilities": [
-        "Plan selection and upgrade",
-        "Billing management",
-        "Premium model quota tracking",
-        "Usage limit configuration"
+        "Six subscription tiers: Free, Student, Pro, Pro+, Business, Enterprise",
+        "Premium request quotas ranging from 50/mo (Free) to 1500/mo (Pro+)",
+        "Tiered model access \u2014 Free gets Claude Haiku 4.5 only, higher tiers unlock Claude Opus/Sonnet and Gemini",
+        "Additional premium requests purchasable at $0.04 each on Pro tier",
+        "Enterprise supports flexible seat assignment to orgs, teams, or individuals"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7058",
+          "title": "Premium Request Limits",
+          "description": "Premium requests reset monthly. Once exhausted, users fall back to the base model until the next cycle. Monitor usage to avoid developer disruption."
+        },
+        {
+          "code": "7059",
+          "title": "No GHES Support",
+          "description": "Copilot is currently unavailable for GitHub Enterprise Server (GHES) installations. Only github.com and GHE.com are supported."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Compare Plan Quotas",
+          "language": "markdown",
+          "context": "reference",
+          "code": "| Plan       | Price          | Premium Requests | Cloud Agent | Code Review |\n|------------|----------------|------------------|-------------|-------------|\n| Free       | $0             | 50/mo            | No          | Limited     |\n| Student    | $0             | 300/mo           | Yes         | Yes         |\n| Pro        | $10/mo         | 300/mo           | Yes         | Yes         |\n| Pro+       | $39/mo         | 1,500/mo         | Yes         | Yes         |\n| Business   | $19/seat/mo    | 300/user/mo      | Yes         | Yes         |\n| Enterprise | $39/seat/mo    | 1,000/user/mo    | Yes         | Yes         |"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2486,10 +3059,26 @@
         "usage-metrics"
       ],
       "links": {
-        "docs": null
+        "docs": "https://docs.github.com/en/copilot/about-github-copilot/subscription-plans-for-github-copilot",
+        "changelog": "https://github.blog/changelog/label/copilot/",
+        "learn": null,
+        "video": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 90,
+      "statusHistory": [
+        {
+          "status": "ga",
+          "date": "2022-06"
+        }
+      ],
+      "description": "GitHub Copilot is available across six tiers: Free (50 premium requests/mo), Student (free, 300 requests/mo), Pro ($10/mo, 300 requests/mo), Pro+ ($39/mo, 1500 requests/mo), Business ($19/seat/mo, 300 requests/user/mo), and Enterprise ($39/seat/mo, 1000 requests/user/mo). Higher tiers unlock more AI models, Copilot cloud agent, code review, and centralized management.",
+      "securityRelevance": {
+        "relevant": false,
+        "aspects": [],
+        "complianceNotes": "Plan selection itself is not security-relevant, but Business and Enterprise tiers unlock org-level policy controls, content exclusion, and audit logging."
+      },
+      "proTip": "Business tier ($19/seat) includes 300 premium requests per user \u2014 the same as Pro ($10/individual). The extra cost covers centralized management, policy controls, and audit logs that enterprises need."
     },
     {
       "id": "copilot-extensions",
@@ -2522,8 +3111,8 @@
         "advanced"
       ],
       "capabilities": [
-        "Invoke third-party tools via @-mentions in Copilot Chat (e.g., @docker, @sentry) — NOW DEPRECATED",
-        "Replaced by Model Context Protocol (MCP) servers — an open standard for AI agent integration",
+        "Invoke third-party tools via @-mentions in Copilot Chat (e.g., @docker, @sentry) \u2014 NOW DEPRECATED",
+        "Replaced by Model Context Protocol (MCP) servers \u2014 an open standard for AI agent integration",
         "Former marketplace included Docker, Sentry, Perplexity, Stack Overflow, Mermaid Chart, Arm",
         "Custom extensions used Copilot skillsets (lightweight) or full agents via GitHub Apps",
         "OpenID Connect (OIDC) authentication for secure extension-to-user identity verification"
@@ -2548,10 +3137,10 @@
       "mermaidDiagrams": [],
       "codeExamples": [
         {
-          "title": "Extensions → MCP migration",
+          "title": "Extensions \u2192 MCP migration",
           "language": "markdown",
           "context": "migration-guide",
-          "code": "# Old Extensions approach (deprecated Nov 2025):\n@sentry what are the latest unresolved issues?\n\n# New MCP approach:\n# 1. Configure MCP server in IDE settings\n# 2. In Copilot Chat, select 'Agent' mode\n# 3. Ask naturally — Copilot invokes MCP tools"
+          "code": "# Old Extensions approach (deprecated Nov 2025):\n@sentry what are the latest unresolved issues?\n\n# New MCP approach:\n# 1. Configure MCP server in IDE settings\n# 2. In Copilot Chat, select 'Agent' mode\n# 3. Ask naturally \u2014 Copilot invokes MCP tools"
         }
       ],
       "terminalRecordings": [],
@@ -2566,7 +3155,7 @@
       },
       "lastVerified": "2026-04-09",
       "confidenceScore": 90,
-      "proTip": "Copilot Extensions (GitHub App-based) were sunset November 10, 2025. All integrations now use MCP servers, which are cross-platform — build an MCP server once and it works with any compatible AI agent, not just Copilot.",
+      "proTip": "Copilot Extensions (GitHub App-based) were sunset November 10, 2025. All integrations now use MCP servers, which are cross-platform \u2014 build an MCP server once and it works with any compatible AI agent, not just Copilot.",
       "securityRelevance": {
         "relevant": true,
         "aspects": [
@@ -2608,7 +3197,7 @@
         "beginner"
       ],
       "capabilities": [
-        "Build full-stack web apps from natural language descriptions — no coding knowledge required",
+        "Build full-stack web apps from natural language descriptions \u2014 no coding knowledge required",
         "Generates React + TypeScript apps with live interactive previews",
         "Built-in AI integration via GitHub Models (text summarization, image tagging) through simple prompts",
         "Automatic managed data storage (Azure Cosmos DB key-value store, up to 512 KB per entry)",
@@ -2647,7 +3236,7 @@
       },
       "lastVerified": "2026-04-09",
       "confidenceScore": 88,
-      "proTip": "Each Spark prompt consumes 4 Copilot premium requests. Advanced users can edit generated code directly or open it in Codespaces — but Spark always generates React + TypeScript, so plan accordingly.",
+      "proTip": "Each Spark prompt consumes 4 Copilot premium requests. Advanced users can edit generated code directly or open it in Codespaces \u2014 but Spark always generates React + TypeScript, so plan accordingly.",
       "securityRelevance": {
         "relevant": true,
         "aspects": [
@@ -2690,7 +3279,7 @@
       ],
       "capabilities": [
         "Connect API keys from 7+ providers: OpenAI, Anthropic, Microsoft Foundry, xAI, AWS Bedrock, Google AI Studio, and OpenAI-compatible endpoints",
-        "Usage billed directly by chosen provider — does not count against GitHub Copilot premium request quotas",
+        "Usage billed directly by chosen provider \u2014 does not count against GitHub Copilot premium request quotas",
         "Works in Agent, Plan, Ask, and Edit modes within supported IDEs",
         "Admin controls: enterprise/org-level key management, per-org model access, configurable max context window",
         "Responses API support for structured outputs and multimodal interactions"
@@ -2732,11 +3321,11 @@
       },
       "lastVerified": "2026-04-09",
       "confidenceScore": 92,
-      "proTip": "BYOK uses static credentials only — no Entra ID, managed identities, or OIDC/SAML. For long-running workloads needing Entra auth, implement custom token refresh logic. Admins can set a max context window per BYOK model to balance cost vs. quality.",
+      "proTip": "BYOK uses static credentials only \u2014 no Entra ID, managed identities, or OIDC/SAML. For long-running workloads needing Entra auth, implement custom token refresh logic. Admins can set a max context window per BYOK model to balance cost vs. quality.",
       "securityRelevance": {
         "relevant": true,
         "aspects": [
-          "Static credential management — API keys must be securely stored and rotated",
+          "Static credential management \u2014 API keys must be securely stored and rotated",
           "Enterprise admin controls over which orgs can access connected models",
           "Provider-side rate limiting and usage tracking",
           "API keys configured at enterprise/org level, not individual user level"
@@ -2780,9 +3369,49 @@
         "PR and issue assistance",
         "General programming Q&A"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7600",
+          "title": "No inline completions",
+          "description": "GitHub Mobile Copilot is chat-only. It does not provide inline code completions, ghost text, or tab-to-accept suggestions."
+        },
+        {
+          "code": "7600",
+          "title": "No agent mode or tool use",
+          "description": "Mobile Copilot cannot run terminal commands, edit files, or use agent mode workflows. It is limited to conversational Q&A."
+        },
+        {
+          "code": "7600",
+          "title": "Reduced context window",
+          "description": "Mobile chat sessions may carry less context than IDE-based Copilot Chat. Very large repos or long conversations can lose earlier context."
+        },
+        {
+          "code": "7700",
+          "title": "Repo not indexed",
+          "description": "If you ask about a specific repository but have not attached it, Copilot may give generic answers. Always attach the repo context explicitly."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Ask Copilot about a repository on mobile",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "How does the authentication middleware work in this repo?"
+        },
+        {
+          "title": "Triage an issue from your phone",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "Summarize issue #42 and suggest which files I should look at to fix it."
+        },
+        {
+          "title": "Review a pull request on the go",
+          "language": "markdown",
+          "context": "chat-prompt",
+          "code": "What are the key changes in PR #128 and are there any obvious concerns?"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2792,7 +3421,17 @@
         "docs": null
       },
       "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "confidenceScore": 50,
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Conversations may include sensitive code context sent over mobile networks",
+          "Device lock screen and notifications could expose code snippets",
+          "Shared or lost devices could expose Copilot chat history"
+        ],
+        "complianceNotes": "Ensure mobile device management (MDM) policies are in place if developers use Copilot on mobile with access to private repositories."
+      },
+      "proTip": "Attach a specific repo to your mobile Copilot conversation before asking questions \u2014 tap the repo reference button rather than just naming the repo in your prompt. This gives Copilot actual code search access instead of relying on training data."
     },
     {
       "id": "copilot-cli",
@@ -2875,7 +3514,7 @@
         "aspects": [
           "Tool approval system for file-modifying operations",
           "Directory trust boundaries with explicit user confirmation",
-          "--yolo flag bypasses all permission checks — use only in trusted environments",
+          "--yolo flag bypasses all permission checks \u2014 use only in trusted environments",
           "Custom MCP server access controlled via allowed_urls/denied_urls in config"
         ],
         "complianceNotes": "Copilot CLI has a granular permission model. Organizations should establish policies around --yolo/--allow-all usage."
@@ -2922,7 +3561,7 @@
         {
           "code": "8001",
           "title": "File Not Found",
-          "description": "Instructions must be at exactly .github/copilot-instructions.md — other paths or filenames are ignored."
+          "description": "Instructions must be at exactly .github/copilot-instructions.md \u2014 other paths or filenames are ignored."
         },
         {
           "code": "8002",
@@ -2960,7 +3599,7 @@
       "securityRelevance": {
         "relevant": true,
         "aspects": [
-          "Instructions are automatically loaded — anyone with write access can influence Copilot behavior for all contributors",
+          "Instructions are automatically loaded \u2014 anyone with write access can influence Copilot behavior for all contributors",
           "Code review uses base branch version, preventing PR-based instruction injection",
           "Can enforce security practices across all Copilot interactions"
         ],
@@ -3002,9 +3641,43 @@
         "Cross-repo instruction persistence",
         "Style and convention settings"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7700",
+          "title": "Instructions silently ignored",
+          "description": "If the instructions file is too long or contains conflicting directives, Copilot may partially or fully ignore them without warning. Keep instructions concise."
+        },
+        {
+          "code": "7700",
+          "title": "Wrong file path",
+          "description": "The exact path must be `.github/copilot-instructions.md`. Variations like underscore separators or .txt extension will not work."
+        },
+        {
+          "code": "7600",
+          "title": "No conditional logic",
+          "description": "Instructions are plain text \u2014 you cannot use conditionals like 'if file is in /tests, use pytest style'. Copilot applies all instructions uniformly."
+        },
+        {
+          "code": "7500",
+          "title": "Instruction injection risk",
+          "description": "If the instructions file is contributed by an untrusted source, it could steer Copilot to generate insecure patterns. Review changes to this file carefully."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Repository-level custom instructions",
+          "language": "markdown",
+          "context": "file-content",
+          "code": "# Copilot Instructions\n\nThis is a TypeScript monorepo using pnpm workspaces.\n\n## Code style\n- Use `type` over `interface` unless extending is needed.\n- Prefer named exports over default exports.\n- Use `async/await` instead of `.then()` chains.\n- All functions must have explicit return types.\n\n## Architecture\n- Data access logic lives in `packages/db/`.\n- Never import directly from `packages/db` in UI components \u2014 use the hooks in `packages/hooks/`.\n\n## Testing\n- Write tests using Vitest, not Jest.\n- Co-locate test files next to source as `*.test.ts`."
+        },
+        {
+          "title": "Personal-level instructions via VS Code settings",
+          "language": "json",
+          "context": "file-content",
+          "code": "{\n  \"github.copilot.chat.codeGeneration.instructions\": [\n    { \"text\": \"Always add JSDoc comments to exported functions.\" },\n    { \"text\": \"Use early returns to reduce nesting.\" },\n    { \"file\": \".github/copilot-instructions.md\" }\n  ]\n}"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -3015,7 +3688,17 @@
         "docs": null
       },
       "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "confidenceScore": 50,
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Malicious instructions could direct Copilot to generate vulnerable code",
+          "Instructions are sent as context, so secrets in the file will be transmitted",
+          "Personal instructions may override repo-level security guidelines"
+        ],
+        "complianceNotes": "Add `.github/copilot-instructions.md` to your PR review checklist. Use CODEOWNERS to require security team approval for changes. Never put API keys or tokens in instruction files."
+      },
+      "proTip": "Layer your instructions: put universal personal preferences (language, style) in VS Code settings, and project-specific architecture rules in the repo-level file. Copilot merges both, so you avoid repeating yourself across repos."
     },
     {
       "id": "prompt-files",
@@ -3058,7 +3741,7 @@
         {
           "code": "8020",
           "title": "Directory Required",
-          "description": "Prompt files must be in .github/prompts/ directory — files elsewhere are not discovered."
+          "description": "Prompt files must be in .github/prompts/ directory \u2014 files elsewhere are not discovered."
         },
         {
           "code": "8021",
@@ -3087,12 +3770,12 @@
       },
       "lastVerified": "2026-04-09",
       "confidenceScore": 90,
-      "proTip": "Unlike copilot-instructions.md which applies automatically, prompt files are invoked on-demand with /prompt-name. Ideal for task-specific workflows — code reviews, test generation, migration patterns — that you want to standardize across a team.",
+      "proTip": "Unlike copilot-instructions.md which applies automatically, prompt files are invoked on-demand with /prompt-name. Ideal for task-specific workflows \u2014 code reviews, test generation, migration patterns \u2014 that you want to standardize across a team.",
       "securityRelevance": {
         "relevant": true,
         "aspects": [
           "Can encode security review checklists as reusable workflows",
-          "Shared via repository — anyone with write access can modify prompt templates"
+          "Shared via repository \u2014 anyone with write access can modify prompt templates"
         ],
         "complianceNotes": "Useful for standardizing security practices as reusable team workflows committed to version control."
       }
@@ -3133,9 +3816,49 @@
         "Tool access configuration",
         "Team-shareable agent personas"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7700",
+          "title": "Wrong file location or naming",
+          "description": "Agent files must be placed in `.github/agents/` with the `.agent.md` extension. Files named `.yml` or placed elsewhere will not be discovered by Copilot."
+        },
+        {
+          "code": "7700",
+          "title": "Invalid YAML frontmatter",
+          "description": "The YAML block between `---` delimiters must be valid YAML. A missing colon, bad indentation, or unquoted special character will cause the agent to fail to load silently."
+        },
+        {
+          "code": "7600",
+          "title": "Tool availability varies by IDE",
+          "description": "Not all tools listed in frontmatter are available in every environment. For example, `terminal` may not be available in github.com web chat."
+        },
+        {
+          "code": "7500",
+          "title": "Overprivileged agent tools",
+          "description": "An agent with `terminal` access can execute arbitrary commands. Granting `terminal` to an agent invoked on untrusted code could allow command injection through crafted file contents."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Security review agent definition (.agent.md)",
+          "language": "markdown",
+          "context": "file-content",
+          "code": "---\ndescription: Reviews code for security vulnerabilities and suggests fixes\ntools:\n  - code_search\n  - file_reader\n---\n\nYou are a security-focused code reviewer. When asked to review code:\n\n1. Check for OWASP Top 10 vulnerabilities.\n2. Flag hardcoded secrets, SQL injection, XSS, and insecure deserialization.\n3. Verify that authentication and authorization checks are present.\n4. Suggest specific fixes with code examples.\n\nAlways reference the relevant CWE identifier for each finding."
+        },
+        {
+          "title": "Database migration agent with MCP",
+          "language": "markdown",
+          "context": "file-content",
+          "code": "---\ndescription: Helps write and validate database migrations\ntools:\n  - code_search\n  - terminal\n  - file_reader\n  - file_editor\n---\n\nYou are a database migration specialist for our PostgreSQL database.\n\n## Rules\n- All migrations must be reversible (include both `up` and `down`).\n- Use `CREATE INDEX CONCURRENTLY` for index additions.\n- Never use `DROP COLUMN` without a deprecation migration first.\n\n## Workflow\n1. Read the current schema from `db/schema.sql`.\n2. Generate the migration file in `db/migrations/`.\n3. Run `pnpm db:validate` to check syntax."
+        },
+        {
+          "title": "Agent directory structure",
+          "language": "markdown",
+          "context": "file-content",
+          "code": ".github/\n  agents/\n    security-reviewer.agent.md\n    db-migration.agent.md\n    docs-writer.agent.md\n    api-designer.agent.md"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -3147,7 +3870,18 @@
         "docs": null
       },
       "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "confidenceScore": 50,
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Agents with terminal access can execute arbitrary shell commands",
+          "Agent definitions in public repos could be modified via PRs to introduce malicious instructions",
+          "MCP server configurations in agent files could point to attacker-controlled endpoints",
+          "Agents can chain tool calls \u2014 a compromised agent could exfiltrate secrets"
+        ],
+        "complianceNotes": "Restrict `terminal` tool grants to agents that genuinely need it. Use CODEOWNERS to protect `.github/agents/`. Audit MCP server URLs. Consider review processes for new agent additions similar to GitHub Actions workflow approvals."
+      },
+      "proTip": "Invoke custom agents in Copilot Chat by typing @agent-name where the name matches the filename without the .agent.md suffix. Combine with slash commands \u2014 e.g., @security-reviewer /review \u2014 for specialized behavior without writing the full prompt every time."
     }
   ],
   "models": [
