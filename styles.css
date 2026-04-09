@@ -1,0 +1,605 @@
+/* ============================================
+   COPILOT COCKPIT HUD
+   Head-Up Display Style
+   ============================================ */
+
+/* --- CSS Variables / Design Tokens --- */
+:root {
+    --bg-primary: #07080c;
+    --bg-secondary: #0d0f14;
+    --bg-card: rgba(10, 14, 20, 0.6);
+    --bg-card-hover: rgba(15, 22, 35, 0.8);
+
+    --color-pfd: #00ff88;
+    --color-nd: #00d4ff;
+    --color-glareshield: #ffaa00;
+    --color-eicas: #ff6644;
+    --color-pedestal: #e0e0e0;
+    --color-overhead: #7a7fa0;
+    --color-side: #aa88ff;
+    --color-fms: #44ddaa;
+
+    --status-ga: #00ff88;
+    --status-preview: #ffaa00;
+    --status-deprecated: #ff4444;
+
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+
+    --zone-gap: 16px;
+    --card-gap: 10px;
+    --card-padding: 14px;
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-mono);
+    background: var(--bg-primary);
+    color: #c0c8d8;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Subtle scan-line overlay */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* --- Header --- */
+.cockpit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid rgba(0, 255, 136, 0.15);
+}
+
+.cockpit-title { display: flex; align-items: center; gap: 14px; }
+.cockpit-title .icon { font-size: 1.6rem; }
+
+.cockpit-title h1 {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--color-pfd);
+}
+
+.cockpit-title .subtitle {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(0, 255, 136, 0.4);
+    margin-top: 2px;
+}
+
+.header-right { display: flex; align-items: center; gap: 20px; }
+
+.header-status {
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(0, 255, 136, 0.5);
+}
+
+.header-status .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--status-ga);
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: pulse-led 2s ease-in-out infinite;
+}
+
+/* --- Search --- */
+.search-container { position: relative; }
+
+.search-input {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    padding: 5px 12px 5px 28px;
+    width: 220px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--color-pfd);
+    outline: none;
+    transition: all 0.2s;
+}
+
+.search-input::placeholder { color: rgba(255, 255, 255, 0.2); }
+.search-input:focus {
+    border-color: var(--color-pfd);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 8px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.65rem;
+    opacity: 0.3;
+}
+
+/* --- Filter Bar --- */
+.filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 32px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    flex-wrap: wrap;
+}
+
+.filter-label {
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.filter-btn {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    border-color: var(--color-pfd);
+    color: var(--color-pfd);
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.15);
+}
+
+/* --- Main Cockpit Grid --- */
+.cockpit-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr;
+    grid-template-rows: auto auto 1fr auto auto;
+    grid-template-areas:
+        "overhead  overhead    overhead"
+        "glare     glare       glare"
+        "side      pfd         nd"
+        "side      pedestal    engines"
+        "fms       fms         fms";
+    gap: var(--zone-gap);
+    padding: 24px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* --- Zone Base Styles --- */
+.zone {
+    position: relative;
+    padding: var(--card-padding);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--bg-secondary);
+}
+
+.zone-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+}
+
+.zone-label {
+    font-size: 0.55rem;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.zone-line { flex: 1; height: 1px; }
+
+/* --- Zone-specific colors --- */
+.zone-overhead { grid-area: overhead; }
+.zone-overhead .zone-label { color: var(--color-overhead); }
+.zone-overhead .zone-line { background: linear-gradient(90deg, var(--color-overhead), transparent); }
+.zone-overhead { border-color: rgba(122, 127, 160, 0.15); }
+
+.zone-glareshield { grid-area: glare; }
+.zone-glareshield .zone-label { color: var(--color-glareshield); }
+.zone-glareshield .zone-line { background: linear-gradient(90deg, var(--color-glareshield), transparent); }
+.zone-glareshield { border-color: rgba(255, 170, 0, 0.15); }
+
+.zone-pfd { grid-area: pfd; }
+.zone-pfd .zone-label { color: var(--color-pfd); }
+.zone-pfd .zone-line { background: linear-gradient(90deg, var(--color-pfd), transparent); }
+.zone-pfd { border-color: rgba(0, 255, 136, 0.15); }
+
+.zone-nd { grid-area: nd; }
+.zone-nd .zone-label { color: var(--color-nd); }
+.zone-nd .zone-line { background: linear-gradient(90deg, var(--color-nd), transparent); }
+.zone-nd { border-color: rgba(0, 212, 255, 0.15); }
+
+.zone-side { grid-area: side; }
+.zone-side .zone-label { color: var(--color-side); }
+.zone-side .zone-line { background: linear-gradient(90deg, var(--color-side), transparent); }
+.zone-side { border-color: rgba(170, 136, 255, 0.15); }
+
+.zone-pedestal { grid-area: pedestal; }
+.zone-pedestal .zone-label { color: var(--color-pedestal); }
+.zone-pedestal .zone-line { background: linear-gradient(90deg, var(--color-pedestal), transparent); }
+.zone-pedestal { border-color: rgba(224, 224, 224, 0.1); }
+
+.zone-engines { grid-area: engines; }
+.zone-engines .zone-label { color: var(--color-eicas); }
+.zone-engines .zone-line { background: linear-gradient(90deg, var(--color-eicas), transparent); }
+.zone-engines { border-color: rgba(255, 102, 68, 0.15); }
+
+.zone-fms { grid-area: fms; }
+.zone-fms .zone-label { color: var(--color-fms); }
+.zone-fms .zone-line { background: linear-gradient(90deg, var(--color-fms), transparent); }
+.zone-fms { border-color: rgba(68, 221, 170, 0.15); }
+
+/* --- Instrument Cards --- */
+.instruments { display: flex; flex-wrap: wrap; gap: var(--card-gap); }
+
+.instrument {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 14px;
+    min-width: 110px;
+    flex: 1 1 110px;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.instrument:hover {
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+}
+
+.instrument.dimmed { opacity: 0.15; pointer-events: none; }
+.instrument.hidden { display: none; }
+
+/* Zone-colored hover glow */
+.zone-pfd .instrument:hover { border-color: rgba(0, 255, 136, 0.4); box-shadow: 0 0 20px rgba(0, 255, 136, 0.08), inset 0 0 20px rgba(0, 255, 136, 0.03); }
+.zone-nd .instrument:hover { border-color: rgba(0, 212, 255, 0.4); box-shadow: 0 0 20px rgba(0, 212, 255, 0.08), inset 0 0 20px rgba(0, 212, 255, 0.03); }
+.zone-glareshield .instrument:hover { border-color: rgba(255, 170, 0, 0.4); box-shadow: 0 0 20px rgba(255, 170, 0, 0.08), inset 0 0 20px rgba(255, 170, 0, 0.03); }
+.zone-engines .instrument:hover { border-color: rgba(255, 102, 68, 0.4); box-shadow: 0 0 20px rgba(255, 102, 68, 0.08), inset 0 0 20px rgba(255, 102, 68, 0.03); }
+.zone-overhead .instrument:hover { border-color: rgba(122, 127, 160, 0.4); box-shadow: 0 0 20px rgba(122, 127, 160, 0.08), inset 0 0 20px rgba(122, 127, 160, 0.03); }
+.zone-pedestal .instrument:hover { border-color: rgba(224, 224, 224, 0.3); box-shadow: 0 0 20px rgba(224, 224, 224, 0.06), inset 0 0 20px rgba(224, 224, 224, 0.02); }
+.zone-side .instrument:hover { border-color: rgba(170, 136, 255, 0.4); box-shadow: 0 0 20px rgba(170, 136, 255, 0.08), inset 0 0 20px rgba(170, 136, 255, 0.03); }
+.zone-fms .instrument:hover { border-color: rgba(68, 221, 170, 0.4); box-shadow: 0 0 20px rgba(68, 221, 170, 0.08), inset 0 0 20px rgba(68, 221, 170, 0.03); }
+
+.instrument-top { display: flex; align-items: center; justify-content: space-between; }
+
+.instrument-symbol { font-size: 1.1rem; font-weight: 600; }
+
+.zone-pfd .instrument-symbol { color: var(--color-pfd); }
+.zone-nd .instrument-symbol { color: var(--color-nd); }
+.zone-glareshield .instrument-symbol { color: var(--color-glareshield); }
+.zone-engines .instrument-symbol { color: var(--color-eicas); }
+.zone-overhead .instrument-symbol { color: var(--color-overhead); }
+.zone-pedestal .instrument-symbol { color: var(--color-pedestal); }
+.zone-side .instrument-symbol { color: var(--color-side); }
+.zone-fms .instrument-symbol { color: var(--color-fms); }
+
+.instrument-led { width: 7px; height: 7px; border-radius: 50%; }
+
+.instrument-led.ga {
+    background: var(--status-ga);
+    box-shadow: 0 0 6px var(--status-ga);
+    animation: pulse-led 3s ease-in-out infinite;
+}
+
+.instrument-led.preview {
+    background: var(--status-preview);
+    box-shadow: 0 0 6px var(--status-preview);
+    animation: pulse-led 1.5s ease-in-out infinite;
+}
+
+.instrument-led.deprecated {
+    background: var(--status-deprecated);
+    box-shadow: 0 0 6px var(--status-deprecated);
+    animation: blink 1s step-end infinite;
+}
+
+.instrument-name {
+    font-size: 0.65rem;
+    font-weight: 400;
+    color: rgba(192, 200, 216, 0.8);
+    line-height: 1.3;
+}
+
+.instrument-meta {
+    font-size: 0.5rem;
+    color: rgba(192, 200, 216, 0.35);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* --- Zone-specific card variants --- */
+.zone-side .instruments { flex-direction: column; }
+.zone-side .instrument { min-width: unset; flex: unset; }
+
+.zone-glareshield .instruments { gap: 16px; }
+.zone-glareshield .instrument {
+    flex-direction: row; align-items: center; gap: 10px;
+    min-width: 150px; padding: 8px 14px;
+}
+.zone-glareshield .instrument-symbol { font-size: 0.8rem; }
+.zone-glareshield .instrument-name { font-size: 0.6rem; }
+
+.zone-fms .instruments { align-items: center; }
+.fms-chain { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.fms-arrow { color: var(--color-fms); opacity: 0.4; font-size: 0.8rem; }
+.zone-fms .instrument { min-width: 100px; flex: 0 1 auto; }
+
+/* --- Engine gauge style --- */
+.engine-cluster { display: flex; flex-direction: column; gap: 6px; }
+
+.engine-cluster-label {
+    font-size: 0.5rem; letter-spacing: 2px; text-transform: uppercase;
+    opacity: 0.5; padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 102, 68, 0.1);
+}
+
+.engine-models { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.engine-model {
+    font-size: 0.55rem; padding: 3px 8px;
+    border: 1px solid rgba(255, 102, 68, 0.2);
+    color: rgba(255, 102, 68, 0.7);
+    cursor: pointer; transition: all 0.2s;
+}
+
+.engine-model:hover {
+    border-color: rgba(255, 102, 68, 0.5);
+    color: var(--color-eicas);
+    box-shadow: 0 0 10px rgba(255, 102, 68, 0.1);
+}
+
+.engine-model.included { border-color: rgba(0, 255, 136, 0.25); color: rgba(0, 255, 136, 0.6); }
+.engine-model.included:hover {
+    border-color: rgba(0, 255, 136, 0.5); color: var(--color-pfd);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+}
+
+/* --- Detail Panel (slide-in) --- */
+.detail-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.6); z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.detail-overlay.open { display: block; }
+
+.detail-panel {
+    position: fixed; top: 0; right: 0;
+    width: 500px; max-width: 92vw; height: 100vh;
+    background: var(--bg-secondary);
+    border-left: 1px solid rgba(0, 255, 136, 0.15);
+    z-index: 1001; overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.detail-overlay.open .detail-panel { transform: translateX(0); }
+
+.detail-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.detail-symbol { font-size: 2rem; font-weight: 700; line-height: 1; }
+.detail-name { font-size: 0.9rem; font-weight: 400; color: rgba(255, 255, 255, 0.9); margin-top: 4px; }
+.detail-zone-badge { font-size: 0.5rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; margin-top: 6px; }
+
+.detail-close {
+    font-family: var(--font-mono); font-size: 0.7rem;
+    padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.15);
+    background: transparent; color: rgba(255, 255, 255, 0.5);
+    cursor: pointer; transition: all 0.2s;
+}
+
+.detail-close:hover { border-color: #ff4444; color: #ff4444; }
+
+/* --- Detail Tabs --- */
+.detail-tabs {
+    display: flex; gap: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 0 24px;
+}
+
+.detail-tab {
+    font-family: var(--font-mono);
+    font-size: 0.55rem; letter-spacing: 1px; text-transform: uppercase;
+    padding: 10px 14px; border: none; background: transparent;
+    color: rgba(255, 255, 255, 0.35); cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.detail-tab:hover { color: rgba(255, 255, 255, 0.6); }
+.detail-tab.active { color: var(--color-pfd); border-bottom-color: var(--color-pfd); }
+
+.detail-tab-content { display: none; padding: 20px 24px; }
+.detail-tab-content.active { display: block; }
+
+/* --- Detail Sections --- */
+.detail-section { margin-bottom: 24px; }
+
+.detail-section-title {
+    font-size: 0.5rem; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3); margin-bottom: 10px;
+    padding-bottom: 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.detail-description { font-size: 0.7rem; line-height: 1.7; color: rgba(255, 255, 255, 0.7); }
+.detail-status-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.detail-status-label { font-size: 0.55rem; color: rgba(255, 255, 255, 0.4); min-width: 70px; }
+.detail-status-value { font-size: 0.6rem; color: rgba(255, 255, 255, 0.8); }
+
+.ide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+
+.ide-item {
+    font-size: 0.55rem; padding: 4px 8px; text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ide-item.available { border-color: rgba(0, 255, 136, 0.2); color: var(--status-ga); }
+.ide-item.preview-ide { border-color: rgba(255, 170, 0, 0.2); color: var(--status-preview); }
+.ide-item.unavailable { opacity: 0.25; }
+
+.capability-list { list-style: none; }
+.capability-list li {
+    font-size: 0.6rem; padding: 4px 0;
+    color: rgba(255, 255, 255, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+.capability-list li::before { content: '>'; margin-right: 8px; opacity: 0.3; }
+
+/* --- Squawk Codes --- */
+.squawk-card {
+    padding: 10px 12px; margin-bottom: 8px;
+    border: 1px solid rgba(255, 170, 0, 0.2);
+    background: rgba(255, 170, 0, 0.03);
+}
+
+.squawk-code {
+    font-size: 0.55rem; font-weight: 600;
+    color: var(--color-glareshield); margin-bottom: 4px;
+}
+
+.squawk-text { font-size: 0.6rem; color: rgba(255, 255, 255, 0.6); line-height: 1.5; }
+
+/* --- Code Examples --- */
+.code-block {
+    position: relative; margin-bottom: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.code-block-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.code-block-title { font-size: 0.55rem; color: rgba(255, 255, 255, 0.4); }
+.code-block-lang { font-size: 0.5rem; color: rgba(255, 255, 255, 0.25); text-transform: uppercase; letter-spacing: 1px; }
+
+.code-block pre {
+    padding: 12px; margin: 0; overflow-x: auto;
+    font-size: 0.6rem; line-height: 1.6; color: rgba(255, 255, 255, 0.75);
+}
+
+.code-block code { font-family: var(--font-mono); }
+
+.copy-btn {
+    font-family: var(--font-mono); font-size: 0.5rem;
+    padding: 2px 8px; border: 1px solid rgba(255, 255, 255, 0.15);
+    background: transparent; color: rgba(255, 255, 255, 0.4);
+    cursor: pointer; transition: all 0.2s;
+}
+
+.copy-btn:hover { border-color: var(--color-pfd); color: var(--color-pfd); }
+.copy-btn.copied { border-color: var(--status-ga); color: var(--status-ga); }
+
+/* --- Mermaid Diagrams --- */
+.mermaid-container { margin-bottom: 16px; }
+.mermaid-title { font-size: 0.6rem; color: rgba(255, 255, 255, 0.5); margin-bottom: 8px; }
+
+.mermaid-container .mermaid {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 16px; overflow-x: auto;
+}
+
+/* --- Related Instruments --- */
+.related-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.related-chip {
+    font-size: 0.55rem; padding: 3px 10px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    color: var(--color-pfd); cursor: pointer;
+    transition: all 0.2s; text-decoration: none;
+}
+
+.related-chip:hover {
+    background: rgba(0, 255, 136, 0.1);
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.1);
+}
+
+/* --- Detail Links --- */
+.detail-links { display: flex; gap: 10px; margin-top: 20px; }
+
+.detail-link {
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 1px;
+    padding: 6px 14px; border: 1px solid rgba(0, 255, 136, 0.25);
+    background: transparent; color: var(--color-pfd);
+    text-decoration: none; transition: all 0.2s;
+}
+
+.detail-link:hover { background: rgba(0, 255, 136, 0.1); box-shadow: 0 0 12px rgba(0, 255, 136, 0.1); }
+
+/* --- Legend --- */
+.cockpit-legend {
+    display: flex; align-items: center; gap: 20px;
+    padding: 12px 32px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.5rem; letter-spacing: 1px; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.legend-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+/* --- Animations --- */
+@keyframes pulse-led { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+    .cockpit-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "overhead  overhead"
+            "glare     glare"
+            "pfd       nd"
+            "pedestal  engines"
+            "side      fms";
+    }
+    .zone-side .instruments { flex-direction: row; flex-wrap: wrap; }
+}
+
+@media (max-width: 640px) {
+    .cockpit-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "overhead" "glare" "pfd" "nd" "engines" "pedestal" "side" "fms";
+        padding: 16px;
+    }
+    .cockpit-header { padding: 16px; }
+    .filter-bar { padding: 10px 16px; }
+    .cockpit-legend { padding: 10px 16px; }
+    .search-input { width: 160px; }
+}
