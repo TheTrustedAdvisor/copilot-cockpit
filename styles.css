@@ -4,6 +4,9 @@
    ============================================ */
 
 /* --- CSS Variables / Design Tokens --- */
+/* Global font scale: 105% of browser default (16px → 16.8px) */
+html { font-size: 105%; }
+
 :root {
     --bg-primary: #07080c;
     --bg-secondary: #0d0f14;
@@ -658,12 +661,12 @@ body::after {
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.detail-symbol { font-size: 2rem; font-weight: 700; line-height: 1; }
-.detail-name { font-size: 1.0rem; font-weight: 400; color: rgba(255, 255, 255, 0.9); margin-top: 4px; }
-.detail-zone-badge { font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; margin-top: 6px; }
+.detail-symbol { font-size: 2.1rem; font-weight: 700; line-height: 1; }
+.detail-name { font-size: 1.05rem; font-weight: 400; color: rgba(255, 255, 255, 0.9); margin-top: 4px; }
+.detail-zone-badge { font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; margin-top: 6px; }
 
 .detail-close {
-    font-family: var(--font-mono); font-size: 0.65rem;
+    font-family: var(--font-mono); font-size: 0.68rem;
     padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.15);
     background: transparent; color: rgba(255, 255, 255, 0.5);
     cursor: pointer; transition: all 0.2s;
@@ -680,7 +683,7 @@ body::after {
 
 .detail-tab {
     font-family: var(--font-mono);
-    font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase;
+    font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase;
     padding: 10px 14px; border: none; background: transparent;
     color: rgba(255, 255, 255, 0.35); cursor: pointer;
     border-bottom: 2px solid transparent;
@@ -697,20 +700,20 @@ body::after {
 .detail-section { margin-bottom: 24px; }
 
 .detail-section-title {
-    font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase;
+    font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase;
     color: rgba(255, 255, 255, 0.3); margin-bottom: 10px;
     padding-bottom: 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.detail-description { font-size: 0.75rem; line-height: 1.7; color: rgba(255, 255, 255, 0.7); }
+.detail-description { font-size: 0.79rem; line-height: 1.7; color: rgba(255, 255, 255, 0.7); }
 .detail-status-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.detail-status-label { font-size: 0.65rem; color: rgba(255, 255, 255, 0.4); min-width: 70px; }
-.detail-status-value { font-size: 0.6rem; color: rgba(255, 255, 255, 0.8); }
+.detail-status-label { font-size: 0.68rem; color: rgba(255, 255, 255, 0.4); min-width: 70px; }
+.detail-status-value { font-size: 0.63rem; color: rgba(255, 255, 255, 0.8); }
 
 .ide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 
 .ide-item {
-    font-size: 0.65rem; padding: 4px 8px; text-align: center;
+    font-size: 0.68rem; padding: 4px 8px; text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -720,7 +723,7 @@ body::after {
 
 .capability-list { list-style: none; }
 .capability-list li {
-    font-size: 0.6rem; padding: 4px 0;
+    font-size: 0.63rem; padding: 4px 0;
     color: rgba(255, 255, 255, 0.6);
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
@@ -734,11 +737,11 @@ body::after {
 }
 
 .squawk-code {
-    font-size: 0.65rem; font-weight: 600;
+    font-size: 0.68rem; font-weight: 600;
     color: var(--color-glareshield); margin-bottom: 4px;
 }
 
-.squawk-text { font-size: 0.6rem; color: rgba(255, 255, 255, 0.6); line-height: 1.5; }
+.squawk-text { font-size: 0.63rem; color: rgba(255, 255, 255, 0.6); line-height: 1.5; }
 
 /* --- Code Examples --- */
 .code-block {
@@ -754,12 +757,12 @@ body::after {
     background: rgba(255, 255, 255, 0.02);
 }
 
-.code-block-title { font-size: 0.65rem; color: rgba(255, 255, 255, 0.4); }
-.code-block-lang { font-size: 0.55rem; color: rgba(255, 255, 255, 0.25); text-transform: uppercase; letter-spacing: 1px; }
+.code-block-title { font-size: 0.68rem; color: rgba(255, 255, 255, 0.4); }
+.code-block-lang { font-size: 0.58rem; color: rgba(255, 255, 255, 0.25); text-transform: uppercase; letter-spacing: 1px; }
 
 .code-block pre {
     padding: 12px; margin: 0; overflow-x: auto;
-    font-size: 0.6rem; line-height: 1.6; color: rgba(255, 255, 255, 0.75);
+    font-size: 0.63rem; line-height: 1.6; color: rgba(255, 255, 255, 0.75);
 }
 
 .code-block code { font-family: var(--font-mono); }
@@ -770,11 +773,11 @@ body::after {
     background: none;
     text-shadow: none;
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.63rem;
 }
 
 .copy-btn {
-    font-family: var(--font-mono); font-size: 0.55rem;
+    font-family: var(--font-mono); font-size: 0.58rem;
     padding: 2px 8px; border: 1px solid rgba(255, 255, 255, 0.15);
     background: transparent; color: rgba(255, 255, 255, 0.4);
     cursor: pointer; transition: all 0.2s;
@@ -785,7 +788,7 @@ body::after {
 
 /* --- Mermaid Diagrams --- */
 .mermaid-container { margin-bottom: 16px; }
-.mermaid-title { font-size: 0.6rem; color: rgba(255, 255, 255, 0.5); margin-bottom: 8px; }
+.mermaid-title { font-size: 0.63rem; color: rgba(255, 255, 255, 0.5); margin-bottom: 8px; }
 
 .mermaid-container .mermaid {
     background: rgba(0, 0, 0, 0.2);
@@ -797,7 +800,7 @@ body::after {
 .related-grid { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .related-chip {
-    font-size: 0.65rem; padding: 3px 10px;
+    font-size: 0.68rem; padding: 3px 10px;
     border: 1px solid rgba(0, 255, 136, 0.2);
     color: var(--color-pfd); cursor: pointer;
     transition: all 0.2s; text-decoration: none;
@@ -812,7 +815,7 @@ body::after {
 .detail-links { display: flex; gap: 10px; margin-top: 20px; }
 
 .detail-link {
-    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 1px;
+    font-family: var(--font-mono); font-size: 0.63rem; letter-spacing: 1px;
     padding: 6px 14px; border: 1px solid rgba(0, 255, 136, 0.25);
     background: transparent; color: var(--color-pfd);
     text-decoration: none; transition: all 0.2s;
@@ -852,7 +855,7 @@ body::after {
 
 .media-recording-title {
     font-family: var(--font-mono);
-    font-size: 0.6rem; font-weight: 600;
+    font-size: 0.63rem; font-weight: 600;
     color: rgba(255, 255, 255, 0.7);
     letter-spacing: 0.5px;
 }
@@ -861,7 +864,7 @@ body.light-theme .media-recording-title { color: rgba(0, 0, 0, 0.7); }
 
 .media-recording-duration {
     font-family: var(--font-mono);
-    font-size: 0.5rem;
+    font-size: 0.53rem;
     color: rgba(255, 255, 255, 0.3);
     letter-spacing: 1px;
 }
