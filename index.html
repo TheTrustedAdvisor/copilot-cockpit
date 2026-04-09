@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copilot Cockpit - GitHub Copilot HUD</title>
+    <style>
+        /* ============================================
+           COPILOT COCKPIT HUD - Visual Prototype
+           Approach 2: Head-Up Display Style
+           ============================================ */
+
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+        /* --- CSS Variables / Design Tokens --- */
+        :root {
+            /* Background */
+            --bg-primary: #07080c;
+            --bg-secondary: #0d0f14;
+            --bg-card: rgba(10, 14, 20, 0.6);
+            --bg-card-hover: rgba(15, 22, 35, 0.8);
+
+            /* Zone Colors (real cockpit display conventions) */
+            --color-pfd: #00ff88;        /* Primary Flight - Green */
+            --color-nd: #00d4ff;         /* Navigation - Cyan */
+            --color-glareshield: #ffaa00; /* Autopilot - Amber */
+            --color-eicas: #ff6644;      /* Engines - Orange-Red */
+            --color-pedestal: #e0e0e0;   /* Commands - White */
+            --color-overhead: #7a7fa0;   /* Admin - Muted */
+            --color-side: #aa88ff;       /* Extensions - Purple */
+            --color-fms: #44ddaa;        /* Flight Mgmt - Teal */
+
+            /* Status */
+            --status-ga: #00ff88;
+            --status-preview: #ffaa00;
+            --status-deprecated: #ff4444;
+
+            /* Typography */
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+
+            /* Spacing */
+            --zone-gap: 16px;
+            --card-gap: 10px;
+            --card-padding: 14px;
+        }
+
+        /* --- Reset & Base --- */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--bg-primary);
+            color: #c0c8d8;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Subtle scan-line overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.03) 2px,
+                rgba(0, 0, 0, 0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* --- Header --- */
+        .cockpit-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 32px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.15);
+        }
+
+        .cockpit-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .cockpit-title .icon {
+            font-size: 1.6rem;
+        }
+
+        .cockpit-title h1 {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--color-pfd);
+        }
+
+        .cockpit-title .subtitle {
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(0, 255, 136, 0.4);
+            margin-top: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-status {
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(0, 255, 136, 0.5);
+        }
+
+        .header-status .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--status-ga);
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse-led 2s ease-in-out infinite;
+        }
+
+        /* --- Filter Bar --- */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 32px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-size: 0.55rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .filter-btn {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            letter-spacing: 1px;
+            padding: 4px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--color-pfd);
+            color: var(--color-pfd);
+            box-shadow: 0 0 8px rgba(0, 255, 136, 0.15);
+        }
+
+        /* --- Main Cockpit Grid --- */
+        .cockpit-grid {
+            display: grid;
+            grid-template-columns: 160px 1fr 1fr;
+            grid-template-rows: auto auto 1fr auto auto;
+            grid-template-areas:
+                "overhead  overhead    overhead"
+                "glare     glare       glare"
+                "side      pfd         nd"
+                "side      pedestal    engines"
+                "fms       fms         fms";
+            gap: var(--zone-gap);
+            padding: 24px 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* --- Zone Base Styles --- */
+        .zone {
+            position: relative;
+            padding: var(--card-padding);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: var(--bg-secondary);
+        }
+
+        .zone-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+        }
+
+        .zone-label {
+            font-size: 0.55rem;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .zone-line {
+            flex: 1;
+            height: 1px;
+        }
+
+        /* --- Zone-specific colors --- */
+        .zone-overhead { grid-area: overhead; }
+        .zone-overhead .zone-label { color: var(--color-overhead); }
+        .zone-overhead .zone-line { background: linear-gradient(90deg, var(--color-overhead), transparent); }
+        .zone-overhead { border-color: rgba(122, 127, 160, 0.15); }
+
+        .zone-glareshield { grid-area: glare; }
+        .zone-glareshield .zone-label { color: var(--color-glareshield); }
+        .zone-glareshield .zone-line { background: linear-gradient(90deg, var(--color-glareshield), transparent); }
+        .zone-glareshield { border-color: rgba(255, 170, 0, 0.15); }
+
+        .zone-pfd { grid-area: pfd; }
+        .zone-pfd .zone-label { color: var(--color-pfd); }
+        .zone-pfd .zone-line { background: linear-gradient(90deg, var(--color-pfd), transparent); }
+        .zone-pfd { border-color: rgba(0, 255, 136, 0.15); }
+
+        .zone-nd { grid-area: nd; }
+        .zone-nd .zone-label { color: var(--color-nd); }
+        .zone-nd .zone-line { background: linear-gradient(90deg, var(--color-nd), transparent); }
+        .zone-nd { border-color: rgba(0, 212, 255, 0.15); }
+
+        .zone-side { grid-area: side; }
+        .zone-side .zone-label { color: var(--color-side); }
+        .zone-side .zone-line { background: linear-gradient(90deg, var(--color-side), transparent); }
+        .zone-side { border-color: rgba(170, 136, 255, 0.15); }
+
+        .zone-pedestal { grid-area: pedestal; }
+        .zone-pedestal .zone-label { color: var(--color-pedestal); }
+        .zone-pedestal .zone-line { background: linear-gradient(90deg, var(--color-pedestal), transparent); }
+        .zone-pedestal { border-color: rgba(224, 224, 224, 0.1); }
+
+        .zone-engines { grid-area: engines; }
+        .zone-engines .zone-label { color: var(--color-eicas); }
+        .zone-engines .zone-line { background: linear-gradient(90deg, var(--color-eicas), transparent); }
+        .zone-engines { border-color: rgba(255, 102, 68, 0.15); }
+
+        .zone-fms { grid-area: fms; }
+        .zone-fms .zone-label { color: var(--color-fms); }
+        .zone-fms .zone-line { background: linear-gradient(90deg, var(--color-fms), transparent); }
+        .zone-fms { border-color: rgba(68, 221, 170, 0.15); }
+
+        /* --- Instrument Cards --- */
+        .instruments {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--card-gap);
+        }
+
+        .instrument {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 12px 14px;
+            min-width: 110px;
+            flex: 1 1 110px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .instrument:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Zone-colored hover glow */
+        .zone-pfd .instrument:hover { border-color: rgba(0, 255, 136, 0.4); box-shadow: 0 0 20px rgba(0, 255, 136, 0.08), inset 0 0 20px rgba(0, 255, 136, 0.03); }
+        .zone-nd .instrument:hover { border-color: rgba(0, 212, 255, 0.4); box-shadow: 0 0 20px rgba(0, 212, 255, 0.08), inset 0 0 20px rgba(0, 212, 255, 0.03); }
+        .zone-glareshield .instrument:hover { border-color: rgba(255, 170, 0, 0.4); box-shadow: 0 0 20px rgba(255, 170, 0, 0.08), inset 0 0 20px rgba(255, 170, 0, 0.03); }
+        .zone-engines .instrument:hover { border-color: rgba(255, 102, 68, 0.4); box-shadow: 0 0 20px rgba(255, 102, 68, 0.08), inset 0 0 20px rgba(255, 102, 68, 0.03); }
+        .zone-overhead .instrument:hover { border-color: rgba(122, 127, 160, 0.4); box-shadow: 0 0 20px rgba(122, 127, 160, 0.08), inset 0 0 20px rgba(122, 127, 160, 0.03); }
+        .zone-pedestal .instrument:hover { border-color: rgba(224, 224, 224, 0.3); box-shadow: 0 0 20px rgba(224, 224, 224, 0.06), inset 0 0 20px rgba(224, 224, 224, 0.02); }
+        .zone-side .instrument:hover { border-color: rgba(170, 136, 255, 0.4); box-shadow: 0 0 20px rgba(170, 136, 255, 0.08), inset 0 0 20px rgba(170, 136, 255, 0.03); }
+        .zone-fms .instrument:hover { border-color: rgba(68, 221, 170, 0.4); box-shadow: 0 0 20px rgba(68, 221, 170, 0.08), inset 0 0 20px rgba(68, 221, 170, 0.03); }
+
+        .instrument-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .instrument-symbol {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .zone-pfd .instrument-symbol { color: var(--color-pfd); }
+        .zone-nd .instrument-symbol { color: var(--color-nd); }
+        .zone-glareshield .instrument-symbol { color: var(--color-glareshield); }
+        .zone-engines .instrument-symbol { color: var(--color-eicas); }
+        .zone-overhead .instrument-symbol { color: var(--color-overhead); }
+        .zone-pedestal .instrument-symbol { color: var(--color-pedestal); }
+        .zone-side .instrument-symbol { color: var(--color-side); }
+        .zone-fms .instrument-symbol { color: var(--color-fms); }
+
+        .instrument-led {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .instrument-led.ga {
+            background: var(--status-ga);
+            box-shadow: 0 0 6px var(--status-ga);
+            animation: pulse-led 3s ease-in-out infinite;
+        }
+
+        .instrument-led.preview {
+            background: var(--status-preview);
+            box-shadow: 0 0 6px var(--status-preview);
+            animation: pulse-led 1.5s ease-in-out infinite;
+        }
+
+        .instrument-led.deprecated {
+            background: var(--status-deprecated);
+            box-shadow: 0 0 6px var(--status-deprecated);
+            animation: blink 1s step-end infinite;
+        }
+
+        .instrument-name {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: rgba(192, 200, 216, 0.8);
+            line-height: 1.3;
+        }
+
+        .instrument-meta {
+            font-size: 0.5rem;
+            color: rgba(192, 200, 216, 0.35);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- Side panel compact variant --- */
+        .zone-side .instruments {
+            flex-direction: column;
+        }
+
+        .zone-side .instrument {
+            min-width: unset;
+            flex: unset;
+        }
+
+        /* --- Glareshield toggle-switch style --- */
+        .zone-glareshield .instruments {
+            gap: 16px;
+        }
+
+        .zone-glareshield .instrument {
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            min-width: 150px;
+            padding: 8px 14px;
+        }
+
+        .zone-glareshield .instrument-symbol {
+            font-size: 0.8rem;
+        }
+
+        .zone-glareshield .instrument-name {
+            font-size: 0.6rem;
+        }
+
+        /* --- FMS chain style --- */
+        .zone-fms .instruments {
+            align-items: center;
+        }
+
+        .fms-chain {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .fms-arrow {
+            color: var(--color-fms);
+            opacity: 0.4;
+            font-size: 0.8rem;
+        }
+
+        .zone-fms .instrument {
+            min-width: 100px;
+            flex: 0 1 auto;
+        }
+
+        /* --- Engine gauge style --- */
+        .engine-cluster {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .engine-cluster-label {
+            font-size: 0.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 102, 68, 0.1);
+        }
+
+        .engine-models {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .engine-model {
+            font-size: 0.55rem;
+            padding: 3px 8px;
+            border: 1px solid rgba(255, 102, 68, 0.2);
+            color: rgba(255, 102, 68, 0.7);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .engine-model:hover {
+            border-color: rgba(255, 102, 68, 0.5);
+            color: var(--color-eicas);
+            box-shadow: 0 0 10px rgba(255, 102, 68, 0.1);
+        }
+
+        .engine-model.included {
+            border-color: rgba(0, 255, 136, 0.25);
+            color: rgba(0, 255, 136, 0.6);
+        }
+
+        .engine-model.included:hover {
+            border-color: rgba(0, 255, 136, 0.5);
+            color: var(--color-pfd);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+        }
+
+        /* --- Detail Panel (slide-in) --- */
+        .detail-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .detail-overlay.open {
+            display: block;
+        }
+
+        .detail-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 440px;
+            max-width: 90vw;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-left: 1px solid rgba(0, 255, 136, 0.15);
+            z-index: 1001;
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            padding: 0;
+        }
+
+        .detail-overlay.open .detail-panel {
+            transform: translateX(0);
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 28px 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .detail-symbol {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .detail-name {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 4px;
+        }
+
+        .detail-zone-badge {
+            font-size: 0.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-top: 6px;
+        }
+
+        .detail-close {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .detail-close:hover {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        .detail-body {
+            padding: 20px 24px;
+        }
+
+        .detail-section {
+            margin-bottom: 24px;
+        }
+
+        .detail-section-title {
+            font-size: 0.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 10px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .detail-description {
+            font-size: 0.7rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .detail-status-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .detail-status-label {
+            font-size: 0.55rem;
+            color: rgba(255, 255, 255, 0.4);
+            min-width: 70px;
+        }
+
+        .detail-status-value {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .ide-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .ide-item {
+            font-size: 0.55rem;
+            padding: 4px 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .ide-item.available {
+            border-color: rgba(0, 255, 136, 0.2);
+            color: var(--status-ga);
+        }
+
+        .ide-item.preview-ide {
+            border-color: rgba(255, 170, 0, 0.2);
+            color: var(--status-preview);
+        }
+
+        .ide-item.unavailable {
+            opacity: 0.25;
+        }
+
+        .capability-list {
+            list-style: none;
+        }
+
+        .capability-list li {
+            font-size: 0.6rem;
+            padding: 4px 0;
+            color: rgba(255, 255, 255, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .capability-list li::before {
+            content: '>';
+            margin-right: 8px;
+            opacity: 0.3;
+        }
+
+        .detail-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .detail-link {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            letter-spacing: 1px;
+            padding: 6px 14px;
+            border: 1px solid rgba(0, 255, 136, 0.25);
+            background: transparent;
+            color: var(--color-pfd);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .detail-link:hover {
+            background: rgba(0, 255, 136, 0.1);
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.1);
+        }
+
+        /* --- Legend --- */
+        .cockpit-legend {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 12px 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .legend-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        /* --- Animations --- */
+        @keyframes pulse-led {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1024px) {
+            .cockpit-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "overhead  overhead"
+                    "glare     glare"
+                    "pfd       nd"
+                    "pedestal  engines"
+                    "side      fms";
+            }
+
+            .zone-side .instruments {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .cockpit-grid {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "overhead"
+                    "glare"
+                    "pfd"
+                    "nd"
+                    "engines"
+                    "pedestal"
+                    "side"
+                    "fms";
+                padding: 16px;
+            }
+
+            .cockpit-header { padding: 16px; }
+            .filter-bar { padding: 10px 16px; }
+            .cockpit-legend { padding: 10px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="cockpit-header">
+        <div class="cockpit-title">
+            <span class="icon">&#9992;</span>
+            <div>
+                <h1>Copilot Cockpit</h1>
+                <div class="subtitle">GitHub Copilot Feature Reference</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <span class="header-status"><span class="dot"></span>48 Instruments Active</span>
+        </div>
+    </header>
+
+    <!-- ===== FILTER BAR ===== -->
+    <div class="filter-bar">
+        <span class="filter-label">Flight Mode:</span>
+        <button class="filter-btn active" onclick="setMode('all')">Full Cockpit</button>
+        <button class="filter-btn" onclick="setMode('beginner')">VFR / Beginner</button>
+        <button class="filter-btn" onclick="setMode('advanced')">IFR / Advanced</button>
+        <button class="filter-btn" onclick="setMode('admin')">ATC / Admin</button>
+        <span class="filter-label" style="margin-left: 16px;">Plan:</span>
+        <button class="filter-btn" onclick="filterPlan('free')">Free</button>
+        <button class="filter-btn" onclick="filterPlan('pro')">Pro</button>
+        <button class="filter-btn" onclick="filterPlan('enterprise')">Enterprise</button>
+    </div>
+
+    <!-- ===== MAIN COCKPIT GRID ===== -->
+    <main class="cockpit-grid">
+
+        <!-- OVERHEAD PANEL -->
+        <section class="zone zone-overhead">
+            <div class="zone-header">
+                <span class="zone-label">Overhead Panel</span>
+                <span class="zone-line"></span>
+                <span class="zone-label" style="opacity: 0.4;">Admin &amp; Governance</span>
+            </div>
+            <div class="instruments">
+                <div class="instrument" onclick="openDetail('plans')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">PLN</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Plans & Licensing</span>
+                    <span class="instrument-meta">Free / Pro / Enterprise</span>
+                </div>
+                <div class="instrument" onclick="openDetail('policies')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">POL</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Feature Policies</span>
+                    <span class="instrument-meta">Org / Enterprise</span>
+                </div>
+                <div class="instrument" onclick="openDetail('seats')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">SEA</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Seat Management</span>
+                    <span class="instrument-meta">Business+</span>
+                </div>
+                <div class="instrument" onclick="openDetail('audit')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">AUD</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Audit Logs</span>
+                    <span class="instrument-meta">Enterprise</span>
+                </div>
+                <div class="instrument" onclick="openDetail('content-exclusion')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">CEX</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Content Exclusion</span>
+                    <span class="instrument-meta">Business+</span>
+                </div>
+                <div class="instrument" onclick="openDetail('ip')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">IPI</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">IP Indemnity</span>
+                    <span class="instrument-meta">Business+</span>
+                </div>
+                <div class="instrument" onclick="openDetail('metrics')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">MTR</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Usage Metrics</span>
+                    <span class="instrument-meta">Org / Enterprise</span>
+                </div>
+                <div class="instrument" onclick="openDetail('residency')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">DRS</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Data Residency</span>
+                    <span class="instrument-meta">Enterprise</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- GLARESHIELD / AUTOPILOT -->
+        <section class="zone zone-glareshield">
+            <div class="zone-header">
+                <span class="zone-label">Glareshield</span>
+                <span class="zone-line"></span>
+                <span class="zone-label" style="opacity: 0.4;">Automated Quality Gates</span>
+            </div>
+            <div class="instruments">
+                <div class="instrument" onclick="openDetail('code-review')">
+                    <span class="instrument-led ga"></span>
+                    <span class="instrument-symbol">CRV</span>
+                    <span class="instrument-name">Code Review</span>
+                </div>
+                <div class="instrument" onclick="openDetail('autofix')">
+                    <span class="instrument-led ga"></span>
+                    <span class="instrument-symbol">AFX</span>
+                    <span class="instrument-name">Autofix</span>
+                </div>
+                <div class="instrument" onclick="openDetail('pr-summary')">
+                    <span class="instrument-led ga"></span>
+                    <span class="instrument-symbol">PRS</span>
+                    <span class="instrument-name">PR Summary</span>
+                </div>
+                <div class="instrument" onclick="openDetail('sec-scan')">
+                    <span class="instrument-led ga"></span>
+                    <span class="instrument-symbol">SSC</span>
+                    <span class="instrument-name">Security Scan</span>
+                </div>
+                <div class="instrument" onclick="openDetail('self-review')">
+                    <span class="instrument-led ga"></span>
+                    <span class="instrument-symbol">SRV</span>
+                    <span class="instrument-name">Agent Self-Review</span>
+                </div>
+                <div class="instrument" onclick="openDetail('research-plan')">
+                    <span class="instrument-led ga"></span>
+                    <span class="instrument-symbol">R&amp;P</span>
+                    <span class="instrument-name">Research &amp; Plan</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SIDE PANELS (Extensions) -->
+        <section class="zone zone-side">
+            <div class="zone-header">
+                <span class="zone-label">Side Panel</span>
+                <span class="zone-line"></span>
+            </div>
+            <div class="instruments">
+                <div class="instrument" onclick="openDetail('extensions')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">EXT</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Extensions</span>
+                </div>
+                <div class="instrument" onclick="openDetail('mcp')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">MCP</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Model Context Protocol</span>
+                </div>
+                <div class="instrument" onclick="openDetail('byok')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">BYK</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Bring Your Own Key</span>
+                </div>
+                <div class="instrument" onclick="openDetail('sdk')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">SDK</span>
+                        <span class="instrument-led preview"></span>
+                    </div>
+                    <span class="instrument-name">Copilot SDK</span>
+                </div>
+                <div class="instrument" onclick="openDetail('spark')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">SPK</span>
+                        <span class="instrument-led preview"></span>
+                    </div>
+                    <span class="instrument-name">GitHub Spark</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRIMARY FLIGHT DISPLAY -->
+        <section class="zone zone-pfd">
+            <div class="zone-header">
+                <span class="zone-label">Primary Flight Display</span>
+                <span class="zone-line"></span>
+                <span class="zone-label" style="opacity: 0.4;">Core Surfaces</span>
+            </div>
+            <div class="instruments">
+                <div class="instrument" onclick="openDetail('inline')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">IC</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Inline Completions</span>
+                    <span class="instrument-meta">All IDEs</span>
+                </div>
+                <div class="instrument" onclick="openDetail('nes')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">NES</span>
+                        <span class="instrument-led preview"></span>
+                    </div>
+                    <span class="instrument-name">Next Edit Suggestions</span>
+                    <span class="instrument-meta">VS Code, VS &bull; Preview: JB, Xcode</span>
+                </div>
+                <div class="instrument" onclick="openDetail('chat')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">CHT</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Copilot Chat</span>
+                    <span class="instrument-meta">IDE, GitHub.com, Mobile, CLI</span>
+                </div>
+                <div class="instrument" onclick="openDetail('edit-mode')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">EDT</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Edit Mode</span>
+                    <span class="instrument-meta">Multi-file edits</span>
+                </div>
+                <div class="instrument" onclick="openDetail('agent-mode')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">AGT</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Agent Mode</span>
+                    <span class="instrument-meta">Autonomous tool execution</span>
+                </div>
+                <div class="instrument" onclick="openDetail('coding-agent')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">CCA</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Cloud Coding Agent</span>
+                    <span class="instrument-meta">Async &bull; GitHub Actions</span>
+                </div>
+                <div class="instrument" onclick="openDetail('cli')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">CLI</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Copilot CLI</span>
+                    <span class="instrument-meta">Terminal &bull; BYOK &bull; Local</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- NAVIGATION DISPLAY -->
+        <section class="zone zone-nd">
+            <div class="zone-header">
+                <span class="zone-label">Navigation Display</span>
+                <span class="zone-line"></span>
+                <span class="zone-label" style="opacity: 0.4;">Context &amp; Awareness</span>
+            </div>
+            <div class="instruments">
+                <div class="instrument" onclick="openDetail('workspace')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">@ws</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">@workspace</span>
+                    <span class="instrument-meta">Codebase-wide context</span>
+                </div>
+                <div class="instrument" onclick="openDetail('terminal')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">@tm</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">@terminal</span>
+                    <span class="instrument-meta">Terminal output</span>
+                </div>
+                <div class="instrument" onclick="openDetail('vscode-part')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">@vs</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">@vscode</span>
+                    <span class="instrument-meta">Editor commands</span>
+                </div>
+                <div class="instrument" onclick="openDetail('github-part')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">@gh</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">@github</span>
+                    <span class="instrument-meta">Issues, PRs, Repos</span>
+                </div>
+                <div class="instrument" onclick="openDetail('spaces')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">SPC</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Copilot Spaces</span>
+                    <span class="instrument-meta">Curated context</span>
+                </div>
+                <div class="instrument" onclick="openDetail('vision')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">VIS</span>
+                        <span class="instrument-led preview"></span>
+                    </div>
+                    <span class="instrument-name">Copilot Vision</span>
+                    <span class="instrument-meta">Image input</span>
+                </div>
+                <div class="instrument" onclick="openDetail('memory')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">MEM</span>
+                        <span class="instrument-led preview"></span>
+                    </div>
+                    <span class="instrument-name">Agentic Memory</span>
+                    <span class="instrument-meta">Repo-scoped &bull; 28 days</span>
+                </div>
+                <div class="instrument" onclick="openDetail('indexing')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">IDX</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Workspace Indexing</span>
+                    <span class="instrument-meta">Semantic search</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CENTER PEDESTAL (Commands) -->
+        <section class="zone zone-pedestal">
+            <div class="zone-header">
+                <span class="zone-label">Center Pedestal</span>
+                <span class="zone-line"></span>
+                <span class="zone-label" style="opacity: 0.4;">Commands</span>
+            </div>
+            <div class="instruments">
+                <div class="instrument" onclick="openDetail('cmd-explain')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">/exp</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">/explain</span>
+                </div>
+                <div class="instrument" onclick="openDetail('cmd-fix')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">/fix</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">/fix</span>
+                </div>
+                <div class="instrument" onclick="openDetail('cmd-tests')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">/tst</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">/tests</span>
+                </div>
+                <div class="instrument" onclick="openDetail('cmd-doc')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">/doc</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">/doc</span>
+                </div>
+                <div class="instrument" onclick="openDetail('cmd-new')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">/new</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">/new</span>
+                </div>
+                <div class="instrument" onclick="openDetail('cmd-optimize')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">/opt</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">/optimize</span>
+                </div>
+                <div class="instrument" onclick="openDetail('cmd-simplify')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">/sim</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">/simplify</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- EICAS / ENGINES -->
+        <section class="zone zone-engines">
+            <div class="zone-header">
+                <span class="zone-label">EICAS / Engines</span>
+                <span class="zone-line"></span>
+                <span class="zone-label" style="opacity: 0.4;">AI Models</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div class="engine-cluster">
+                    <div class="engine-cluster-label">OpenAI</div>
+                    <div class="engine-models">
+                        <span class="engine-model included" title="Included - no premium cost">GPT-5 mini</span>
+                        <span class="engine-model included" title="Included - no premium cost">GPT-4.1</span>
+                        <span class="engine-model" title="Premium request">GPT-5.2</span>
+                        <span class="engine-model" title="Premium request">GPT-5.4</span>
+                        <span class="engine-model" title="Agentic - Premium">Codex 5.3</span>
+                    </div>
+                </div>
+                <div class="engine-cluster">
+                    <div class="engine-cluster-label">Anthropic</div>
+                    <div class="engine-models">
+                        <span class="engine-model included" title="Included on Free">Haiku 4.5</span>
+                        <span class="engine-model" title="Premium request">Sonnet 4.6</span>
+                        <span class="engine-model" title="Premium request">Opus 4.6</span>
+                    </div>
+                </div>
+                <div class="engine-cluster">
+                    <div class="engine-cluster-label">Google</div>
+                    <div class="engine-models">
+                        <span class="engine-model" title="Premium request">Gemini 2.5 Pro</span>
+                        <span class="engine-model included" title="Included">Gemini 3 Flash</span>
+                        <span class="engine-model" title="Premium - Preview">Gemini 3.1 Pro</span>
+                    </div>
+                </div>
+                <div class="engine-cluster">
+                    <div class="engine-cluster-label">Other + BYOK</div>
+                    <div class="engine-models">
+                        <span class="engine-model" title="Premium request">Grok Code</span>
+                        <span class="engine-model" title="Premium request">Qwen 2.5</span>
+                        <span class="engine-model" title="Bring Your Own Key">BYOK</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FMS / FLIGHT MANAGEMENT -->
+        <section class="zone zone-fms">
+            <div class="zone-header">
+                <span class="zone-label">Flight Management System</span>
+                <span class="zone-line"></span>
+                <span class="zone-label" style="opacity: 0.4;">Custom Instructions &mdash; Priority: Personal &gt; Repo &gt; Org</span>
+            </div>
+            <div class="fms-chain">
+                <div class="instrument" onclick="openDetail('personal-instructions')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">UCI</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Personal Instructions</span>
+                    <span class="instrument-meta">Highest priority</span>
+                </div>
+                <span class="fms-arrow">&#9654;</span>
+                <div class="instrument" onclick="openDetail('repo-instructions')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">RCI</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Repo Instructions</span>
+                    <span class="instrument-meta">.github/copilot-instructions.md</span>
+                </div>
+                <span class="fms-arrow">&#9654;</span>
+                <div class="instrument" onclick="openDetail('path-instructions')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">PCI</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Path Instructions</span>
+                    <span class="instrument-meta">.github/*.instructions.md</span>
+                </div>
+                <span class="fms-arrow">&#9654;</span>
+                <div class="instrument" onclick="openDetail('prompt-files')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">PMD</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Prompt Files</span>
+                    <span class="instrument-meta">.github/*.prompt.md</span>
+                </div>
+                <span class="fms-arrow">&#9654;</span>
+                <div class="instrument" onclick="openDetail('org-instructions')">
+                    <div class="instrument-top">
+                        <span class="instrument-symbol">OCI</span>
+                        <span class="instrument-led ga"></span>
+                    </div>
+                    <span class="instrument-name">Org Instructions</span>
+                    <span class="instrument-meta">Lowest priority</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== LEGEND ===== -->
+    <footer class="cockpit-legend">
+        <div class="legend-item">
+            <span class="legend-dot" style="background: var(--status-ga); box-shadow: 0 0 4px var(--status-ga);"></span>
+            GA (Generally Available)
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background: var(--status-preview); box-shadow: 0 0 4px var(--status-preview);"></span>
+            Public Preview
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background: var(--status-deprecated); box-shadow: 0 0 4px var(--status-deprecated);"></span>
+            Deprecated
+        </div>
+        <div class="legend-item" style="margin-left: 12px;">
+            <span class="legend-dot" style="background: var(--color-pfd); box-shadow: 0 0 4px var(--color-pfd);"></span>
+            PFD / Core
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background: var(--color-nd); box-shadow: 0 0 4px var(--color-nd);"></span>
+            ND / Context
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background: var(--color-glareshield); box-shadow: 0 0 4px var(--color-glareshield);"></span>
+            Glareshield / Autopilot
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background: var(--color-eicas); box-shadow: 0 0 4px var(--color-eicas);"></span>
+            EICAS / Engines
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background: var(--color-side); box-shadow: 0 0 4px var(--color-side);"></span>
+            Extensions
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background: var(--color-fms); box-shadow: 0 0 4px var(--color-fms);"></span>
+            FMS / Config
+        </div>
+    </footer>
+
+    <!-- ===== DETAIL PANEL ===== -->
+    <div class="detail-overlay" id="detailOverlay" onclick="closeDetail(event)">
+        <div class="detail-panel" id="detailPanel">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <script>
+        /* ============================================
+           COPILOT COCKPIT - Interaction Logic
+           ============================================ */
+
+        // Sample detail data (in production this comes from JSON)
+        const instrumentData = {
+            'agent-mode': {
+                symbol: 'AGT',
+                name: 'Agent Mode',
+                zone: 'Primary Flight Display',
+                zoneColor: '#00ff88',
+                status: 'GA',
+                since: '2025 (Preview) → 2026 (GA)',
+                description: 'Autonomous agentic loop where Copilot iteratively edits files, runs terminal commands, and executes tools until the task is complete. Supports MCP servers, custom agents, and checkpoints for safe rollback.',
+                ideSupport: {
+                    'VS Code': 'ga', 'Visual Studio': 'ga', 'JetBrains': 'ga',
+                    'Eclipse': 'ga', 'Xcode': 'ga', 'Neovim': null
+                },
+                capabilities: [
+                    'Multi-file editing with autonomous iteration',
+                    'Terminal command execution',
+                    'MCP server and tool integration',
+                    'Checkpoints for undo/rollback',
+                    'Custom agents and sub-agents (JetBrains)',
+                    'Web search integration'
+                ],
+                proTip: 'Combine with .github/copilot-instructions.md for repo-specific agent behavior.',
+                docsUrl: 'https://docs.github.com/en/copilot/using-github-copilot/using-agent-mode'
+            },
+            'chat': {
+                symbol: 'CHT',
+                name: 'Copilot Chat',
+                zone: 'Primary Flight Display',
+                zoneColor: '#00ff88',
+                status: 'GA',
+                since: '2023 (Preview) → 2024 (GA)',
+                description: 'Conversational AI interface for asking questions about code, generating code, debugging, and learning. Available in IDEs, GitHub.com, GitHub Mobile, and Windows Terminal.',
+                ideSupport: {
+                    'VS Code': 'ga', 'Visual Studio': 'ga', 'JetBrains': 'ga',
+                    'Eclipse': 'ga', 'Xcode': 'ga', 'Neovim': null
+                },
+                capabilities: [
+                    'Natural language code generation',
+                    'Codebase-aware Q&A via @workspace',
+                    'Multi-turn conversations with context',
+                    'Slash commands (/explain, /fix, /tests)',
+                    'Chat participants (@workspace, @terminal, @github)',
+                    'Context variables (#file, #selection, #codebase)',
+                    'Model selection per conversation'
+                ],
+                proTip: 'Use @workspace for codebase-wide questions. Combine with #file to focus on specific files.',
+                docsUrl: 'https://docs.github.com/en/copilot/using-github-copilot/copilot-chat'
+            },
+            'inline': {
+                symbol: 'IC',
+                name: 'Inline Completions',
+                zone: 'Primary Flight Display',
+                zoneColor: '#00ff88',
+                status: 'GA',
+                since: '2022 (GA)',
+                description: 'Real-time code suggestions as you type. Copilot analyzes your current file, open tabs, and codebase context to provide single-line and multi-line completions.',
+                ideSupport: {
+                    'VS Code': 'ga', 'Visual Studio': 'ga', 'JetBrains': 'ga',
+                    'Eclipse': 'ga', 'Xcode': 'ga', 'Neovim': 'ga'
+                },
+                capabilities: [
+                    'Single-line completions',
+                    'Multi-line / block completions',
+                    'Comment-driven generation',
+                    'Unlimited completions on all paid plans',
+                    'Context from open tabs and imports',
+                    'Code referencing (public code match detection)'
+                ],
+                proTip: 'Write a descriptive comment before the code you want — Copilot uses it as a strong signal for completions.',
+                docsUrl: 'https://docs.github.com/en/copilot/using-github-copilot/getting-code-suggestions'
+            },
+            'coding-agent': {
+                symbol: 'CCA',
+                name: 'Cloud Coding Agent',
+                zone: 'Primary Flight Display',
+                zoneColor: '#00ff88',
+                status: 'GA',
+                since: '2025 (Preview) → 2026 (GA)',
+                description: 'Fully autonomous cloud-side agent that runs in an ephemeral GitHub Actions environment. Assign tasks from Issues, Chat, or @copilot mentions on PRs. Creates branches, writes code, runs tests, and opens pull requests.',
+                ideSupport: {
+                    'GitHub.com': 'ga', 'Copilot CLI': 'ga', 'VS Code': null,
+                    'JetBrains': null, 'Xcode': null, 'Neovim': null
+                },
+                capabilities: [
+                    'Triggered from Issues, Chat, or @copilot PR mentions',
+                    'Runs in GitHub Actions sandbox',
+                    'Creates branch + PR automatically',
+                    'Self-reviews its own code',
+                    'Runs security scanning before opening PR',
+                    'MCP server integration',
+                    'Research & Plan mode (no PR yet)',
+                    'CLI handoff (pull session locally)'
+                ],
+                proTip: 'Tag @copilot on an issue with a clear description. The agent works best with well-defined, scoped tasks.',
+                docsUrl: 'https://docs.github.com/en/copilot/using-github-copilot/using-copilot-coding-agent'
+            },
+            'code-review': {
+                symbol: 'CRV',
+                name: 'Copilot Code Review',
+                zone: 'Glareshield / Autopilot',
+                zoneColor: '#ffaa00',
+                status: 'GA',
+                since: '2024 (Preview) → 2025 (GA)',
+                description: 'AI-generated review comments on pull requests. Blends LLM analysis with deterministic tools (ESLint, CodeQL) for comprehensive coverage. Can auto-request review from Copilot on all PRs.',
+                ideSupport: {
+                    'GitHub.com': 'ga', 'VS Code': 'ga', 'Visual Studio': 'ga',
+                    'JetBrains': 'ga', 'CLI (gh)': 'ga', 'Xcode': 'ga'
+                },
+                capabilities: [
+                    'AI review comments on PRs',
+                    'Deterministic tool integration (ESLint, CodeQL)',
+                    'Batch autofix sends fixes to coding agent',
+                    'Request via UI, API, or gh CLI',
+                    'Custom review instructions per repo'
+                ],
+                proTip: 'Add Copilot as a required reviewer in branch protection rules for automatic review on every PR.',
+                docsUrl: 'https://docs.github.com/en/copilot/using-github-copilot/code-review'
+            },
+            'mcp': {
+                symbol: 'MCP',
+                name: 'Model Context Protocol',
+                zone: 'Side Panel / Extensions',
+                zoneColor: '#aa88ff',
+                status: 'GA',
+                since: '2025 (Preview) → 2026 (GA)',
+                description: 'Open protocol for connecting Copilot to external data sources, APIs, and tools. Enables agent mode and coding agent to interact with databases, cloud services, internal tools, and more.',
+                ideSupport: {
+                    'VS Code': 'ga', 'Visual Studio': 'ga', 'JetBrains': 'ga',
+                    'Eclipse': 'ga', 'Xcode': 'ga', 'Cloud Agent': 'ga'
+                },
+                capabilities: [
+                    'Connect to any external API or data source',
+                    'Available in Agent Mode and Cloud Agent',
+                    'Auto-approve for trusted MCP servers (JetBrains)',
+                    'Built-in GitHub MCP skills (branches, files, PRs)',
+                    'URL access controls (allow/deny patterns)',
+                    'Repository-configured servers for cloud agent'
+                ],
+                proTip: 'Configure MCP servers in your repo settings to give the cloud coding agent access to your tools.',
+                docsUrl: 'https://docs.github.com/en/copilot/using-github-copilot/using-mcp'
+            }
+        };
+
+        // Aliases for onclick handlers
+        const detailAliases = {
+            'agent-mode': 'agent-mode', 'chat': 'chat', 'inline': 'inline',
+            'coding-agent': 'coding-agent', 'code-review': 'code-review', 'mcp': 'mcp',
+            'nes': 'inline', 'edit-mode': 'chat', 'cli': 'coding-agent',
+            'workspace': 'chat', 'terminal': 'chat', 'vscode-part': 'chat',
+            'github-part': 'chat', 'spaces': 'chat', 'vision': 'chat',
+            'memory': 'agent-mode', 'indexing': 'chat',
+            'autofix': 'code-review', 'pr-summary': 'code-review',
+            'sec-scan': 'code-review', 'self-review': 'code-review',
+            'research-plan': 'coding-agent',
+            'extensions': 'mcp', 'byok': 'mcp', 'sdk': 'mcp', 'spark': 'mcp',
+            'plans': 'code-review', 'policies': 'code-review', 'seats': 'code-review',
+            'audit': 'code-review', 'content-exclusion': 'code-review',
+            'ip': 'code-review', 'metrics': 'code-review', 'residency': 'code-review',
+            'cmd-explain': 'chat', 'cmd-fix': 'chat', 'cmd-tests': 'chat',
+            'cmd-doc': 'chat', 'cmd-new': 'chat', 'cmd-optimize': 'chat',
+            'cmd-simplify': 'chat',
+            'personal-instructions': 'agent-mode', 'repo-instructions': 'agent-mode',
+            'path-instructions': 'agent-mode', 'prompt-files': 'agent-mode',
+            'org-instructions': 'agent-mode'
+        };
+
+        function openDetail(id) {
+            const key = detailAliases[id] || id;
+            const data = instrumentData[key];
+            if (!data) return;
+
+            const panel = document.getElementById('detailPanel');
+            const overlay = document.getElementById('detailOverlay');
+
+            const ideHtml = Object.entries(data.ideSupport).map(([ide, status]) => {
+                const cls = status === 'ga' ? 'available' : status === 'preview' ? 'preview-ide' : 'unavailable';
+                const label = status === 'ga' ? ide : status === 'preview' ? ide + ' *' : ide;
+                return `<div class="ide-item ${cls}">${label}</div>`;
+            }).join('');
+
+            const capsHtml = data.capabilities.map(c => `<li>${c}</li>`).join('');
+
+            panel.innerHTML = `
+                <div class="detail-header">
+                    <div>
+                        <div class="detail-symbol" style="color: ${data.zoneColor}">${data.symbol}</div>
+                        <div class="detail-name">${data.name}</div>
+                        <div class="detail-zone-badge">${data.zone}</div>
+                    </div>
+                    <button class="detail-close" onclick="closeDetail(event, true)">[ESC]</button>
+                </div>
+                <div class="detail-body">
+                    <div class="detail-section">
+                        <div class="detail-section-title">Status</div>
+                        <div class="detail-status-row">
+                            <span class="detail-status-label">Status:</span>
+                            <span class="instrument-led ${data.status.toLowerCase()}" style="display:inline-block;"></span>
+                            <span class="detail-status-value">${data.status}</span>
+                        </div>
+                        <div class="detail-status-row">
+                            <span class="detail-status-label">Since:</span>
+                            <span class="detail-status-value">${data.since}</span>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">Description</div>
+                        <div class="detail-description">${data.description}</div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">IDE Availability</div>
+                        <div class="ide-grid">${ideHtml}</div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">Capabilities</div>
+                        <ul class="capability-list">${capsHtml}</ul>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">Pro Tip</div>
+                        <div class="detail-description" style="color: ${data.zoneColor}; opacity: 0.8;">> ${data.proTip}</div>
+                    </div>
+                    <div class="detail-links">
+                        <a class="detail-link" href="${data.docsUrl}" target="_blank" rel="noopener">Docs</a>
+                        <a class="detail-link" href="#" onclick="event.preventDefault()">Learn</a>
+                        <a class="detail-link" href="#" onclick="event.preventDefault()">Video</a>
+                    </div>
+                </div>
+            `;
+
+            overlay.classList.add('open');
+        }
+
+        function closeDetail(event, force) {
+            if (force || event.target === document.getElementById('detailOverlay')) {
+                document.getElementById('detailOverlay').classList.remove('open');
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('detailOverlay').classList.remove('open');
+            }
+        });
+
+        // Filter stubs (would filter instruments by visibility)
+        function setMode(mode) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            // In production: show/hide zones based on mode
+        }
+
+        function filterPlan(plan) {
+            // In production: dim instruments not available on this plan
+        }
+    </script>
+
+</body>
+</html>
