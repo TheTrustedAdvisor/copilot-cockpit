@@ -1,0 +1,254 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-09",
+  "entryTypes": {
+    "departure": { "label": "DEPARTURE", "description": "Feature reaches General Availability", "color": "#00ff88" },
+    "cleared": { "label": "CLEARED FOR TAKEOFF", "description": "Feature enters Public Preview", "color": "#ffaa00" },
+    "upgrade": { "label": "UPGRADE", "description": "Significant feature enhancement", "color": "#00ccff" },
+    "notam": { "label": "NOTAM", "description": "Important announcement or policy change", "color": "#ff66cc" },
+    "grounded": { "label": "GROUNDED", "description": "Feature deprecated or removed", "color": "#ff4444" },
+    "turbulence": { "label": "TURBULENCE", "description": "Breaking change or known issue", "color": "#ff8800" }
+  },
+  "entries": [
+    {
+      "id": "2026-03-agent-mode-next-edit",
+      "date": "2026-03",
+      "type": "upgrade",
+      "title": "Agent Mode gains Next Edit Suggestions",
+      "description": "Agent Mode now predicts your next edit location and pre-populates suggestions based on your recent changes.",
+      "instruments": ["agent-mode", "next-edit-suggestions"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-02-copilot-agent-md",
+      "date": "2026-02",
+      "type": "departure",
+      "title": "Custom Agents (.agent.md) reach GA",
+      "description": "Define reusable specialized agents with .agent.md files in .github/agents/. Agents can use tools, MCP servers, and custom instructions.",
+      "instruments": ["copilot-agents-yml"],
+      "zone": "fms",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-01-coding-agent-ga",
+      "date": "2026-01",
+      "type": "departure",
+      "title": "Coding Agent (Copilot Workspace) clears for departure",
+      "description": "Cloud-based autonomous coding agent reaches GA. Assigns GitHub Issues to Copilot for end-to-end implementation in a sandboxed environment.",
+      "instruments": ["coding-agent"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2025-11-extensions-grounded",
+      "date": "2025-11",
+      "type": "grounded",
+      "title": "Copilot Extensions grounded — replaced by MCP",
+      "description": "Copilot Extensions are deprecated in favor of the Model Context Protocol (MCP). Existing extensions should migrate to MCP servers.",
+      "instruments": ["copilot-extensions", "mcp"],
+      "zone": "side",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2025-10-gh-copilot-deprecated",
+      "date": "2025-10",
+      "type": "grounded",
+      "title": "gh copilot CLI grounded — standalone 'copilot' takes over",
+      "description": "The 'gh copilot' CLI extension is deprecated. A standalone 'copilot' command replaces it with enhanced capabilities.",
+      "instruments": ["copilot-cli"],
+      "zone": "side",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2025-06-agent-mode-ga",
+      "date": "2025-06",
+      "type": "departure",
+      "title": "Agent Mode clears for departure",
+      "description": "Agent Mode reaches General Availability across VS Code, JetBrains, Visual Studio, Eclipse, and Xcode. Autonomous multi-file editing with terminal access.",
+      "instruments": ["agent-mode"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2025-05-data-residency-ga",
+      "date": "2025-05",
+      "type": "departure",
+      "title": "Data Residency reaches GA",
+      "description": "Enterprise customers can now choose data processing regions (EU, US) for Copilot prompts and suggestions.",
+      "instruments": ["data-residency"],
+      "zone": "overhead",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2025-04-mcp-ga",
+      "date": "2025-04",
+      "type": "departure",
+      "title": "Model Context Protocol support reaches GA",
+      "description": "MCP servers can now be configured in VS Code settings or .vscode/mcp.json to extend Copilot with custom tools and data sources.",
+      "instruments": ["mcp"],
+      "zone": "side",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2025-03-multi-model",
+      "date": "2025-03",
+      "type": "upgrade",
+      "title": "Multi-model support expanded",
+      "description": "Copilot Chat now supports Claude 3.5 Sonnet, Gemini 2.0 Flash, and GPT-4o alongside the default model. Model selection available in chat dropdown.",
+      "instruments": ["model-picker"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2025-02-agent-mode-preview",
+      "date": "2025-02",
+      "type": "cleared",
+      "title": "Agent Mode cleared for takeoff",
+      "description": "Agent Mode enters public preview in VS Code. Autonomous coding loop with terminal access, multi-file editing, and self-correction.",
+      "instruments": ["agent-mode"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2025-02-code-review-ga",
+      "date": "2025-02",
+      "type": "departure",
+      "title": "Copilot Code Review reaches GA",
+      "description": "AI-powered code review on GitHub.com pull requests reaches General Availability. Provides inline suggestions and security feedback.",
+      "instruments": ["code-review"],
+      "zone": "glareshield",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2025-01-mcp-preview",
+      "date": "2025-01",
+      "type": "cleared",
+      "title": "MCP support cleared for takeoff",
+      "description": "VS Code gains experimental support for Model Context Protocol servers, allowing Copilot to connect to external tools and data sources.",
+      "instruments": ["mcp"],
+      "zone": "side",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2024-12-copilot-free",
+      "date": "2024-12",
+      "type": "notam",
+      "title": "NOTAM: Copilot Free tier announced",
+      "description": "GitHub announces a free tier of Copilot with 2,000 code completions and 50 chat messages per month. Available to all GitHub users.",
+      "instruments": ["copilot-plans", "inline-completions", "copilot-chat"],
+      "zone": "overhead",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2024-10-workspace-ga",
+      "date": "2024-10",
+      "type": "departure",
+      "title": "@workspace reaches GA",
+      "description": "The @workspace chat participant reaches General Availability, enabling codebase-wide context in Copilot Chat queries.",
+      "instruments": ["workspace-participant"],
+      "zone": "nd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2024-10-code-review-preview",
+      "date": "2024-10",
+      "type": "cleared",
+      "title": "Copilot Code Review cleared for takeoff",
+      "description": "AI-powered pull request review enters public preview on GitHub.com. Copilot can be requested as a reviewer on PRs.",
+      "instruments": ["code-review"],
+      "zone": "glareshield",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2024-10-data-residency-preview",
+      "date": "2024-10",
+      "type": "cleared",
+      "title": "Data Residency enters preview",
+      "description": "Enterprise customers can now opt into data processing region selection for Copilot in preview.",
+      "instruments": ["data-residency"],
+      "zone": "overhead",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2024-07-copilot-extensions",
+      "date": "2024-07",
+      "type": "cleared",
+      "title": "Copilot Extensions cleared for takeoff",
+      "description": "Third-party extensions for Copilot Chat enter preview. Developers can build integrations that add context and capabilities.",
+      "instruments": ["copilot-extensions"],
+      "zone": "side",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2024-03-workspace-preview",
+      "date": "2024-03",
+      "type": "cleared",
+      "title": "@workspace enters preview",
+      "description": "New @workspace chat participant enables codebase-wide questions in Copilot Chat, searching across all files in the workspace.",
+      "instruments": ["workspace-participant"],
+      "zone": "nd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2024-02-copilot-enterprise",
+      "date": "2024-02",
+      "type": "departure",
+      "title": "Copilot Enterprise clears for departure",
+      "description": "Copilot Enterprise tier launches with knowledge bases, fine-tuned models, and advanced admin controls.",
+      "instruments": ["copilot-plans", "knowledge-bases"],
+      "zone": "overhead",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2024-01-explain-ga",
+      "date": "2024-01",
+      "type": "departure",
+      "title": "/explain reaches GA",
+      "description": "The /explain slash command for code explanation reaches General Availability across all supported IDEs.",
+      "instruments": ["slash-explain"],
+      "zone": "pedestal",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2024-01-usage-metrics-ga",
+      "date": "2024-01",
+      "type": "departure",
+      "title": "Usage Metrics dashboard reaches GA",
+      "description": "Organization admins can now view Copilot adoption metrics including acceptance rates, active users, and language breakdown.",
+      "instruments": ["usage-metrics"],
+      "zone": "overhead",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2023-11-copilot-chat-ga",
+      "date": "2023-11",
+      "type": "departure",
+      "title": "Copilot Chat clears for departure",
+      "description": "Copilot Chat reaches General Availability in VS Code and JetBrains. Conversational AI coding assistant available to all subscribers.",
+      "instruments": ["copilot-chat"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2023-03-seat-management-ga",
+      "date": "2023-03",
+      "type": "departure",
+      "title": "Seat Management reaches GA",
+      "description": "Organization admins can assign, remove, and manage Copilot seats across teams with granular policies.",
+      "instruments": ["seat-management"],
+      "zone": "overhead",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2022-06-copilot-ga",
+      "date": "2022-06",
+      "type": "departure",
+      "title": "GitHub Copilot clears for departure",
+      "description": "GitHub Copilot reaches General Availability with inline code completions. The first AI pair programmer available to individual developers.",
+      "instruments": ["inline-completions", "copilot-plans"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    }
+  ]
+}

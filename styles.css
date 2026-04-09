@@ -837,6 +837,168 @@ body::after {
 @keyframes pulse-led { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
+/* --- Header Navigation --- */
+.header-nav {
+    display: flex; gap: 4px; margin-right: 12px;
+}
+
+.nav-link {
+    font-family: var(--font-mono);
+    font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    padding: 4px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    transition: all 0.2s;
+}
+
+.nav-link:hover { color: var(--color-pfd); border-color: var(--color-pfd); }
+.nav-link.active { color: var(--color-pfd); border-color: var(--color-pfd); background: rgba(0, 255, 136, 0.08); }
+
+body.light-theme .nav-link { color: rgba(0, 0, 0, 0.4); border-color: rgba(0, 0, 0, 0.12); }
+body.light-theme .nav-link:hover,
+body.light-theme .nav-link.active { color: var(--color-pfd); border-color: var(--color-pfd); background: rgba(0, 153, 77, 0.06); }
+
+/* --- Flight Log --- */
+.flight-log-main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 32px;
+}
+
+.flight-log-stats {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 24px;
+}
+
+body.light-theme .flight-log-stats {
+    color: rgba(0, 0, 0, 0.4);
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+.log-year-group { margin-bottom: 32px; }
+
+.log-year-header {
+    font-family: var(--font-mono);
+    font-size: 1.1rem; font-weight: 700;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 4px;
+    margin-bottom: 16px;
+    padding-left: 90px;
+}
+
+body.light-theme .log-year-header { color: rgba(0, 0, 0, 0.15); }
+
+.log-entries { display: flex; flex-direction: column; gap: 2px; }
+
+.log-entry {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.15s;
+}
+
+.log-entry:hover { background: rgba(255, 255, 255, 0.02); }
+body.light-theme .log-entry { border-bottom-color: rgba(0, 0, 0, 0.04); }
+body.light-theme .log-entry:hover { background: rgba(0, 0, 0, 0.02); }
+
+.log-entry-date {
+    font-family: var(--font-mono);
+    font-size: 0.6rem; font-weight: 500;
+    color: rgba(255, 255, 255, 0.3);
+    min-width: 70px; text-align: right;
+    padding-top: 2px;
+    letter-spacing: 0.5px;
+}
+
+body.light-theme .log-entry-date { color: rgba(0, 0, 0, 0.35); }
+
+.log-entry-marker {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+    box-shadow: 0 0 6px currentColor;
+}
+
+.log-entry-content { flex: 1; min-width: 0; }
+
+.log-entry-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 4px;
+}
+
+.log-entry-type {
+    font-family: var(--font-mono);
+    font-size: 0.5rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 2px 6px;
+    border: 1px solid;
+    border-radius: 3px;
+}
+
+.log-entry-zone {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    letter-spacing: 1px; text-transform: uppercase;
+    opacity: 0.6;
+}
+
+.log-entry-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem; font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 4px 0;
+}
+
+body.light-theme .log-entry-title { color: rgba(0, 0, 0, 0.85); }
+
+.log-entry-description {
+    font-family: var(--font-mono);
+    font-size: 0.6rem; line-height: 1.5;
+    color: rgba(255, 255, 255, 0.45);
+    margin: 0 0 6px 0;
+}
+
+body.light-theme .log-entry-description { color: rgba(0, 0, 0, 0.5); }
+
+.log-entry-instruments {
+    display: flex; flex-wrap: wrap; gap: 6px;
+}
+
+.log-instrument-link {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--color-nd);
+    text-decoration: none;
+    padding: 1px 6px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 3px;
+    transition: all 0.15s;
+}
+
+.log-instrument-link:hover {
+    border-color: var(--color-nd);
+    background: rgba(0, 212, 255, 0.08);
+}
+
+.log-empty {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.3);
+    text-align: center;
+    padding: 60px 0;
+}
+
+body.light-theme .log-empty { color: rgba(0, 0, 0, 0.3); }
+
 /* --- Responsive --- */
 @media (max-width: 1024px) {
     .cockpit-grid {

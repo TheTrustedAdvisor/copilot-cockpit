@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Log — Copilot Cockpit Changelog</title>
+    <meta name="description" content="Changelog for GitHub Copilot features tracked in aviation terminology. Departures, NOTAMs, and turbulence reports.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="cockpit-header">
+        <div class="cockpit-title">
+            <span class="icon">✈</span>
+            <div>
+                <h1>Flight Log</h1>
+                <div class="subtitle">Copilot Changelog</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <nav class="header-nav">
+                <a href="index.html" class="nav-link">Cockpit</a>
+                <a href="flight-log.html" class="nav-link active">Flight Log</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">DAY</button>
+        </div>
+    </header>
+
+    <!-- ==================== FILTER BAR ==================== -->
+    <div class="filter-bar">
+        <span class="filter-label">Entry Type</span>
+        <button class="filter-btn log-filter" data-filter-type="entryType" data-filter-value="departure">Departure</button>
+        <button class="filter-btn log-filter" data-filter-type="entryType" data-filter-value="cleared">Cleared</button>
+        <button class="filter-btn log-filter" data-filter-type="entryType" data-filter-value="upgrade">Upgrade</button>
+        <button class="filter-btn log-filter" data-filter-type="entryType" data-filter-value="notam">NOTAM</button>
+        <button class="filter-btn log-filter" data-filter-type="entryType" data-filter-value="grounded">Grounded</button>
+        <button class="filter-btn log-filter" data-filter-type="entryType" data-filter-value="turbulence">Turbulence</button>
+
+        <span class="filter-label" style="margin-left:16px">Zone</span>
+        <button class="filter-btn log-filter" data-filter-type="zone" data-filter-value="pfd">PFD</button>
+        <button class="filter-btn log-filter" data-filter-type="zone" data-filter-value="nd">ND</button>
+        <button class="filter-btn log-filter" data-filter-type="zone" data-filter-value="glareshield">Glareshield</button>
+        <button class="filter-btn log-filter" data-filter-type="zone" data-filter-value="pedestal">Pedestal</button>
+        <button class="filter-btn log-filter" data-filter-type="zone" data-filter-value="overhead">Overhead</button>
+        <button class="filter-btn log-filter" data-filter-type="zone" data-filter-value="side">Side</button>
+        <button class="filter-btn log-filter" data-filter-type="zone" data-filter-value="fms">FMS</button>
+    </div>
+
+    <!-- ==================== FLIGHT LOG CONTENT ==================== -->
+    <main class="flight-log-main">
+        <div class="flight-log-stats" id="log-stats"></div>
+        <div class="flight-log-timeline" id="log-timeline">
+            <!-- Rendered by JS -->
+        </div>
+    </main>
+
+    <script>
+    // ============================================================
+    // FLIGHT LOG APP
+    // ============================================================
+
+    let logData = null;
+    let activeFilters = {};
+
+    // --- Theme ---
+    function initTheme() {
+        const saved = localStorage.getItem('cockpit-theme');
+        if (saved === 'light') {
+            document.body.classList.add('light-theme');
+            document.getElementById('theme-toggle').textContent = 'NIGHT';
+        }
+    }
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('cockpit-theme', isLight ? 'light' : 'dark');
+        document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
+    });
+
+    // --- Zone metadata ---
+    const ZONE_META = {
+        pfd: { name: 'Primary Flight Display', color: 'var(--color-pfd)' },
+        nd: { name: 'Navigation Display', color: 'var(--color-nd)' },
+        glareshield: { name: 'Glareshield', color: 'var(--color-glareshield)' },
+        eicas: { name: 'EICAS', color: 'var(--color-eicas)' },
+        pedestal: { name: 'Pedestal', color: 'var(--color-pedestal)' },
+        overhead: { name: 'Overhead Panel', color: 'var(--color-overhead)' },
+        side: { name: 'Side Panel', color: 'var(--color-side)' },
+        fms: { name: 'FMS', color: 'var(--color-fms)' }
+    };
+
+    // --- Load data ---
+    async function loadFlightLog() {
+        const res = await fetch('data/known-changelog-entries.json');
+        logData = await res.json();
+        renderTimeline();
+    }
+
+    // --- Render ---
+    function renderTimeline() {
+        const container = document.getElementById('log-timeline');
+        const stats = document.getElementById('log-stats');
+        if (!logData) return;
+
+        // Apply filters
+        let entries = logData.entries;
+        for (const [type, value] of Object.entries(activeFilters)) {
+            if (value) {
+                entries = entries.filter(e => {
+                    if (type === 'entryType') return e.type === value;
+                    if (type === 'zone') return e.zone === value;
+                    return true;
+                });
+            }
+        }
+
+        // Group by year
+        const grouped = {};
+        entries.forEach(e => {
+            const year = e.date.split('-')[0];
+            if (!grouped[year]) grouped[year] = [];
+            grouped[year].push(e);
+        });
+
+        // Stats
+        const typeCounts = {};
+        entries.forEach(e => { typeCounts[e.type] = (typeCounts[e.type] || 0) + 1; });
+        stats.innerHTML = `
+            <span class="log-stat-item">${entries.length} entries</span>
+            ${Object.entries(typeCounts).map(([type, count]) => {
+                const meta = logData.entryTypes[type];
+                return `<span class="log-stat-item" style="color:${meta ? meta.color : '#888'}">${meta ? meta.label : type}: ${count}</span>`;
+            }).join('')}
+        `;
+
+        // Render grouped timeline
+        const years = Object.keys(grouped).sort((a, b) => b - a);
+        container.innerHTML = years.map(year => `
+            <div class="log-year-group">
+                <h2 class="log-year-header">${year}</h2>
+                <div class="log-entries">
+                    ${grouped[year].map(entry => renderEntry(entry)).join('')}
+                </div>
+            </div>
+        `).join('');
+
+        if (entries.length === 0) {
+            container.innerHTML = '<div class="log-empty">No entries match current filters.</div>';
+        }
+    }
+
+    function renderEntry(entry) {
+        const typeMeta = logData.entryTypes[entry.type] || {};
+        const zoneMeta = ZONE_META[entry.zone] || {};
+        const monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const [year, month] = entry.date.split('-');
+        const dateLabel = month ? `${monthNames[parseInt(month)]} ${year}` : year;
+
+        const instrumentLinks = (entry.instruments || []).map(id =>
+            `<a href="index.html#instrument-${id}" class="log-instrument-link" data-instrument="${id}">${id}</a>`
+        ).join('');
+
+        return `
+            <article class="log-entry" data-type="${entry.type}" data-zone="${entry.zone}">
+                <div class="log-entry-date">${dateLabel}</div>
+                <div class="log-entry-marker" style="background:${typeMeta.color || '#888'}"></div>
+                <div class="log-entry-content">
+                    <div class="log-entry-header">
+                        <span class="log-entry-type" style="color:${typeMeta.color || '#888'};border-color:${typeMeta.color || '#888'}">${typeMeta.label || entry.type}</span>
+                        <span class="log-entry-zone" style="color:${zoneMeta.color || '#888'}">${zoneMeta.name || entry.zone}</span>
+                    </div>
+                    <h3 class="log-entry-title">${entry.title}</h3>
+                    <p class="log-entry-description">${entry.description}</p>
+                    <div class="log-entry-instruments">${instrumentLinks}</div>
+                </div>
+            </article>
+        `;
+    }
+
+    // --- Filters ---
+    document.querySelectorAll('.log-filter').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const type = btn.dataset.filterType;
+            const value = btn.dataset.filterValue;
+
+            // Toggle: if already active, deactivate
+            if (activeFilters[type] === value) {
+                delete activeFilters[type];
+                btn.classList.remove('active');
+            } else {
+                // Deactivate other buttons in same group
+                document.querySelectorAll(`.log-filter[data-filter-type="${type}"]`).forEach(b => b.classList.remove('active'));
+                activeFilters[type] = value;
+                btn.classList.add('active');
+            }
+            renderTimeline();
+        });
+    });
+
+    // --- Init ---
+    initTheme();
+    loadFlightLog();
+    </script>
+</body>
+</html>
