@@ -629,9 +629,10 @@ body::after {
 
 .cockpit-body.blade-open .detail-blade {
     flex-basis: 60%;
-    min-width: 500px;
+    min-width: 600px;
     max-width: 900px;
     opacity: 1;
+    padding: 0 4px;
 }
 
 /* Mobile: blade goes full-width overlay */
