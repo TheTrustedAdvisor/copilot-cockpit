@@ -1416,8 +1416,8 @@
       "ideSupport": {
         "vscode": null,
         "jetbrains": null,
-        "neovim": null,
         "visual-studio": null,
+        "neovim": null,
         "eclipse": null,
         "xcode": null,
         "github-com": "ga",
@@ -1427,14 +1427,39 @@
         "atc"
       ],
       "capabilities": [
-        "Auto-generated security fixes",
-        "CodeQL integration",
-        "PR-level fix suggestions",
-        "One-click apply"
+        "Automatically generates AI-powered fix suggestions for CodeQL code scanning alerts on pull requests",
+        "Supports C#, C/C++, Go, Java/Kotlin, Swift, JavaScript/TypeScript, Python, Ruby, and Rust",
+        "Uses GPT-5.1 to translate alert descriptions and code locations into concrete code change suggestions",
+        "Provides explanatory text alongside suggested code changes to help developers understand the fix",
+        "Enabled by default for all repositories using CodeQL — no Copilot subscription required",
+        "Configurable (enabled/disabled) at enterprise, organization, or repository levels"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "4001",
+          "title": "Partial Fix",
+          "description": "Autofix may only partially address a vulnerability due to limited visibility into the full codebase context."
+        },
+        {
+          "code": "4002",
+          "title": "Fabricated Dependencies",
+          "description": "Suggested fixes may reference fabricated or insecure dependency versions — always verify package names and versions."
+        },
+        {
+          "code": "4003",
+          "title": "Non-Deterministic",
+          "description": "The LLM may produce different suggestions for identical alerts across runs — results are not guaranteed to be reproducible."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Autofix workflow on a pull request",
+          "language": "yaml",
+          "context": "github-actions",
+          "code": "# No config needed — Autofix activates automatically\n# when CodeQL code scanning is enabled.\n#\n# To disable at org level:\n# Settings > Code security > Code scanning\n#   > Copilot Autofix > Disable\n#\n# Autofix suggestions appear inline on PR alerts\n# as commit-ready code changes."
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1444,8 +1469,19 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "Always run CI tests after committing an Autofix suggestion — the fix may resolve the security alert but could introduce semantic changes that break existing functionality.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Directly remediates security vulnerabilities found by CodeQL static analysis",
+          "Data sent to GPT-5.1 includes code snippets around alert locations",
+          "Customer data is NOT used for LLM training — governed by Advanced Security terms",
+          "Generated fixes may themselves introduce new vulnerabilities — human review mandatory"
+        ],
+        "complianceNotes": "No Copilot subscription required for public repos. Private/internal repos require GitHub Code Security license."
+      }
     },
     {
       "id": "security-scanning",
@@ -1465,27 +1501,52 @@
         "enterprise": true
       },
       "ideSupport": {
-        "vscode": null,
+        "vscode": "ga",
         "jetbrains": null,
-        "neovim": null,
         "visual-studio": null,
+        "neovim": null,
         "eclipse": null,
         "xcode": null,
         "github-com": "ga",
-        "cli": null
+        "cli": "ga"
       },
       "flightMode": [
         "atc"
       ],
       "capabilities": [
-        "CodeQL analysis",
-        "Dependency vulnerability scanning",
-        "Secret scanning",
-        "Custom query support"
+        "Uses CodeQL analysis engine to automatically find security vulnerabilities and coding errors",
+        "Supports 12 languages: C/C++, C#, Go, Java, Kotlin, JS, TS, Python, Ruby, Rust, Swift, and GitHub Actions YAML",
+        "Default setup (one-click) and advanced setup (custom GitHub Actions workflow with third-party tools)",
+        "Integrates with pull requests to surface alerts before merge, with optional merge protection rules",
+        "Interoperable with third-party SARIF-compliant tools — results uploadable from any CI system",
+        "Organization-wide security overview for monitoring results across all repositories"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "4010",
+          "title": "SARIF Open Standard",
+          "description": "Code scanning uses SARIF — you can integrate any SARIF-compliant tool, not just CodeQL."
+        },
+        {
+          "code": "4011",
+          "title": "Actions Minutes",
+          "description": "Code scanning consumes GitHub Actions minutes — private repos require sufficient Actions quota and a Code Security license."
+        },
+        {
+          "code": "4012",
+          "title": "Merge Protection",
+          "description": "Configure merge protection rules to prevent PRs with unresolved scanning alerts from being merged."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Advanced CodeQL scanning workflow",
+          "language": "yaml",
+          "context": "github-actions",
+          "code": "name: 'CodeQL Analysis'\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n  schedule:\n    - cron: '0 6 * * 1'\njobs:\n  analyze:\n    runs-on: ubuntu-latest\n    permissions:\n      security-events: write\n    strategy:\n      matrix:\n        language: ['javascript', 'python']\n    steps:\n      - uses: actions/checkout@v4\n      - uses: github/codeql-action/init@v3\n        with:\n          languages: ${{ matrix.language }}\n      - uses: github/codeql-action/analyze@v3"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1495,8 +1556,19 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "Start with default setup for immediate coverage, then graduate to advanced setup when you need custom CodeQL query suites or third-party tool integration via SARIF uploads.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Core security analysis tool — identifies vulnerabilities via static analysis",
+          "CodeQL treats code as data, querying it for vulnerability patterns across control and data flow",
+          "Supports variant analysis to find similar vulnerabilities across multiple repositories",
+          "Organization security overview provides centralized vulnerability monitoring"
+        ],
+        "complianceNotes": "Free for public repos. Private repos require GitHub Code Security license. SARIF standard enables integration with compliance toolchains."
+      }
     },
     {
       "id": "agent-self-review",
@@ -1516,26 +1588,51 @@
         "enterprise": true
       },
       "ideSupport": {
-        "vscode": "preview",
+        "vscode": null,
         "jetbrains": null,
-        "neovim": null,
         "visual-studio": null,
+        "neovim": null,
         "eclipse": null,
         "xcode": null,
-        "github-com": null,
+        "github-com": "ga",
         "cli": null
       },
       "flightMode": [
         "advanced"
       ],
       "capabilities": [
-        "Self-review of generated code",
-        "Error detection before presenting",
-        "Quality improvement loop"
+        "Coding agent autonomously creates PRs; auto-review rulesets assign Copilot to review them",
+        "Creates a feedback loop where AI-generated code is reviewed by AI before human review",
+        "Review comments appear as standard PR comments that developers can accept or dismiss",
+        "Configurable via rulesets to review draft PRs (catching issues before human review is requested)",
+        "Reviews complete in under 30 seconds and leave Comment-type reviews (never Approve)"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "4020",
+          "title": "Not an Approval",
+          "description": "Copilot code review always leaves a 'Comment' review, never 'Approve' or 'Request changes' — it cannot satisfy required review rules."
+        },
+        {
+          "code": "4021",
+          "title": "Human Review Required",
+          "description": "Agent self-review supplements but does not replace human review — developers must validate all agent-generated code."
+        },
+        {
+          "code": "4022",
+          "title": "Review Hallucination",
+          "description": "Review comments may flag non-existent problems or misunderstand agent-generated code patterns."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Configure auto-review for agent PRs",
+          "language": "text",
+          "context": "github-settings",
+          "code": "Settings > Rules > Rulesets > New branch ruleset\n  Name: auto-review-agent-prs\n  Enforcement: Active\n  Target branches: Include all branches\n  Branch rules:\n    [x] Automatically request Copilot code review\n    [x] Review new pushes\n    [x] Review draft pull requests"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1545,8 +1642,19 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 85,
+      "description": "Not a standalone feature — the combination of the Copilot coding agent creating PRs and automatic Copilot code review rulesets reviewing those PRs. When both are active, Copilot effectively reviews its own generated code.",
+      "proTip": "Enable 'Review draft pull requests' in your auto-review ruleset so Copilot reviews agent-generated PRs while they are still drafts — catching issues before any human reviewer is assigned.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Adds automated review layer to catch security issues in AI-generated code before human review",
+          "Review may miss complex security issues — not a substitute for security-focused human review",
+          "Custom instructions can include security checklists for reviews"
+        ],
+        "complianceNotes": "Requires Copilot Enterprise or Pro+. Copilot review reads only the first 4,000 characters of custom instruction files."
+      }
     },
     {
       "id": "auto-review-assign",
@@ -1618,8 +1726,8 @@
       "ideSupport": {
         "vscode": null,
         "jetbrains": null,
-        "neovim": null,
         "visual-studio": null,
+        "neovim": null,
         "eclipse": null,
         "xcode": null,
         "github-com": "ga",
@@ -1629,13 +1737,38 @@
         "advanced"
       ],
       "capabilities": [
-        "Automatic PR description generation",
-        "Diff-based summarization",
-        "Walkthrough of changes"
+        "Generates AI-powered summaries of pull request changes to help reviewers understand the diff",
+        "Available in the PR description editor and comment fields via the Copilot icon menu",
+        "Works on both new and existing pull requests on GitHub.com",
+        "Summarizes the nature and purpose of code changes across all files in the diff",
+        "Users can edit and augment the generated summary before publishing"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "4040",
+          "title": "Blank Description Best",
+          "description": "Copilot ignores existing PR description text when generating summaries — start with a blank description for best results."
+        },
+        {
+          "code": "4041",
+          "title": "Supplement Required",
+          "description": "Generated summaries should be reviewed and supplemented with business context, testing notes, and deployment considerations."
+        },
+        {
+          "code": "4042",
+          "title": "GitHub.com Only",
+          "description": "PR summaries are only available on GitHub.com — no IDE or CLI integration exists for this feature."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Generating a PR summary",
+          "language": "text",
+          "context": "github-ui",
+          "code": "1. Navigate to your pull request on GitHub.com\n2. Click the Copilot icon in the description field\n3. Select 'Summary' from the dropdown\n4. Review the generated summary\n5. Add additional context or edit as needed\n6. Publish the pull request"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -1645,8 +1778,16 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "Start with a blank PR description before generating a summary — Copilot does not account for existing content, so pre-existing text may lead to redundant or conflicting descriptions.",
+      "securityRelevance": {
+        "relevant": false,
+        "aspects": [
+          "PR summaries describe code changes but do not perform security analysis"
+        ],
+        "complianceNotes": "Available with Copilot subscription plans. Descriptive only — does not evaluate code security."
+      }
     },
     {
       "id": "slash-fix",
