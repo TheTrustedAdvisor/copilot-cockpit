@@ -2257,6 +2257,13 @@
         "cockpit"
       ],
       "status": "ga",
+      "statusHistory": [
+        {
+          "status": "ga",
+          "date": "2024-01"
+        }
+      ],
+      "description": "Organization-level analytics dashboard showing Copilot adoption and seat utilization. Admins can view seat assignments, estimated costs, last activity dates, and download CSV activity reports. REST API endpoints provide programmatic access to seat information for custom reporting.",
       "shortDescription": "Dashboards and API for Copilot adoption and productivity metrics",
       "planAvailability": {
         "free": false,
@@ -2279,14 +2286,43 @@
         "atc"
       ],
       "capabilities": [
-        "Acceptance rate metrics",
-        "Active user tracking",
-        "Language breakdown",
-        "API endpoint for custom reporting"
+        "Seat assignment count and estimated monthly cost overview",
+        "Per-user last activity tracking with sortable list",
+        "CSV activity report download for offline analysis",
+        "REST API endpoints for seat info, seat list, and per-user details",
+        "24-hour telemetry refresh cycle for activity data"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "7050",
+          "title": "Telemetry Lag",
+          "description": "The last_activity_at field may have up to a 24-hour delay. Wait and recheck if recent usage is not yet reflected."
+        },
+        {
+          "code": "7051",
+          "title": "IDE Telemetry Disabled",
+          "description": "Usage data requires telemetry to be enabled in each developer's IDE settings. Disabled telemetry results in stale or missing activity dates."
+        }
+      ],
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Exposes per-user activity data to org admins",
+          "API access requires org owner or admin permissions",
+          "Activity tracking reveals developer tool usage patterns"
+        ],
+        "complianceNotes": "Usage data helps demonstrate Copilot ROI for audits. CSV exports may contain PII (usernames, activity timestamps)."
+      },
+      "proTip": "Sort users by last activity date to identify inactive seats. Reclaim licenses from users who haven't used Copilot in 30+ days to optimize your seat spend.",
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "List Copilot Seat Assignments via API",
+          "language": "bash",
+          "context": "terminal",
+          "code": "# List all Copilot seat assignments for your org\ncurl -s -H \"Authorization: Bearer $GITHUB_TOKEN\" \\\n  -H \"Accept: application/vnd.github+json\" \\\n  \"https://api.github.com/orgs/YOUR_ORG/copilot/billing/seats\" \\\n  | jq '.seats[] | {login: .assignee.login, last_activity: .last_activity_at}'"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2294,10 +2330,13 @@
         "seat-management"
       ],
       "links": {
-        "docs": null
+        "docs": "https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-usage-data-for-github-copilot-in-your-organization",
+        "changelog": "https://github.blog/changelog/label/copilot/",
+        "learn": null,
+        "video": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 85
     },
     {
       "id": "seat-management",
@@ -2862,10 +2901,10 @@
       "ideSupport": {
         "vscode": "ga",
         "jetbrains": "ga",
-        "neovim": null,
         "visual-studio": "ga",
-        "eclipse": null,
-        "xcode": null,
+        "neovim": null,
+        "eclipse": "preview",
+        "xcode": "ga",
         "github-com": "ga",
         "cli": null
       },
@@ -2873,14 +2912,38 @@
         "advanced"
       ],
       "capabilities": [
-        "Repository-level instructions",
-        "Review behavior customization",
-        "Code generation guidelines",
-        "Team-shared configuration"
+        "Repository-level custom instructions via .github/copilot-instructions.md that automatically apply to all Copilot interactions",
+        "Supports Copilot Chat, Code Review, inline chat, and cloud agent",
+        "Complemented by path-specific instructions in .github/instructions/NAME.instructions.md with glob-pattern frontmatter",
+        "Priority system: personal instructions > repository instructions > organization instructions",
+        "Automated generation via Copilot cloud agent at github.com/copilot/agents"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "8001",
+          "title": "File Not Found",
+          "description": "Instructions must be at exactly .github/copilot-instructions.md — other paths or filenames are ignored."
+        },
+        {
+          "code": "8002",
+          "title": "Priority Conflicts",
+          "description": "Personal instructions override repository instructions, which override org instructions. Conflicts may cause unexpected behavior."
+        },
+        {
+          "code": "8003",
+          "title": "Length Limits",
+          "description": "Code review only reads the first 4,000 characters of instruction files. Keep critical rules near the top."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Repository Custom Instructions File",
+          "language": "markdown",
+          "context": "file-content",
+          "code": "# Project Conventions\n\nThis is a TypeScript project using React and Next.js.\n\n- Use functional components with hooks, never class components\n- Use `react-hook-form` for all form state management\n- All API calls must use the `fetchWrapper` from `src/lib/api.ts`\n- Write unit tests using Vitest with React Testing Library\n- Follow the project's ESLint configuration strictly"
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2891,8 +2954,18 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 95,
+      "proTip": "When Copilot uses your custom instructions, the .github/copilot-instructions.md file is listed as a reference in the response. Check the References list to verify your instructions are being applied.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Instructions are automatically loaded — anyone with write access can influence Copilot behavior for all contributors",
+          "Code review uses base branch version, preventing PR-based instruction injection",
+          "Can enforce security practices across all Copilot interactions"
+        ],
+        "complianceNotes": "Instructions can encode compliance requirements ensuring Copilot-generated code follows organizational security policies."
+      }
     },
     {
       "id": "custom-instructions-personal",
@@ -2963,9 +3036,9 @@
       },
       "ideSupport": {
         "vscode": "preview",
-        "jetbrains": null,
+        "jetbrains": "preview",
+        "visual-studio": "ga",
         "neovim": null,
-        "visual-studio": null,
         "eclipse": null,
         "xcode": null,
         "github-com": null,
@@ -2975,14 +3048,33 @@
         "advanced"
       ],
       "capabilities": [
-        "Reusable prompt templates",
-        "File reference inclusion",
-        "Team-shared prompts",
-        "Variable substitution"
+        "Reusable prompt templates as .prompt.md files in .github/prompts/, invoked via /prompt-name in Copilot Chat",
+        "YAML frontmatter with agent (mode), description, and tools properties",
+        "Interactive input variables using ${input:variable_name:Prompt question?} syntax",
+        "Markdown link references to other prompt files and docs for modular, composable instruction sets",
+        "Can reference workspace files using #file:path syntax"
       ],
-      "squawkCodes": [],
+      "squawkCodes": [
+        {
+          "code": "8020",
+          "title": "Directory Required",
+          "description": "Prompt files must be in .github/prompts/ directory — files elsewhere are not discovered."
+        },
+        {
+          "code": "8021",
+          "title": "Frontmatter Required",
+          "description": "Prompt files need YAML frontmatter with at least a description property to appear in the command list."
+        }
+      ],
       "mermaidDiagrams": [],
-      "codeExamples": [],
+      "codeExamples": [
+        {
+          "title": "Unit Test Generator Prompt File",
+          "language": "markdown",
+          "context": "file-content",
+          "code": "---\nagent: 'agent'\ndescription: 'Generate unit tests for selected functions'\n---\n\nGenerate tests for `${input:function_name:Which function?}`\nusing `${input:framework:Which framework? (jest/vitest/pytest)}`.\n\nFollow AAA (Arrange, Act, Assert) structure.\nGenerate 5-8 focused test cases with descriptive names."
+        }
+      ],
       "terminalRecordings": [],
       "videos": [],
       "relatedInstruments": [
@@ -2993,8 +3085,17 @@
       "links": {
         "docs": null
       },
-      "lastVerified": "2026-04-08",
-      "confidenceScore": 50
+      "lastVerified": "2026-04-09",
+      "confidenceScore": 90,
+      "proTip": "Unlike copilot-instructions.md which applies automatically, prompt files are invoked on-demand with /prompt-name. Ideal for task-specific workflows — code reviews, test generation, migration patterns — that you want to standardize across a team.",
+      "securityRelevance": {
+        "relevant": true,
+        "aspects": [
+          "Can encode security review checklists as reusable workflows",
+          "Shared via repository — anyone with write access can modify prompt templates"
+        ],
+        "complianceNotes": "Useful for standardizing security practices as reusable team workflows committed to version control."
+      }
     },
     {
       "id": "copilot-agents-yml",
