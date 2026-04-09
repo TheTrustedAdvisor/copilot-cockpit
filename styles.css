@@ -761,6 +761,15 @@ body::after {
 
 .code-block code { font-family: var(--font-mono); }
 
+/* Override Prism theme backgrounds to match HUD aesthetic */
+.code-block pre[class*="language-"],
+.code-block code[class*="language-"] {
+    background: none;
+    text-shadow: none;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+}
+
 .copy-btn {
     font-family: var(--font-mono); font-size: 0.55rem;
     padding: 2px 8px; border: 1px solid rgba(255, 255, 255, 0.15);

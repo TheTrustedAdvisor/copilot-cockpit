@@ -155,6 +155,31 @@ test.describe('Blade Detail Panel', () => {
 
 
 // ============================================================
+// SYNTAX HIGHLIGHTING (Prism.js)
+// ============================================================
+
+test.describe('Syntax Highlighting', () => {
+    test('Prism.js highlights code blocks in Code tab', async ({ page }) => {
+        await page.goto('/');
+
+        // Open an instrument with code examples (agent-mode has them)
+        await page.locator('.instrument[data-id="agent-mode"]').click();
+        await expect(page.locator('#cockpit-body')).toHaveClass(/blade-open/);
+
+        // Click the Code tab
+        const codeTab = page.locator('.detail-tab', { hasText: 'Code' });
+        if (await codeTab.isVisible()) {
+            await codeTab.click();
+
+            // Wait for Prism to apply highlighting — look for Prism's token spans
+            const tokenSpan = page.locator('.code-block code .token');
+            await expect(tokenSpan.first()).toBeVisible({ timeout: 3000 });
+        }
+    });
+});
+
+
+// ============================================================
 // DEEP LINKING
 // ============================================================
 

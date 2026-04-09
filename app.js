@@ -234,10 +234,13 @@ function openDetailPanel(instrumentId, pushState = true) {
         history.pushState({ instrumentId }, '', `#instrument-${instrumentId}`);
     }
 
-    // Lazy-init Mermaid when Diagrams tab is clicked
+    // Tab click handlers
     panel.querySelectorAll('.detail-tab').forEach(tab => {
         tab.addEventListener('click', () => switchTab(tab, panel));
     });
+
+    // Highlight code blocks if Code tab is visible on initial render
+    highlightCodeBlocks(panel);
 }
 
 function closeDetailPanel() {
@@ -317,6 +320,11 @@ function switchTab(tabBtn, panel) {
         // Lazy render Mermaid diagrams when tab becomes visible
         if (tabId === 'diagrams') {
             renderMermaidDiagrams(content);
+        }
+
+        // Highlight code blocks when Code tab becomes visible
+        if (tabId === 'code') {
+            highlightCodeBlocks(content);
         }
     }
 }
@@ -748,6 +756,14 @@ function copyCode(button) {
             button.textContent = 'COPY';
             button.classList.remove('copied');
         }, 2000);
+    });
+}
+
+function highlightCodeBlocks(container) {
+    if (typeof Prism === 'undefined') return;
+    container.querySelectorAll('code[class*="language-"]:not(.prism-highlighted)').forEach(el => {
+        Prism.highlightElement(el);
+        el.classList.add('prism-highlighted');
     });
 }
 
