@@ -68,11 +68,13 @@ def harvest_one(source_id: str, meta: dict, refresh: bool) -> int:
         )
         return 2
 
-    url = meta["url"]
-    slug = meta.get("slug", source_id)
-    html = cache.get_or_fetch(source_id, slug, url, refresh=refresh)
+    try:
+        records = adapter.harvest(cache, refresh=refresh)
+    except RuntimeError as exc:
+        # require_env() and friends raise these with actionable messages.
+        print(f"[error] {source_id}: {exc}", file=sys.stderr)
+        return 1
 
-    records = adapter.parse(html)
     path = cache.write_parsed(source_id, records)
     print(f"[ok] {source_id}: {len(records)} records → {path.relative_to(cache.REPO_ROOT)}")
     return 0
@@ -94,6 +96,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     )
 
     args = parser.parse_args(argv)
+    cache.load_dotenv_if_present()
     sources = load_sources()
 
     if args.list_sources or (not args.source and not args.all):

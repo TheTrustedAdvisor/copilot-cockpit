@@ -29,6 +29,19 @@ sources:
     fields: [taskFit, strengths]
     phase: P1
 
+  # ── P1: provider APIs (authoritative, richest metadata) ─────────────────
+  anthropic-api:
+    url: https://api.anthropic.com/v1/models
+    type: json-api
+    adapter: anthropic_api
+    slug: models
+    fields: [displayName, contextWindow, maxOutputTokens, imageInput, pdfInput,
+             structuredOutputs, toolUse, citations, codeExecution, batchApi,
+             thinkingTypes, effortLevels, contextManagement, pricing,
+             releasedAt, deprecatedAt]
+    phase: P1
+    auth: ANTHROPIC_API_KEY
+
   # ── P2: provider docs (contextWindow + knowledgeCutoff) ──────────────────
   openai-models:
     url: https://platform.openai.com/docs/models
