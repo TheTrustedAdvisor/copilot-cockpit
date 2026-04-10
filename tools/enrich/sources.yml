@@ -42,6 +42,16 @@ sources:
     phase: P1
     auth: ANTHROPIC_API_KEY
 
+  google-genai-api:
+    url: https://generativelanguage.googleapis.com/v1beta/models
+    type: json-api
+    adapter: google_genai_api
+    slug: models
+    fields: [displayName, description, version, contextWindow, maxOutputTokens,
+             supportedMethods, thinkingEnabled, defaultTemperature, maxTemperature]
+    phase: P1
+    auth: GOOGLE_API_KEY
+
   # ── P2: provider docs (contextWindow + knowledgeCutoff) ──────────────────
   openai-models:
     url: https://platform.openai.com/docs/models
