@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower — Copilot Cockpit</title>
+    <meta name="description" content="Tower perspective for GitHub Copilot: governance, seat management, compliance mapping and incident runbooks for org owners and enterprise IT.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="cockpit-header">
+        <div class="cockpit-title">
+            <span class="icon">✈</span>
+            <div>
+                <h1>Tower Perspective</h1>
+                <div class="subtitle">Copilot — Admin & Governance View</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <nav class="header-nav" aria-label="Perspectives">
+                <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Terminal<span class="nav-soon">SOON</span></a>
+                <a href="security.html" class="nav-link">Security</a>
+                <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Gangway<span class="nav-soon">SOON</span></a>
+                <a href="index.html" class="nav-link">Cockpit</a>
+                <a href="tower.html" class="nav-link active">Tower</a>
+                <span class="nav-separator">·</span>
+                <a href="flight-log.html" class="nav-link">Flight Log</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">DAY</button>
+        </div>
+    </header>
+
+    <!-- ==================== TOWER CONTENT ==================== -->
+    <main class="tower-main" id="tower-main">
+        <section class="tower-intro">
+            <h2>🗼 Air Traffic Control Briefing</h2>
+            <p>The Tower doesn't fly the plane — it governs the airspace. This is the admin &amp; governance view for org owners,
+            CISOs' deputies, and enterprise IT. See which controls you've enabled, how they map to compliance frameworks,
+            what's running across your fleet of seats, and what to do when a squawk goes off.</p>
+        </section>
+
+        <!-- ============ RADAR SCOPE — HERO ============ -->
+        <section class="radar-scope tower-section" aria-label="Governance Radar Scope">
+            <h3 class="tower-section-title">◉ Governance Radar</h3>
+            <div class="radar-container">
+                <div class="radar-display" aria-hidden="true">
+                    <div class="radar-ring ring-outer"></div>
+                    <div class="radar-ring ring-middle"></div>
+                    <div class="radar-ring ring-inner"></div>
+                    <div class="radar-crosshair radar-crosshair-h"></div>
+                    <div class="radar-crosshair radar-crosshair-v"></div>
+                    <div class="radar-sweep"></div>
+                    <div class="radar-blips" id="radar-blips">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <div class="radar-legend">
+                    <div class="radar-score">
+                        <div class="radar-score-value" id="governance-score">--</div>
+                        <div class="radar-score-label">Governance Score</div>
+                        <div class="radar-score-status" id="governance-status">Scanning…</div>
+                    </div>
+                    <div class="radar-breakdown" id="radar-breakdown">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ GOVERNANCE CONTROLS MATRIX ============ -->
+        <section class="tower-section">
+            <h3 class="tower-section-title">Governance Controls</h3>
+            <p class="tower-section-intro">Every control an org owner can configure, cross-cutting across Overhead, Glareshield, Side and FMS zones. Click any control to open it in the Cockpit.</p>
+            <div class="governance-grid" id="governance-grid">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ SEAT MANAGEMENT ============ -->
+        <section class="tower-section">
+            <h3 class="tower-section-title">Seat Management</h3>
+            <div class="seat-widget" id="seat-widget">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ ADOPTION METRICS ============ -->
+        <section class="tower-section">
+            <h3 class="tower-section-title">Adoption Metrics</h3>
+            <div class="metrics-grid" id="metrics-grid">
+                <!-- Populated by JS -->
+            </div>
+            <h4 class="tower-subsection-title">Top Instruments (last 30 days)</h4>
+            <table class="instrument-usage-table" id="instrument-usage-table">
+                <thead>
+                    <tr>
+                        <th>Instrument</th>
+                        <th class="num">Active Users</th>
+                        <th class="num">Events (30d)</th>
+                        <th>Trend</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ============ COMPLIANCE MAPPING ============ -->
+        <section class="tower-section">
+            <h3 class="tower-section-title">Compliance Mapping</h3>
+            <p class="tower-section-intro">Which frameworks Copilot supports, which controls underpin them, and where to find canonical evidence. External links open in a new tab.</p>
+            <div class="compliance-framework-grid" id="compliance-framework-grid">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ INCIDENT RUNBOOK ============ -->
+        <section class="tower-section">
+            <h3 class="tower-section-title">⚠ Incident Runbook</h3>
+            <p class="tower-section-intro">Three scenarios you should be able to run from muscle memory. Drill them before you need them.</p>
+            <div class="incident-list" id="incident-list">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+    // ============================================================
+    // TOWER PERSPECTIVE — Admin & Governance View
+    // ============================================================
+
+    let instrumentsData = null;
+    let governanceData = null;
+    let metricsData = null;
+
+    // --- Theme ---
+    function initTheme() {
+        const saved = localStorage.getItem('cockpit-theme');
+        if (saved === 'light') {
+            document.body.classList.add('light-theme');
+            document.getElementById('theme-toggle').textContent = 'NIGHT';
+        }
+    }
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('cockpit-theme', isLight ? 'light' : 'dark');
+        document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
+    });
+
+    // --- Load data in parallel ---
+    async function loadAllData() {
+        const [inst, gov, met] = await Promise.all([
+            fetch('data/copilot-instruments.json').then(r => r.json()),
+            fetch('data/tower-governance.json').then(r => r.json()),
+            fetch('data/tower-metrics.json').then(r => r.json())
+        ]);
+        instrumentsData = inst;
+        governanceData = gov;
+        metricsData = met;
+        init();
+    }
+
+    function init() {
+        renderRadar();
+        renderGovernanceGrid();
+        renderSeatWidget();
+        renderMetrics();
+        renderCompliance();
+        renderIncidents();
+        handleDeepLink();
+    }
+
+    function escapeHtml(s) {
+        if (s == null) return '';
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // --- Radar Scope ---
+    function renderRadar() {
+        const posture = metricsData.posture;
+        const scoreEl = document.getElementById('governance-score');
+        const statusEl = document.getElementById('governance-status');
+        const breakdownEl = document.getElementById('radar-breakdown');
+        const blipsEl = document.getElementById('radar-blips');
+
+        scoreEl.textContent = `${posture.governanceScore}%`;
+        scoreEl.classList.remove('low', 'mid', 'high');
+        if (posture.governanceScore < 40) {
+            scoreEl.classList.add('low');
+            statusEl.textContent = 'Squawk 7700 — At Risk';
+        } else if (posture.governanceScore < 75) {
+            scoreEl.classList.add('mid');
+            statusEl.textContent = 'Squawk 7600 — Improving';
+        } else {
+            scoreEl.classList.add('high');
+            statusEl.textContent = 'Cleared for Flight';
+        }
+
+        const checks = [
+            { label: `Policies configured`, value: `${posture.breakdown.policiesConfigured}/${posture.breakdown.policiesTotal}`, ok: posture.breakdown.policiesConfigured >= posture.breakdown.policiesTotal * 0.7 },
+            { label: `Content Exclusion`, value: posture.breakdown.contentExclusionEnabled ? 'Enabled' : 'Off', ok: posture.breakdown.contentExclusionEnabled },
+            { label: `Audit Log export`, value: posture.breakdown.auditLogsExported ? 'Active' : 'Off', ok: posture.breakdown.auditLogsExported },
+            { label: `Seat offboarding automated`, value: posture.breakdown.seatOffboardingAutomated ? 'Yes' : 'Manual', ok: posture.breakdown.seatOffboardingAutomated },
+            { label: `MCP allowlist`, value: posture.breakdown.mcpAllowlistSet ? 'Set' : 'Open', ok: posture.breakdown.mcpAllowlistSet },
+            { label: `Data residency pinned`, value: posture.breakdown.dataResidencyPinned ? 'Yes' : 'No', ok: posture.breakdown.dataResidencyPinned },
+            { label: `Runbook drilled`, value: posture.breakdown.incidentRunbookDrilled ? 'Yes' : 'Never', ok: posture.breakdown.incidentRunbookDrilled }
+        ];
+        breakdownEl.innerHTML = checks.map(c => `
+            <div class="radar-check ${c.ok ? 'ok' : 'warn'}">
+                <span class="radar-check-dot"></span>
+                <span class="radar-check-label">${escapeHtml(c.label)}</span>
+                <span class="radar-check-value">${escapeHtml(c.value)}</span>
+            </div>
+        `).join('');
+
+        // Place blips: deterministic positions around the scope
+        const blips = governanceData.controls.slice(0, 8).map((c, idx) => {
+            const angle = (idx / 8) * Math.PI * 2;
+            const radius = 32 + (idx % 3) * 14; // percent
+            const x = 50 + Math.cos(angle) * radius;
+            const y = 50 + Math.sin(angle) * radius;
+            const inst = instrumentsData.instruments.find(i => i.id === c.id);
+            const symbol = inst ? inst.symbol : c.id.slice(0, 3).toUpperCase();
+            return `<a class="radar-blip ${c.rolloutEffort}"
+                       href="#control=${c.id}"
+                       style="left:${x}%;top:${y}%;"
+                       title="${escapeHtml(inst ? inst.name : c.id)}">
+                        <span class="radar-blip-symbol">${escapeHtml(symbol)}</span>
+                    </a>`;
+        }).join('');
+        blipsEl.innerHTML = blips;
+    }
+
+    // --- Governance Grid ---
+    function renderGovernanceGrid() {
+        const grid = document.getElementById('governance-grid');
+        grid.innerHTML = governanceData.controls.map(c => {
+            const inst = instrumentsData.instruments.find(i => i.id === c.id);
+            if (!inst) return '';
+            const rolloutBadgeClass = `rollout-${c.rolloutEffort}`;
+            const stateBadgeClass = `state-${c.defaultState}`;
+            return `
+                <a class="governance-card" href="index.html#instrument-${inst.id}" data-control-id="${c.id}">
+                    <div class="governance-card-top">
+                        <span class="governance-card-symbol">${inst.symbol}</span>
+                        <span class="governance-card-rollout ${rolloutBadgeClass}">${c.rolloutEffort} effort</span>
+                    </div>
+                    <div class="governance-card-name">${escapeHtml(inst.name)}</div>
+                    <div class="governance-card-category">${escapeHtml(c.category)} · ${c.scope}</div>
+                    <div class="governance-card-note">${escapeHtml(c.governanceNote)}</div>
+                    <div class="governance-card-footer">
+                        <span class="governance-card-state ${stateBadgeClass}">Default: ${c.defaultState}</span>
+                        <span class="governance-card-compliance">${c.complianceRelevance.length} compliance refs</span>
+                    </div>
+                </a>
+            `;
+        }).join('');
+    }
+
+    // --- Seat Management Widget ---
+    function renderSeatWidget() {
+        const org = metricsData.org;
+        const s = org.seats;
+        const utilization = Math.round((s.activeLast30d / s.total) * 100);
+        const assignedPct = Math.round((s.assigned / s.total) * 100);
+        const activePct = Math.round((s.activeLast30d / s.total) * 100);
+
+        document.getElementById('seat-widget').innerHTML = `
+            <div class="seat-header">
+                <div>
+                    <div class="seat-org-name">${escapeHtml(org.name)}</div>
+                    <div class="seat-org-plan">${escapeHtml(org.plan)} · $${s.monthlySpend.toLocaleString()}/mo</div>
+                </div>
+                <div class="seat-utilization">
+                    <div class="seat-utilization-value">${utilization}%</div>
+                    <div class="seat-utilization-label">Utilization</div>
+                </div>
+            </div>
+            <div class="seat-bar" aria-label="Seat breakdown">
+                <div class="seat-bar-assigned" style="width:${assignedPct}%" title="Assigned: ${s.assigned}"></div>
+                <div class="seat-bar-active"   style="width:${activePct}%"   title="Active in 30d: ${s.activeLast30d}"></div>
+            </div>
+            <div class="seat-legend">
+                <span class="seat-legend-item"><span class="seat-legend-dot total"></span>Total ${s.total}</span>
+                <span class="seat-legend-item"><span class="seat-legend-dot assigned"></span>Assigned ${s.assigned}</span>
+                <span class="seat-legend-item"><span class="seat-legend-dot active"></span>Active 30d ${s.activeLast30d}</span>
+                <span class="seat-legend-item warn"><span class="seat-legend-dot orphan"></span>Orphaned ${s.inactiveWithSeat}</span>
+            </div>
+            <div class="seat-note">${escapeHtml(s.inactiveNote)}</div>
+            <div class="seat-regions">
+                ${org.regions.map(r => `
+                    <div class="seat-region">
+                        <div class="seat-region-label">${escapeHtml(r.label)}</div>
+                        <div class="seat-region-count">${r.seats}</div>
+                        <div class="seat-region-flag ${r.residencyPinned ? 'pinned' : 'open'}">
+                            ${r.residencyPinned ? '🔒 pinned' : '⚠ not pinned'}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    // --- Adoption Metrics ---
+    function renderMetrics() {
+        const a = metricsData.adoption;
+        const cards = [
+            { label: 'Inline Acceptance', value: `${Math.round(a.inlineAcceptanceRate * 100)}%`, trend: a.inlineAcceptanceRateTrend },
+            { label: 'Chat sessions / user / day', value: a.chatSessionsPerUserPerDay.toFixed(1), trend: a.chatSessionsTrend },
+            { label: 'Agent Mode (weekly active)', value: a.agentModeWeeklyActive, trend: a.agentModeWeeklyActiveTrend },
+            { label: 'Time to first PR (median)', value: `${a.timeToFirstPr.medianDays}d`, trend: `P90 ${a.timeToFirstPr.p90Days}d` }
+        ];
+        document.getElementById('metrics-grid').innerHTML = cards.map(c => `
+            <div class="metric-card">
+                <div class="metric-card-label">${escapeHtml(c.label)}</div>
+                <div class="metric-card-value">${escapeHtml(String(c.value))}</div>
+                <div class="metric-card-trend">${escapeHtml(c.trend)}</div>
+            </div>
+        `).join('');
+
+        // Instrument usage table
+        const rows = metricsData.instrumentUsage.map(u => {
+            const inst = instrumentsData.instruments.find(i => i.id === u.id);
+            if (!inst) return '';
+            return `
+                <tr>
+                    <td><a href="index.html#instrument-${inst.id}"><strong>${inst.symbol}</strong> ${escapeHtml(inst.name)}</a></td>
+                    <td class="num">${u.users}</td>
+                    <td class="num">${u.events30d.toLocaleString()}</td>
+                    <td><span class="trend-badge ${u.trend.startsWith('+') ? 'up' : u.trend === 'new' ? 'new' : 'stable'}">${escapeHtml(u.trend)}</span></td>
+                </tr>
+            `;
+        }).join('');
+        document.querySelector('#instrument-usage-table tbody').innerHTML = rows;
+    }
+
+    // --- Compliance Mapping ---
+    function renderCompliance() {
+        const c = governanceData.compliance;
+        const order = ['SOC2', 'ISO27001', 'GDPR', 'HIPAA', 'FedRAMP', 'EU_AI_ACT'];
+        const grid = document.getElementById('compliance-framework-grid');
+        grid.innerHTML = order.map(k => {
+            const fw = c[k];
+            if (!fw) return '';
+            const extras = fw.controlFamilies || fw.annexControls || fw.keyArticles || fw.rules || null;
+            const extrasHtml = extras
+                ? `<ul class="compliance-extras">${Object.entries(extras).map(([id, label]) => `<li><strong>${escapeHtml(id)}</strong> — ${escapeHtml(label)}</li>`).join('')}</ul>`
+                : '';
+            const checklist = fw.evidencePackChecklist || fw.dpiaChecklist || fw.deployerObligations || null;
+            const checklistHtml = checklist
+                ? `<div class="compliance-checklist-title">Checklist</div>
+                   <ul class="compliance-checklist">${checklist.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>`
+                : '';
+            return `
+                <div class="compliance-card framework-${k.toLowerCase().replace(/_/g,'-')}" data-framework="${k}">
+                    <div class="compliance-card-header">
+                        <div>
+                            <div class="compliance-card-name">${escapeHtml(fw.fullName)}</div>
+                            <div class="compliance-card-status status-${fw.status}">${escapeHtml(fw.status)}</div>
+                        </div>
+                        <a class="compliance-card-link" href="${escapeHtml(fw.url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(fw.fullName)} reference">↗</a>
+                    </div>
+                    <div class="compliance-card-note">${escapeHtml(fw.statusNote)}</div>
+                    ${extrasHtml}
+                    ${checklistHtml}
+                </div>
+            `;
+        }).join('');
+    }
+
+    // --- Incident Runbook ---
+    function renderIncidents() {
+        const list = document.getElementById('incident-list');
+        list.innerHTML = governanceData.incidents.map(inc => `
+            <details class="incident-card severity-${inc.severity}" data-incident-id="${inc.id}">
+                <summary class="incident-summary">
+                    <span class="squawk-code">SQUAWK ${inc.squawkCode}</span>
+                    <span class="incident-title">${escapeHtml(inc.title)}</span>
+                    <span class="incident-severity">${inc.severity}</span>
+                </summary>
+                <div class="incident-body">
+                    <div class="incident-trigger"><strong>Trigger:</strong> ${escapeHtml(inc.trigger)}</div>
+                    <div class="incident-phases">
+                        ${renderIncidentPhase('🔍 Detection', inc.detection)}
+                        ${renderIncidentPhase('🚨 Containment', inc.containment)}
+                        ${renderIncidentPhase('🔬 Forensics', inc.forensics)}
+                        ${renderIncidentPhase('📋 Post-Incident', inc.postIncident)}
+                    </div>
+                </div>
+            </details>
+        `).join('');
+    }
+
+    function renderIncidentPhase(label, items) {
+        return `
+            <div class="incident-phase">
+                <div class="incident-phase-label">${label}</div>
+                <ul>${items.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>
+            </div>
+        `;
+    }
+
+    // --- Deep link ---
+    function handleDeepLink() {
+        const m = window.location.hash.match(/#control=([\w-]+)/);
+        if (!m) return;
+        const card = document.querySelector(`.governance-card[data-control-id="${m[1]}"]`);
+        if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.classList.add('highlight');
+            setTimeout(() => card.classList.remove('highlight'), 2000);
+        }
+    }
+
+    window.addEventListener('hashchange', handleDeepLink);
+
+    // --- Init ---
+    initTheme();
+    loadAllData();
+    </script>
+</body>
+</html>

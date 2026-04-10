@@ -1,0 +1,356 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-10",
+  "verificationRequired": true,
+  "description": "Tower Perspective governance registry. Maps Copilot controls to compliance frameworks (SOC 2, ISO 27001, GDPR, HIPAA, FedRAMP, EU AI Act) and defines incident response runbooks. IMPORTANT: Compliance framework control IDs (e.g. SOC2-CC6.1) and URLs were authored from model training knowledge and MUST be manually verified against the official standards before being treated as authoritative. Flip verificationRequired to false once reviewed.",
+  "sources": {
+    "soc2": {
+      "name": "SOC 2 Type II",
+      "url": "https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2",
+      "note": "Controls use the AICPA Trust Services Criteria (CC = Common Criteria, A = Availability, C = Confidentiality, PI = Processing Integrity, P = Privacy).",
+      "lastVerified": null
+    },
+    "iso27001": {
+      "name": "ISO/IEC 27001:2022",
+      "url": "https://www.iso.org/standard/27001",
+      "note": "Annex A controls (A.5 - A.18). The 2022 revision uses a flat numbering scheme.",
+      "lastVerified": null
+    },
+    "gdpr": {
+      "name": "EU General Data Protection Regulation",
+      "url": "https://gdpr-info.eu/",
+      "note": "Article references (Art. 5, 25, 30, 32, 35, 44).",
+      "lastVerified": null
+    },
+    "hipaa": {
+      "name": "HIPAA Security Rule",
+      "url": "https://www.hhs.gov/hipaa/for-professionals/security/index.html",
+      "note": "45 CFR 164.308 (admin), 164.310 (physical), 164.312 (technical). Requires signed BAA for covered entities.",
+      "lastVerified": null
+    },
+    "fedramp": {
+      "name": "FedRAMP",
+      "url": "https://www.fedramp.gov/",
+      "note": "Status per Copilot offering (In Process / Moderate / High). Verify current authorization state before claiming.",
+      "lastVerified": null
+    },
+    "euAiAct": {
+      "name": "EU Artificial Intelligence Act",
+      "url": "https://artificialintelligenceact.eu/",
+      "note": "Risk category determines obligations. General-purpose AI models have separate Chapter V rules.",
+      "lastVerified": null
+    }
+  },
+  "controls": [
+    {
+      "id": "feature-policies",
+      "category": "policy",
+      "scope": "org",
+      "defaultState": "off",
+      "rolloutEffort": "low",
+      "governanceNote": "Org owners toggle individual Copilot features (chat, suggestions, MCP, agent mode) on or off at the organization level. Foundational control — everything else depends on this being set correctly first.",
+      "complianceRelevance": ["SOC2-CC6.1", "SOC2-CC6.6", "ISO-A.5.15", "ISO-A.8.3", "GDPR-Art25"]
+    },
+    {
+      "id": "content-exclusion",
+      "category": "data-protection",
+      "scope": "org",
+      "defaultState": "off",
+      "rolloutEffort": "medium",
+      "governanceNote": "Repository-level and path-level exclusions prevent Copilot from indexing sensitive code. Essential for orgs with regulated workloads or third-party proprietary code in monorepos.",
+      "complianceRelevance": ["SOC2-CC6.1", "SOC2-C1.1", "ISO-A.5.12", "ISO-A.8.11", "GDPR-Art5", "GDPR-Art25", "HIPAA-164.312(a)"]
+    },
+    {
+      "id": "ip-indemnity",
+      "category": "legal",
+      "scope": "org",
+      "defaultState": "on",
+      "rolloutEffort": "low",
+      "governanceNote": "GitHub's indemnification for public code matches. Requires public-code-matching filter to be enabled. Legal should review the indemnity terms before relying on it in production.",
+      "complianceRelevance": ["SOC2-CC1.1", "ISO-A.5.31"]
+    },
+    {
+      "id": "audit-logs",
+      "category": "observability",
+      "scope": "org",
+      "defaultState": "on",
+      "rolloutEffort": "medium",
+      "governanceNote": "Immutable log of Copilot events (suggestion acceptance, chat sessions, policy changes, seat assignments). The foundation of every SOC 2 evidence pack.",
+      "complianceRelevance": ["SOC2-CC7.2", "SOC2-CC7.3", "ISO-A.8.15", "ISO-A.8.16", "GDPR-Art30", "HIPAA-164.312(b)"]
+    },
+    {
+      "id": "usage-metrics",
+      "category": "observability",
+      "scope": "org",
+      "defaultState": "on",
+      "rolloutEffort": "low",
+      "governanceNote": "Adoption, acceptance rate, active-seat trends. Required for license optimization and ROI reporting.",
+      "complianceRelevance": ["SOC2-CC7.1"]
+    },
+    {
+      "id": "seat-management",
+      "category": "identity",
+      "scope": "org",
+      "defaultState": "on",
+      "rolloutEffort": "medium",
+      "governanceNote": "Assign, unassign and audit Copilot seats. Tie unassignment to the HR offboarding workflow — orphaned seats are a direct security finding.",
+      "complianceRelevance": ["SOC2-CC6.2", "SOC2-CC6.3", "ISO-A.5.16", "ISO-A.5.18", "HIPAA-164.308(a)(3)"]
+    },
+    {
+      "id": "data-residency",
+      "category": "data-protection",
+      "scope": "org",
+      "defaultState": "off",
+      "rolloutEffort": "high",
+      "governanceNote": "Pins prompt/completion traffic to an EU (or other regional) data plane. Required for Schrems II compliance in many EU orgs. Availability varies by plan tier.",
+      "complianceRelevance": ["GDPR-Art44", "GDPR-Art45", "GDPR-Art46", "ISO-A.5.34"]
+    },
+    {
+      "id": "copilot-plans",
+      "category": "commercial",
+      "scope": "org",
+      "defaultState": "n/a",
+      "rolloutEffort": "low",
+      "governanceNote": "Plan tier determines which governance controls are available at all. Business and Enterprise unlock audit logs, content exclusion and policy management.",
+      "complianceRelevance": ["SOC2-CC1.4"]
+    },
+    {
+      "id": "security-scanning",
+      "category": "detection",
+      "scope": "org",
+      "defaultState": "preview",
+      "rolloutEffort": "medium",
+      "governanceNote": "Copilot's built-in secret and vulnerability scanning on suggestions. Pair with the downstream Copilot Autofix workflow for closed-loop remediation.",
+      "complianceRelevance": ["SOC2-CC7.1", "ISO-A.8.8", "ISO-A.8.28"]
+    },
+    {
+      "id": "copilot-autofix",
+      "category": "remediation",
+      "scope": "repo",
+      "defaultState": "off",
+      "rolloutEffort": "medium",
+      "governanceNote": "Auto-generates PRs that fix Code-Scanning alerts. Guard with branch-protection requiring human approval before merge — the fix quality is still model-dependent.",
+      "complianceRelevance": ["SOC2-CC7.2", "ISO-A.8.28", "ISO-A.8.32"]
+    },
+    {
+      "id": "agent-self-review",
+      "category": "detection",
+      "scope": "repo",
+      "defaultState": "preview",
+      "rolloutEffort": "low",
+      "governanceNote": "The agent reviews its own PR before requesting human review. Useful signal but NEVER a substitute for independent human review on security-sensitive paths.",
+      "complianceRelevance": ["SOC2-CC8.1", "ISO-A.8.29"]
+    },
+    {
+      "id": "byok",
+      "category": "data-protection",
+      "scope": "org",
+      "defaultState": "off",
+      "rolloutEffort": "high",
+      "governanceNote": "Route Copilot traffic through your own Anthropic, OpenAI, Azure or Google tenant. Gives you control over retention, billing and regional pinning — at the cost of complexity.",
+      "complianceRelevance": ["SOC2-CC6.7", "SOC2-C1.1", "GDPR-Art28", "GDPR-Art44"]
+    },
+    {
+      "id": "mcp",
+      "category": "tool-sandbox",
+      "scope": "org",
+      "defaultState": "off",
+      "rolloutEffort": "high",
+      "governanceNote": "Model Context Protocol grants the agent access to external tools. Must be governed via an allowlist of servers, per-server scopes, and audit logging of every tool call. Highest-blast-radius control in the catalog.",
+      "complianceRelevance": ["SOC2-CC6.6", "SOC2-CC6.8", "ISO-A.8.9", "ISO-A.8.23"]
+    },
+    {
+      "id": "copilot-instructions",
+      "category": "guardrail",
+      "scope": "repo",
+      "defaultState": "off",
+      "rolloutEffort": "medium",
+      "governanceNote": "Per-repo .github/copilot-instructions.md defines coding standards, security guardrails and forbidden patterns. Treat as security configuration — review in PRs, lock with CODEOWNERS.",
+      "complianceRelevance": ["SOC2-CC8.1", "ISO-A.5.24", "ISO-A.8.27"]
+    }
+  ],
+  "compliance": {
+    "SOC2": {
+      "fullName": "SOC 2 Type II",
+      "status": "available",
+      "statusNote": "GitHub Copilot Business and Enterprise are covered by GitHub's SOC 2 Type II report. Request the report via the GitHub Trust Center.",
+      "url": "https://github.com/trust-center",
+      "controlFamilies": {
+        "CC1": "Control Environment",
+        "CC6": "Logical and Physical Access",
+        "CC7": "System Operations",
+        "CC8": "Change Management",
+        "C1": "Confidentiality",
+        "A1": "Availability",
+        "PI1": "Processing Integrity"
+      },
+      "evidencePackChecklist": [
+        "12 months of audit log exports",
+        "Organization policy screenshots with timestamps",
+        "Seat assignment history with offboarding evidence",
+        "Incident response runbook with drill records",
+        "Change-management approvals for policy modifications"
+      ]
+    },
+    "ISO27001": {
+      "fullName": "ISO/IEC 27001:2022",
+      "status": "available",
+      "statusNote": "GitHub maintains ISO 27001 certification covering Copilot Business and Enterprise.",
+      "url": "https://github.com/trust-center",
+      "annexControls": {
+        "A.5": "Organizational controls",
+        "A.6": "People controls",
+        "A.7": "Physical controls",
+        "A.8": "Technological controls"
+      }
+    },
+    "GDPR": {
+      "fullName": "EU General Data Protection Regulation",
+      "status": "available",
+      "statusNote": "GitHub publishes a Data Protection Addendum and Standard Contractual Clauses. EU Data Residency adds a regional-pinning option for Business/Enterprise.",
+      "url": "https://docs.github.com/en/site-policy/privacy-policies/github-data-protection-addendum",
+      "keyArticles": {
+        "Art5": "Principles of processing (minimization, purpose limitation)",
+        "Art25": "Data protection by design and by default",
+        "Art28": "Processor obligations (use BYOK for full processor control)",
+        "Art30": "Record of processing activities",
+        "Art32": "Security of processing",
+        "Art35": "Data Protection Impact Assessment",
+        "Art44": "Transfers (Schrems II)",
+        "Art45": "Adequacy decision",
+        "Art46": "Transfers with safeguards"
+      },
+      "dpiaChecklist": [
+        "Document lawful basis for training data processing",
+        "Record sub-processors (model providers, regional hosts)",
+        "Map international data flows and SCC coverage",
+        "Describe DSR workflow for prompts/completions",
+        "Log retention period per region"
+      ]
+    },
+    "HIPAA": {
+      "fullName": "HIPAA Security Rule",
+      "status": "conditional",
+      "statusNote": "GitHub can sign a Business Associate Agreement (BAA) for Copilot Enterprise only. PHI must never be included in prompts or code comments even with a BAA in place — treat Copilot as a high-sensitivity endpoint.",
+      "url": "https://www.hhs.gov/hipaa/for-professionals/security/index.html",
+      "rules": {
+        "164.308": "Administrative Safeguards",
+        "164.310": "Physical Safeguards",
+        "164.312": "Technical Safeguards (access control, audit, integrity, transmission)",
+        "164.314": "Organizational requirements (BAA)"
+      }
+    },
+    "FedRAMP": {
+      "fullName": "FedRAMP",
+      "status": "roadmap",
+      "statusNote": "GitHub Copilot authorization status is evolving. Verify current status in the FedRAMP Marketplace before claiming compliance in a federal procurement.",
+      "url": "https://marketplace.fedramp.gov/",
+      "note": "This entry intentionally ships unverified — treat as informational until a GitHub representative confirms current authorization."
+    },
+    "EU_AI_ACT": {
+      "fullName": "EU Artificial Intelligence Act",
+      "status": "applicable",
+      "statusNote": "Copilot is a general-purpose AI system under Chapter V. Deployers (orgs using Copilot) have transparency and human oversight obligations that vary by use case.",
+      "url": "https://artificialintelligenceact.eu/",
+      "riskCategory": "Limited-risk / General-purpose AI",
+      "deployerObligations": [
+        "Inform users when interacting with AI-generated content",
+        "Human oversight for high-risk code paths",
+        "Log model outputs on regulated workflows",
+        "Incident reporting to national supervisory authority for serious incidents"
+      ]
+    }
+  },
+  "incidents": [
+    {
+      "id": "token-leak",
+      "squawkCode": "7700",
+      "title": "Token leaked via suggestion",
+      "severity": "critical",
+      "trigger": "Secret scanning alert fires on a public push that contains a Copilot-suggested key, or a grep on audit logs surfaces a completion containing a credential.",
+      "detection": [
+        "GitHub Secret Scanning alert on push",
+        "Audit log keyword match on credential patterns",
+        "Third-party IAM anomaly (unknown source IP using a valid key)"
+      ],
+      "containment": [
+        "Revoke the leaked credential at the provider",
+        "Rotate all dependent service accounts",
+        "Invalidate any repo clones containing the leaked commit (force-push history rewrite, notify forks)",
+        "Suspend the affected Copilot seat pending review"
+      ],
+      "forensics": [
+        "Export audit log window (±4 hours around the event)",
+        "Correlate with Copilot suggestion acceptance events",
+        "Check whether Security Scanning fired earlier and was dismissed",
+        "Identify whether content exclusion would have prevented this"
+      ],
+      "postIncident": [
+        "Add the credential pattern to org secret-scanning custom patterns",
+        "Enable content exclusion on paths containing credentials",
+        "Review whether .github/copilot-instructions.md warns against inlining secrets",
+        "Schedule a blameless review within 7 days"
+      ]
+    },
+    {
+      "id": "prompt-injection-exfil",
+      "squawkCode": "7700",
+      "title": "Prompt injection exfiltration via agent mode",
+      "severity": "high",
+      "trigger": "Agent mode completes a task via an MCP tool call that references data the user did not intentionally share (e.g. the agent read an issue body containing an injection payload and then called a webhook tool).",
+      "detection": [
+        "Outbound request to unfamiliar domain from an MCP-enabled session",
+        "Unexpected tool invocation sequence in audit logs",
+        "PR description containing data from a file the agent should not have had access to"
+      ],
+      "containment": [
+        "Disable MCP at the org level until the offending server is identified",
+        "Revoke the specific MCP server's credentials",
+        "Quarantine any agent-generated PRs pending review",
+        "Notify affected users whose data may have been touched"
+      ],
+      "forensics": [
+        "Dump the agent's full tool call history for the session",
+        "Identify the injection source (issue comment, file, tool output)",
+        "Determine whether .github/copilot-instructions.md was bypassed",
+        "Test whether the same payload reproduces on a clean environment"
+      ],
+      "postIncident": [
+        "Add the untrusted-source pattern to the MCP sandbox policy",
+        "Review MCP server allowlist and remove high-blast-radius servers",
+        "Enable agent self-review gating on this repository",
+        "Share anonymized IOCs with the community"
+      ]
+    },
+    {
+      "id": "mcp-supply-chain",
+      "squawkCode": "7600",
+      "title": "MCP server supply chain compromise",
+      "severity": "critical",
+      "trigger": "A popular MCP server publishes a malicious update that exfiltrates the agent's environment variables or tool call arguments to an attacker-controlled endpoint.",
+      "detection": [
+        "Community CVE or security advisory for an installed MCP server",
+        "Anomalous egress traffic from a machine running the MCP server",
+        "Checksum mismatch on an MCP server binary at startup"
+      ],
+      "containment": [
+        "Disable all MCP servers organization-wide via feature policies",
+        "Uninstall the compromised package from every affected machine",
+        "Rotate all credentials that were present in the MCP server's environment",
+        "Block the attacker's exfiltration endpoints at the network egress"
+      ],
+      "forensics": [
+        "Collect the compromised package's source and diff against the last known-good version",
+        "Review audit logs for any tool calls that referenced secrets",
+        "Check CI/CD systems for propagation (the MCP server may be bundled in pipelines)",
+        "Identify the time window of exposure"
+      ],
+      "postIncident": [
+        "Pin all MCP server versions in configuration (no floating tags)",
+        "Require signed releases for any MCP server in the org allowlist",
+        "Subscribe to security advisories for every approved MCP server",
+        "Add MCP supply chain to the threat model in the Security X-Ray"
+      ]
+    }
+  ]
+}

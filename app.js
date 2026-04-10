@@ -10,6 +10,7 @@ let activeFilters = { flightMode: null, plan: null, status: null, zone: null };
 let searchQuery = '';
 let mermaidReady = false;
 let scannerIndex = new Set(); // instrumentIds covered by the Security X-Ray Scanner
+let governanceIndex = new Set(); // instrumentIds present in the Tower governance registry
 
 // --- Zone rendering order (matches CSS grid areas) ---
 const ZONE_ORDER = ['overhead', 'glareshield', 'pfd', 'nd', 'side', 'pedestal', 'eicas', 'fms'];
@@ -35,9 +36,10 @@ const ZONE_LABELS = {
 // --- Boot ---
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const [resp, threatsResp] = await Promise.all([
+        const [resp, threatsResp, governanceResp] = await Promise.all([
             fetch('data/copilot-instruments.json'),
-            fetch('data/security-threats.json').catch(() => null)
+            fetch('data/security-threats.json').catch(() => null),
+            fetch('data/tower-governance.json').catch(() => null)
         ]);
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         cockpitData = await resp.json();
@@ -50,6 +52,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 scannerIndex = new Set((threatsData.threats || []).map(t => t.instrumentId));
             } catch (e) {
                 console.warn('Scanner index unavailable:', e);
+            }
+        }
+
+        // Build governance index — soft-fail if tower data is missing/broken
+        if (governanceResp && governanceResp.ok) {
+            try {
+                const governanceData = await governanceResp.json();
+                governanceIndex = new Set((governanceData.controls || []).map(c => c.id));
+            } catch (e) {
+                console.warn('Governance index unavailable:', e);
             }
         }
 
@@ -129,6 +141,7 @@ function renderInstrumentCard(instrument, zone) {
     const statusClass = instrument.status || 'ga';
     const meta = instrument.shortDescription || '';
     const hasScanner = scannerIndex.has(instrument.id);
+    const hasGovernance = governanceIndex.has(instrument.id);
     const xrayBadge = hasScanner
         ? `<a class="instrument-xray-badge"
               href="security.html#scan=${instrument.id}"
@@ -136,9 +149,22 @@ function renderInstrumentCard(instrument, zone) {
               title="Open Security X-Ray for ${instrument.name}"
               aria-label="Open Security X-Ray for ${instrument.name}">X-RAY</a>`
         : '';
+    const govBadge = hasGovernance
+        ? `<a class="instrument-gov-badge"
+              href="tower.html#control=${instrument.id}"
+              onclick="event.stopPropagation()"
+              title="Open Tower governance view for ${instrument.name}"
+              aria-label="Open Tower governance view for ${instrument.name}">GOV</a>`
+        : '';
+
+    const badgeClasses = [
+        hasScanner ? 'has-xray' : '',
+        hasGovernance ? 'has-gov' : '',
+        hasScanner && hasGovernance ? 'has-both-badges' : ''
+    ].filter(Boolean).join(' ');
 
     return `
-        <div class="instrument${hasScanner ? ' has-xray' : ''}"
+        <div class="instrument${badgeClasses ? ' ' + badgeClasses : ''}"
              data-id="${instrument.id}"
              data-zone="${instrument.zone}"
              data-status="${instrument.status}"
@@ -149,6 +175,7 @@ function renderInstrumentCard(instrument, zone) {
              role="button"
              aria-label="${instrument.name}">
             ${xrayBadge}
+            ${govBadge}
             <div class="instrument-top">
                 <span class="instrument-symbol">${instrument.symbol}</span>
                 <span class="instrument-led ${statusClass}" title="${statusLabel(statusClass)}"></span>
@@ -386,6 +413,19 @@ function renderOverviewTab(instrument, zoneColor) {
                     <div class="xray-callout-text">Threat model, attack scenario, before/after demo and countermeasures for this control.</div>
                 </div>
                 <div class="xray-callout-cta">Open Scanner ▸</div>
+            </a>`;
+    }
+
+    // Governance callout — shown when this instrument has a Tower governance entry
+    if (governanceIndex.has(instrument.id)) {
+        html += `
+            <a class="detail-gov-callout" href="tower.html#control=${instrument.id}">
+                <div class="gov-callout-icon">⌬</div>
+                <div class="gov-callout-body">
+                    <div class="gov-callout-title">Governance View Available</div>
+                    <div class="gov-callout-text">Compliance mapping, rollout effort and org-level configuration guidance in the Tower Perspective.</div>
+                </div>
+                <div class="gov-callout-cta">Open Tower ▸</div>
             </a>`;
     }
 

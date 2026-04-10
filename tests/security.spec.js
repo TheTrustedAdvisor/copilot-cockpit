@@ -288,10 +288,10 @@ test.describe('Perspective Navigation Bar', () => {
     test('disabled perspectives have SOON badge and are not clickable', async ({ page }) => {
         await page.goto('/');
         const disabled = page.locator('.nav-link.disabled');
-        await expect(disabled).toHaveCount(3); // Terminal, Gangway, Tower
+        await expect(disabled).toHaveCount(2); // Terminal, Gangway (Tower now live)
 
         const soonBadges = page.locator('.nav-soon');
-        await expect(soonBadges).toHaveCount(3);
+        await expect(soonBadges).toHaveCount(2);
         await expect(soonBadges.first()).toContainText('SOON');
     });
 
