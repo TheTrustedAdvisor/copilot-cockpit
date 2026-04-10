@@ -9,6 +9,7 @@ let allInstruments = [];
 let activeFilters = { flightMode: null, plan: null, status: null, zone: null };
 let searchQuery = '';
 let mermaidReady = false;
+let scannerIndex = new Set(); // instrumentIds covered by the Security X-Ray Scanner
 
 // --- Zone rendering order (matches CSS grid areas) ---
 const ZONE_ORDER = ['overhead', 'glareshield', 'pfd', 'nd', 'side', 'pedestal', 'eicas', 'fms'];
@@ -34,10 +35,23 @@ const ZONE_LABELS = {
 // --- Boot ---
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const resp = await fetch('data/copilot-instruments.json');
+        const [resp, threatsResp] = await Promise.all([
+            fetch('data/copilot-instruments.json'),
+            fetch('data/security-threats.json').catch(() => null)
+        ]);
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         cockpitData = await resp.json();
         allInstruments = cockpitData.instruments || [];
+
+        // Build scanner index — soft-fail if threats data is missing/broken
+        if (threatsResp && threatsResp.ok) {
+            try {
+                const threatsData = await threatsResp.json();
+                scannerIndex = new Set((threatsData.threats || []).map(t => t.instrumentId));
+            } catch (e) {
+                console.warn('Scanner index unavailable:', e);
+            }
+        }
 
         renderCockpit();
         initFilters();
@@ -114,9 +128,17 @@ function renderZone(zone, instruments) {
 function renderInstrumentCard(instrument, zone) {
     const statusClass = instrument.status || 'ga';
     const meta = instrument.shortDescription || '';
+    const hasScanner = scannerIndex.has(instrument.id);
+    const xrayBadge = hasScanner
+        ? `<a class="instrument-xray-badge"
+              href="security.html#scan=${instrument.id}"
+              onclick="event.stopPropagation()"
+              title="Open Security X-Ray for ${instrument.name}"
+              aria-label="Open Security X-Ray for ${instrument.name}">X-RAY</a>`
+        : '';
 
     return `
-        <div class="instrument"
+        <div class="instrument${hasScanner ? ' has-xray' : ''}"
              data-id="${instrument.id}"
              data-zone="${instrument.zone}"
              data-status="${instrument.status}"
@@ -126,6 +148,7 @@ function renderInstrumentCard(instrument, zone) {
              tabindex="0"
              role="button"
              aria-label="${instrument.name}">
+            ${xrayBadge}
             <div class="instrument-top">
                 <span class="instrument-symbol">${instrument.symbol}</span>
                 <span class="instrument-led ${statusClass}" title="${statusLabel(statusClass)}"></span>
@@ -352,6 +375,19 @@ function renderTabContent(instrument, tabId, zoneColor) {
 // --- Overview Tab ---
 function renderOverviewTab(instrument, zoneColor) {
     let html = '';
+
+    // Security X-Ray callout — shown when this instrument has a threat entry
+    if (scannerIndex.has(instrument.id)) {
+        html += `
+            <a class="detail-xray-callout" href="security.html#scan=${instrument.id}">
+                <div class="xray-callout-icon">⚠</div>
+                <div class="xray-callout-body">
+                    <div class="xray-callout-title">Security X-Ray Available</div>
+                    <div class="xray-callout-text">Threat model, attack scenario, before/after demo and countermeasures for this control.</div>
+                </div>
+                <div class="xray-callout-cta">Open Scanner ▸</div>
+            </a>`;
+    }
 
     // Description
     if (instrument.description) {
