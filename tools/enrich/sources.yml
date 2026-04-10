@@ -52,6 +52,17 @@ sources:
     phase: P1
     auth: GOOGLE_API_KEY
 
+  openrouter-api:
+    url: https://openrouter.ai/api/v1/models
+    type: json-api
+    adapter: openrouter_api
+    slug: models
+    fields: [displayName, description, contextWindow, knowledgeCutoff, pricing,
+             inputModalities, outputModalities, tokenizer, supportedParameters,
+             releasedAt, expirationDate, huggingFaceId, provider]
+    phase: P1
+    auth: none
+
   # ── P2: provider docs (contextWindow + knowledgeCutoff) ──────────────────
   openai-models:
     url: https://platform.openai.com/docs/models
