@@ -1363,6 +1363,145 @@ body.light-theme .nav-separator { color: rgba(0, 0, 0, 0.15); }
     transition: opacity 0.3s ease;
 }
 
+/* ============ X-RAY SCANNER ANIMATIONS ============ */
+
+/* 1. Conveyor belt drift — continuous slow horizontal motion on the luggage lane */
+.luggage-lane {
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0, transparent 38px,
+            rgba(0, 255, 136, 0.03) 38px, rgba(0, 255, 136, 0.03) 40px
+        );
+    animation: conveyor-drift 14s linear infinite;
+}
+@keyframes conveyor-drift {
+    from { background-position: 0 0; }
+    to   { background-position: 40px 0; }
+}
+
+/* 2. Active luggage item — slow glow breath (non-layout property to stay clickable) */
+.luggage-item.active {
+    animation: luggage-breath 2.4s ease-in-out infinite;
+}
+@keyframes luggage-breath {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(0, 255, 136, 0.18);
+        border-color: var(--color-pfd);
+    }
+    50% {
+        box-shadow: 0 0 22px rgba(0, 255, 136, 0.5);
+        border-color: rgba(0, 255, 136, 0.8);
+    }
+}
+
+/* 3. CRT flicker — subtle 5s staccato opacity on the scanner phosphor grid */
+.scanner-screen::after {
+    animation: crt-flicker 5.5s steps(18) infinite;
+}
+@keyframes crt-flicker {
+    0%, 3%, 6%, 9%, 100% { opacity: 1; }
+    2%   { opacity: 0.72; }
+    5%   { opacity: 0.88; }
+    7%   { opacity: 0.94; }
+    50%  { opacity: 0.98; }
+    51%  { opacity: 0.82; }
+    52%  { opacity: 1; }
+}
+
+/* 4. Stagger-reveal for scanner sections — fresh innerHTML triggers the animation */
+.scanner-section {
+    animation: section-reveal 0.55s ease-out backwards;
+}
+.scanner-section:nth-of-type(1) { animation-delay: 0.20s; }
+.scanner-section:nth-of-type(2) { animation-delay: 0.32s; }
+.scanner-section:nth-of-type(3) { animation-delay: 0.44s; }
+.scanner-section:nth-of-type(4) { animation-delay: 0.56s; }
+.scanner-section:nth-of-type(5) { animation-delay: 0.68s; }
+@keyframes section-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+        filter: blur(2px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* 5. Severity badge pulse — critical/high throb to signal urgency */
+.severity-badge.critical {
+    animation: severity-pulse-critical 1.6s ease-in-out infinite;
+}
+.severity-badge.high {
+    animation: severity-pulse-high 2s ease-in-out infinite;
+}
+@keyframes severity-pulse-critical {
+    0%, 100% {
+        box-shadow: 0 0 0 rgba(255, 68, 68, 0);
+        text-shadow: 0 0 4px rgba(255, 68, 68, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 14px rgba(255, 68, 68, 0.45);
+        text-shadow: 0 0 10px rgba(255, 68, 68, 0.7);
+    }
+}
+@keyframes severity-pulse-high {
+    0%, 100% { text-shadow: 0 0 4px rgba(255, 170, 0, 0.3); }
+    50%      { text-shadow: 0 0 10px rgba(255, 170, 0, 0.6); }
+}
+
+/* 6. Blast radius segments — left-to-right fill with stagger on mount */
+.blast-radius-segment {
+    animation: blast-fill 0.5s ease-out backwards;
+    transform-origin: left center;
+}
+.blast-radius-segment:nth-child(1) { animation-delay: 0.85s; }
+.blast-radius-segment:nth-child(2) { animation-delay: 0.98s; }
+.blast-radius-segment:nth-child(3) { animation-delay: 1.11s; }
+@keyframes blast-fill {
+    from { transform: scaleX(0); opacity: 0.3; }
+    to   { transform: scaleX(1); opacity: 1; }
+}
+
+/* 7. Scanner symbol glow drift — very slow hue breathing on the hero symbol */
+.scanner-symbol {
+    animation: symbol-glow 3.5s ease-in-out infinite;
+}
+@keyframes symbol-glow {
+    0%, 100% { text-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
+    50%      { text-shadow: 0 0 18px rgba(0, 255, 136, 0.75); }
+}
+
+/* 8. Luggage idle shimmer — gentle brightness modulation on non-active bags
+   (non-layout property so Playwright stability checks still pass) */
+.luggage-item:not(.active) {
+    animation: luggage-idle 3.8s ease-in-out infinite;
+}
+.luggage-item:not(.active):nth-child(2n)  { animation-delay: 0.4s; }
+.luggage-item:not(.active):nth-child(3n)  { animation-delay: 0.8s; }
+.luggage-item:not(.active):nth-child(5n)  { animation-delay: 1.2s; }
+@keyframes luggage-idle {
+    0%, 100% { filter: brightness(1);    background: rgba(0, 0, 0, 0.2); }
+    50%      { filter: brightness(1.15); background: rgba(0, 0, 0, 0.28); }
+}
+
+/* Respect users who want reduced motion — kill all ambient animations */
+@media (prefers-reduced-motion: reduce) {
+    .luggage-lane,
+    .luggage-item,
+    .luggage-item.active,
+    .scanner-screen::after,
+    .scanner-section,
+    .severity-badge,
+    .blast-radius-segment,
+    .scanner-symbol {
+        animation: none !important;
+    }
+}
+
 /* Responsive: demo comparison stacks on narrow */
 @media (max-width: 900px) {
     .demo-comparison { grid-template-columns: 1fr; }
