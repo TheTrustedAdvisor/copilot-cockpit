@@ -340,52 +340,10 @@ test.describe('Security - Theme', () => {
 // ============================================================
 
 test.describe('Cockpit → X-Ray Scanner Integration', () => {
-    test('cockpit cards with scanner coverage show an X-RAY badge', async ({ page }) => {
-        await page.goto('/');
-        // agent-mode has a scanner entry — its card should have the badge
-        const card = page.locator('.instrument[data-id="agent-mode"]');
-        await expect(card).toBeVisible();
-        await expect(card.locator('.instrument-xray-badge')).toBeVisible();
-    });
-
-    test('X-RAY badge count matches threats in data file', async ({ page }) => {
-        await page.goto('/');
-        await expect(page.locator('.instrument').first()).toBeVisible();
-
-        // Fetch threats data directly to know the expected count
-        const expectedCount = await page.evaluate(async () => {
-            const r = await fetch('data/security-threats.json');
-            const d = await r.json();
-            return (d.threats || []).length;
-        });
-
-        const badgeCount = await page.locator('.instrument-xray-badge').count();
-        expect(badgeCount).toBe(expectedCount);
-        // Sanity: we expanded to 22 — this guards against accidental regressions
-        expect(badgeCount).toBeGreaterThanOrEqual(20);
-    });
-
-    test('clicking X-RAY badge navigates to scanner (not detail panel)', async ({ page }) => {
-        await page.goto('/');
-        const badge = page.locator('.instrument[data-id="agent-mode"] .instrument-xray-badge');
-        await expect(badge).toBeVisible();
-        await badge.click();
-
-        // Should be on security page with #scan hash, NOT detail panel open on cockpit
-        await expect(page).toHaveURL(/security\.html#scan=agent-mode/);
-        await expect(page.locator('.scanner-title')).toContainText(/Agent/i, { timeout: 5000 });
-    });
-
-    test('instruments without scanner coverage do not show X-RAY badge', async ({ page }) => {
-        await page.goto('/');
-        await expect(page.locator('.instrument').first()).toBeVisible();
-
-        // "plans" instrument has no threat entry in security-threats.json
-        const plansCard = page.locator('.instrument[data-id="plans"]');
-        if (await plansCard.count() > 0) {
-            await expect(plansCard.locator('.instrument-xray-badge')).toHaveCount(0);
-        }
-    });
+    // Note: cockpit instrument cards deliberately do NOT show an X-RAY badge.
+    // The cockpit is a glance view — the pulsing status LED must not be
+    // competed with by promotional badges. Cross-navigation to the scanner
+    // happens via the detail panel callout (after a click), not the grid.
 
     test('detail panel shows Security X-Ray callout for covered instruments', async ({ page }) => {
         await page.goto('/#instrument-agent-mode');
@@ -409,25 +367,30 @@ test.describe('Cockpit → X-Ray Scanner Integration', () => {
     });
 
     test('detail panel for an uncovered instrument has no callout', async ({ page }) => {
-        // Pick an instrument with no threat entry
         await page.goto('/');
         await expect(page.locator('.instrument').first()).toBeVisible();
 
-        // Find one that lacks the badge
-        const uncoveredId = await page.evaluate(() => {
-            const cards = document.querySelectorAll('.instrument');
-            for (const c of cards) {
-                if (!c.querySelector('.instrument-xray-badge')) {
-                    return c.getAttribute('data-id');
-                }
-            }
-            return null;
+        // Find an instrument that is not in security-threats.json by consulting
+        // the data file directly — we can no longer rely on badge absence.
+        const uncoveredId = await page.evaluate(async () => {
+            const [inst, threats] = await Promise.all([
+                fetch('data/copilot-instruments.json').then((r) => r.json()),
+                fetch('data/security-threats.json').then((r) => r.json())
+            ]);
+            const threatIds = new Set((threats.threats || []).map((t) => t.instrumentId));
+            const uncovered = (inst.instruments || []).find((i) => !threatIds.has(i.id));
+            return uncovered ? uncovered.id : null;
         });
-        if (!uncoveredId) test.skip(true, 'Every instrument has scanner coverage');
+        expect(uncoveredId).not.toBeNull();
 
-        // Click the card directly — more reliable than deep-link setTimeout
         await page.locator(`.instrument[data-id="${uncoveredId}"]`).click();
         await expect(page.locator('#detail-panel .detail-name')).toBeVisible({ timeout: 5000 });
         await expect(page.locator('#detail-panel .detail-xray-callout')).toHaveCount(0);
+    });
+
+    test('cockpit cards never render an X-RAY badge', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.instrument').first()).toBeVisible();
+        await expect(page.locator('.instrument-xray-badge')).toHaveCount(0);
     });
 });

@@ -2039,48 +2039,6 @@ body.light-theme .log-empty { color: rgba(0, 0, 0, 0.3); }
    X-RAY badge on cards + detail panel callout
    ============================================================ */
 
-.instrument-xray-badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    z-index: 2;
-    padding: 2px 6px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.48rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: #ffaa00;
-    background: rgba(255, 170, 0, 0.08);
-    border: 1px solid rgba(255, 170, 0, 0.35);
-    border-radius: 2px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    pointer-events: auto;
-}
-
-.instrument-xray-badge:hover {
-    background: rgba(255, 170, 0, 0.2);
-    border-color: rgba(255, 170, 0, 0.7);
-    color: #ffcc33;
-    box-shadow: 0 0 8px rgba(255, 170, 0, 0.3);
-}
-
-.instrument.has-xray {
-    border-color: rgba(255, 170, 0, 0.12);
-}
-
-body.light-theme .instrument-xray-badge {
-    color: #b36b00;
-    background: rgba(255, 170, 0, 0.14);
-    border-color: rgba(179, 107, 0, 0.5);
-}
-
-body.light-theme .instrument-xray-badge:hover {
-    background: rgba(255, 170, 0, 0.25);
-    color: #8a5300;
-}
-
 /* Detail panel callout — amber banner at the top of Overview tab */
 .detail-xray-callout {
     display: flex;
@@ -2157,59 +2115,6 @@ body.light-theme .xray-callout-cta {
 
 body.light-theme .xray-callout-text {
     color: rgba(0, 0, 0, 0.6);
-}
-
-/* ============================================================
-   GOVERNANCE (GOV) BADGE — mirrors X-Ray, cyan palette so both
-   badges can coexist on the same instrument card legibly
-   ============================================================ */
-
-.instrument-gov-badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    z-index: 2;
-    padding: 2px 6px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.48rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: #00d9ff;
-    background: rgba(0, 217, 255, 0.08);
-    border: 1px solid rgba(0, 217, 255, 0.35);
-    border-radius: 2px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    pointer-events: auto;
-}
-
-.instrument-gov-badge:hover {
-    background: rgba(0, 217, 255, 0.2);
-    border-color: rgba(0, 217, 255, 0.7);
-    color: #66e8ff;
-    box-shadow: 0 0 8px rgba(0, 217, 255, 0.3);
-}
-
-.instrument.has-gov {
-    border-color: rgba(0, 217, 255, 0.12);
-}
-
-/* When both badges are present, offset the GOV badge below the X-Ray badge
-   so they stack vertically in the top-right corner of the instrument card. */
-.instrument.has-both-badges .instrument-gov-badge {
-    top: 26px;
-}
-
-body.light-theme .instrument-gov-badge {
-    color: #006680;
-    background: rgba(0, 217, 255, 0.14);
-    border-color: rgba(0, 102, 128, 0.5);
-}
-
-body.light-theme .instrument-gov-badge:hover {
-    background: rgba(0, 217, 255, 0.25);
-    color: #004d66;
 }
 
 /* Detail panel callout — cyan banner at the top of Overview tab */

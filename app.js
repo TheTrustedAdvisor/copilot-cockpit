@@ -140,31 +140,8 @@ function renderZone(zone, instruments) {
 function renderInstrumentCard(instrument, zone) {
     const statusClass = instrument.status || 'ga';
     const meta = instrument.shortDescription || '';
-    const hasScanner = scannerIndex.has(instrument.id);
-    const hasGovernance = governanceIndex.has(instrument.id);
-    const xrayBadge = hasScanner
-        ? `<a class="instrument-xray-badge"
-              href="security.html#scan=${instrument.id}"
-              onclick="event.stopPropagation()"
-              title="Open Security X-Ray for ${instrument.name}"
-              aria-label="Open Security X-Ray for ${instrument.name}">X-RAY</a>`
-        : '';
-    const govBadge = hasGovernance
-        ? `<a class="instrument-gov-badge"
-              href="tower.html#control=${instrument.id}"
-              onclick="event.stopPropagation()"
-              title="Open Tower governance view for ${instrument.name}"
-              aria-label="Open Tower governance view for ${instrument.name}">GOV</a>`
-        : '';
-
-    const badgeClasses = [
-        hasScanner ? 'has-xray' : '',
-        hasGovernance ? 'has-gov' : '',
-        hasScanner && hasGovernance ? 'has-both-badges' : ''
-    ].filter(Boolean).join(' ');
-
     return `
-        <div class="instrument${badgeClasses ? ' ' + badgeClasses : ''}"
+        <div class="instrument"
              data-id="${instrument.id}"
              data-zone="${instrument.zone}"
              data-status="${instrument.status}"
@@ -174,8 +151,6 @@ function renderInstrumentCard(instrument, zone) {
              tabindex="0"
              role="button"
              aria-label="${instrument.name}">
-            ${xrayBadge}
-            ${govBadge}
             <div class="instrument-top">
                 <span class="instrument-symbol">${instrument.symbol}</span>
                 <span class="instrument-led ${statusClass}" title="${statusLabel(statusClass)}"></span>

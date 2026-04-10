@@ -162,46 +162,16 @@ test.describe('Tower — deep linking', () => {
     });
 });
 
-test.describe('Cockpit → Tower GOV badge integration', () => {
-    test('instruments with governance entries receive a GOV badge', async ({ page }) => {
+test.describe('Cockpit → Tower governance integration', () => {
+    // Note: cockpit instrument cards deliberately do NOT show a GOV badge.
+    // Same reasoning as the X-Ray scanner: the cockpit grid is a glance view
+    // and must not overlay the pulsing status LED. Cross-navigation happens
+    // via the detail panel callout, not the grid.
+
+    test('cockpit cards never render a GOV badge', async ({ page }) => {
         await page.goto('/');
-        // usage-metrics is gov-only (no X-Ray) → single GOV badge, no X-Ray
-        const card = page.locator('.instrument[data-id="usage-metrics"]');
-        await expect(card).toBeVisible();
-        await expect(card).toHaveClass(/has-gov/);
-        await expect(card.locator('.instrument-gov-badge')).toBeVisible();
-        await expect(card.locator('.instrument-gov-badge')).toHaveText('GOV');
-        await expect(card.locator('.instrument-xray-badge')).toHaveCount(0);
-    });
-
-    test('GOV badge links to tower.html#control=<id> and does not open the detail panel', async ({ page }) => {
-        await page.goto('/');
-        const badge = page.locator('.instrument[data-id="usage-metrics"] .instrument-gov-badge');
-        await expect(badge).toBeVisible();
-        await expect(badge).toHaveAttribute('href', 'tower.html#control=usage-metrics');
-
-        // Clicking the badge must navigate away (not toggle the in-page detail panel)
-        await badge.click();
-        await expect(page).toHaveURL(/tower\.html#control=usage-metrics$/);
-    });
-
-    test('instruments covered by both scanner and governance get stacked badges', async ({ page }) => {
-        await page.goto('/');
-        const card = page.locator('.instrument[data-id="content-exclusion"]');
-        await expect(card).toHaveClass(/has-xray/);
-        await expect(card).toHaveClass(/has-gov/);
-        await expect(card).toHaveClass(/has-both-badges/);
-        await expect(card.locator('.instrument-xray-badge')).toBeVisible();
-        await expect(card.locator('.instrument-gov-badge')).toBeVisible();
-
-        // Sanity: the GOV badge is rendered below the X-Ray badge, not on top of it
-        const xrayBox = await card.locator('.instrument-xray-badge').boundingBox();
-        const govBox = await card.locator('.instrument-gov-badge').boundingBox();
-        expect(xrayBox).not.toBeNull();
-        expect(govBox).not.toBeNull();
-        if (xrayBox && govBox) {
-            expect(govBox.y).toBeGreaterThan(xrayBox.y);
-        }
+        await expect(page.locator('.instrument').first()).toBeVisible();
+        await expect(page.locator('.instrument-gov-badge')).toHaveCount(0);
     });
 
     test('detail panel shows a Governance View Available callout for governed instruments', async ({ page }) => {
