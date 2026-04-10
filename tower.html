@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tower — Copilot Cockpit</title>
-    <meta name="description" content="Tower perspective for GitHub Copilot: every model that powers Copilot, their strengths, limitations, surfaces, plan access and how the Copilot engine routes between them.">
+    <meta name="description" content="Tower perspective for GitHub Copilot: every model Copilot can dispatch, filtered by your plan, with a per-model detail blade, flight plans, NOTAMs and an engine explainer.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,81 +47,43 @@
         <section class="tower-intro">
             <h2>🗼 Air Traffic Control Briefing</h2>
             <p>The Tower doesn't fly the plane — it controls the airfield. This view aggregates every AI model
-            GitHub Copilot can dispatch: their strengths, limitations, surface availability, plan access and how
-            the Copilot engine routes between them. Use it to pick the right model for the job instead of
-            reaching for the default.</p>
+            GitHub Copilot can dispatch. Pick your plan, scan the board and click any model for the full briefing.</p>
             <div id="verification-banner" class="verification-banner" hidden>
                 <strong>⚠ VERIFICATION REQUIRED</strong>
                 <span id="verification-banner-text"></span>
             </div>
         </section>
 
+        <!-- ============ FILTER BAR ============ -->
+        <section class="tower-filters" aria-label="Tower filters">
+            <div class="filter-group">
+                <label class="filter-label" for="filter-plan">Plan ticket</label>
+                <select id="filter-plan" class="filter-select">
+                    <!-- Populated by JS -->
+                </select>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Provider</span>
+                <div class="filter-chips" id="filter-providers">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Status</span>
+                <div class="filter-chips" id="filter-status">
+                    <button type="button" class="filter-chip active" data-status="ga">GA</button>
+                    <button type="button" class="filter-chip active" data-status="preview">Preview</button>
+                    <button type="button" class="filter-chip" data-status="deprecated">Grounded</button>
+                </div>
+            </div>
+            <div class="filter-summary" id="filter-summary" aria-live="polite"></div>
+        </section>
+
         <!-- ============ DEPARTURE BOARD — HERO ============ -->
         <section class="tower-section" aria-label="Departure Board">
             <h3 class="tower-section-title">◉ Departure Board</h3>
-            <p class="tower-section-intro">Every model cleared for takeoff. Status LED shows GA / preview / grounded. Click any row to jump to its detail entry below.</p>
+            <p class="tower-section-intro">Every model cleared for takeoff. Rows filtered out by your plan or provider selection appear dimmed. Click any row for the full briefing.</p>
             <div class="departure-board" id="departure-board" role="list">
-                <!-- Populated by JS -->
-            </div>
-        </section>
-
-        <!-- ============ AIRSPACE MAP ============ -->
-        <section class="tower-section" aria-label="Airspace Map">
-            <h3 class="tower-section-title">🛰 Airspace Map</h3>
-            <p class="tower-section-intro">Every model positioned by reasoning depth (Y axis) and speed (X axis). Flagship reasoners cluster top-left, fast inline completers cluster bottom-right.</p>
-            <div class="airspace-map" id="airspace-map" aria-hidden="true">
-                <div class="airspace-axis-y">reasoning ▲</div>
-                <div class="airspace-axis-x">speed ▶</div>
-                <div class="airspace-grid"></div>
-                <div class="airspace-plots" id="airspace-plots"></div>
-            </div>
-            <div class="airspace-legend">
-                <span class="airspace-legend-dot provider-openai"></span>OpenAI
-                <span class="airspace-legend-dot provider-anthropic"></span>Anthropic
-                <span class="airspace-legend-dot provider-google"></span>Google
-                <span class="airspace-legend-dot provider-xai"></span>xAI
-                <span class="airspace-legend-dot provider-github"></span>GitHub fine-tune
-            </div>
-        </section>
-
-        <!-- ============ CAPABILITY MATRIX ============ -->
-        <section class="tower-section" aria-label="Capability Matrix">
-            <h3 class="tower-section-title">⚙ Capability Matrix</h3>
-            <p class="tower-section-intro">Rows = models, columns = capabilities. <span class="cap-mark strong">●</span> strong, <span class="cap-mark partial">◐</span> partial, <span class="cap-mark none">○</span> none / not applicable.</p>
-            <div class="matrix-wrapper">
-                <table class="capability-matrix" id="capability-matrix">
-                    <!-- Populated by JS -->
-                </table>
-            </div>
-        </section>
-
-        <!-- ============ PLAN ACCESS MATRIX ============ -->
-        <section class="tower-section" aria-label="Plan Access Matrix">
-            <h3 class="tower-section-title">🎫 Plan Access Matrix</h3>
-            <p class="tower-section-intro">Which plan ticket gets you aboard which model. Cells marked <em>unverified</em> are pending the freshness pipeline.</p>
-            <div class="matrix-wrapper">
-                <table class="plan-matrix" id="plan-matrix">
-                    <!-- Populated by JS -->
-                </table>
-            </div>
-        </section>
-
-        <!-- ============ SURFACE MATRIX ============ -->
-        <section class="tower-section" aria-label="Surface Matrix">
-            <h3 class="tower-section-title">📡 Surface Matrix</h3>
-            <p class="tower-section-intro">Which Copilot surface (Chat, Inline, Edits, Agent, Coding Agent, Code Review) can dispatch which model.</p>
-            <div class="matrix-wrapper">
-                <table class="surface-matrix" id="surface-matrix">
-                    <!-- Populated by JS -->
-                </table>
-            </div>
-        </section>
-
-        <!-- ============ WEIGHT & BALANCE (pricing) ============ -->
-        <section class="tower-section" aria-label="Weight and Balance">
-            <h3 class="tower-section-title">⚖ Weight &amp; Balance</h3>
-            <p class="tower-section-intro">Premium-request multipliers per model. All entries are <em>unverified</em> until issue #20's freshness pipeline runs — do not use for capacity planning yet.</p>
-            <div class="weight-balance" id="weight-balance">
                 <!-- Populated by JS -->
             </div>
         </section>
@@ -174,12 +136,35 @@ flowchart LR
         </section>
     </main>
 
+    <!-- ==================== MODEL DETAIL BLADE ==================== -->
+    <aside class="model-blade" id="model-blade" aria-hidden="true" role="dialog" aria-labelledby="blade-title">
+        <div class="blade-header">
+            <div class="blade-header-left">
+                <span class="departure-led" id="blade-led"></span>
+                <div>
+                    <h2 class="blade-title" id="blade-title">—</h2>
+                    <div class="blade-subtitle" id="blade-subtitle">—</div>
+                </div>
+            </div>
+            <button class="blade-close" id="blade-close" aria-label="Close detail blade">✕</button>
+        </div>
+        <div class="blade-body" id="blade-body">
+            <!-- Populated by JS when a model is selected -->
+        </div>
+    </aside>
+    <div class="blade-backdrop" id="blade-backdrop" hidden></div>
+
     <script>
     // ============================================================
-    // TOWER PERSPECTIVE — Model Control Tower
+    // TOWER PERSPECTIVE — Model Control Tower (v2)
     // ============================================================
 
     let modelsData = null;
+    const filterState = {
+        planId: 'pro',
+        providers: new Set(),      // empty = all providers
+        statuses: new Set(['ga', 'preview'])
+    };
 
     // --- Theme (shared pattern with cockpit) ---
     function initTheme() {
@@ -211,15 +196,12 @@ flowchart LR
 
     function init() {
         renderVerificationBanner();
+        renderFilters();
         renderDepartureBoard();
-        renderAirspaceMap();
-        renderCapabilityMatrix();
-        renderPlanMatrix();
-        renderSurfaceMatrix();
-        renderWeightBalance();
         renderFlightPlans();
         renderNotams();
         renderEngine();
+        applyFilter();
         handleDeepLink();
         initMermaid();
     }
@@ -249,6 +231,88 @@ flowchart LR
         return 'provider-' + provider.toLowerCase().replace(/[^a-z]/g, '');
     }
 
+    function statusLabel(s) {
+        return { ga: 'GA', preview: 'Preview', deprecated: 'Grounded' }[s] || s;
+    }
+
+    // --- Filters ---
+    function renderFilters() {
+        const planSelect = document.getElementById('filter-plan');
+        planSelect.innerHTML = (modelsData.plans || []).map(p =>
+            `<option value="${escapeHtml(p.id)}" ${p.id === filterState.planId ? 'selected' : ''}>${escapeHtml(p.label)}</option>`
+        ).join('');
+        planSelect.addEventListener('change', (e) => {
+            filterState.planId = e.target.value;
+            applyFilter();
+        });
+
+        const providers = [...new Set(modelsData.models.map(m => m.provider).filter(Boolean))];
+        const providerChips = document.getElementById('filter-providers');
+        providerChips.innerHTML = providers.map(p =>
+            `<button type="button" class="filter-chip ${providerClass(p)}" data-provider="${escapeHtml(p)}">${escapeHtml(p)}</button>`
+        ).join('');
+        providerChips.querySelectorAll('.filter-chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const p = btn.dataset.provider;
+                if (filterState.providers.has(p)) {
+                    filterState.providers.delete(p);
+                    btn.classList.remove('active');
+                } else {
+                    filterState.providers.add(p);
+                    btn.classList.add('active');
+                }
+                applyFilter();
+            });
+        });
+
+        const statusChips = document.getElementById('filter-status');
+        statusChips.querySelectorAll('.filter-chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const s = btn.dataset.status;
+                if (filterState.statuses.has(s)) {
+                    filterState.statuses.delete(s);
+                    btn.classList.remove('active');
+                } else {
+                    filterState.statuses.add(s);
+                    btn.classList.add('active');
+                }
+                applyFilter();
+            });
+        });
+    }
+
+    function modelMatchesFilter(m) {
+        // Plan: model is available (true or 'limited') on the selected plan
+        const planVal = (m.planAvailability || {})[filterState.planId];
+        const planOk = planVal === true || planVal === 'limited' || planVal == null;
+        // Provider: if any selected, must match; empty set = all providers
+        const providerOk = filterState.providers.size === 0 || filterState.providers.has(m.provider);
+        // Status
+        const statusOk = filterState.statuses.has(m.status);
+        return { planOk, providerOk, statusOk, all: planOk && providerOk && statusOk };
+    }
+
+    function applyFilter() {
+        let visible = 0;
+        let dimmed = 0;
+        document.querySelectorAll('#departure-board .departure-row').forEach(row => {
+            const id = row.dataset.modelId;
+            const m = modelsData.models.find(x => x.id === id);
+            if (!m) return;
+            const r = modelMatchesFilter(m);
+            row.classList.toggle('dimmed', !r.all);
+            row.classList.toggle('plan-locked', !r.planOk);
+            if (r.all) visible++; else dimmed++;
+        });
+        const summary = document.getElementById('filter-summary');
+        summary.textContent = `${visible} of ${visible + dimmed} models cleared for ${labelForPlan(filterState.planId)}`;
+    }
+
+    function labelForPlan(id) {
+        const p = (modelsData.plans || []).find(x => x.id === id);
+        return p ? p.label : id;
+    }
+
     // --- Departure Board ---
     function renderDepartureBoard() {
         const board = document.getElementById('departure-board');
@@ -266,142 +330,21 @@ flowchart LR
             <div class="departure-group ${providerClass(provider)}">
                 <div class="departure-group-label">${escapeHtml(provider)}</div>
                 ${grouped[provider].map(m => `
-                    <a class="departure-row status-${m.status}" href="#model-${m.id}" data-model-id="${escapeHtml(m.id)}" role="listitem">
+                    <button type="button" class="departure-row status-${m.status}" data-model-id="${escapeHtml(m.id)}" role="listitem">
                         <span class="departure-led status-${m.status}" title="${escapeHtml(m.status)}"></span>
                         <span class="departure-name">${escapeHtml(m.displayName)}</span>
                         <span class="departure-family">${escapeHtml(m.family || '')}</span>
                         <span class="departure-status">${escapeHtml(statusLabel(m.status))}</span>
                         <span class="departure-tagline">${escapeHtml(m.tagline || '')}</span>
-                    </a>
+                    </button>
                 `).join('')}
             </div>
         `).join('');
-    }
 
-    function statusLabel(s) {
-        return { ga: 'GA', preview: 'Preview', deprecated: 'Grounded' }[s] || s;
-    }
-
-    // --- Airspace Map ---
-    function renderAirspaceMap() {
-        const plots = document.getElementById('airspace-plots');
-        // Heuristic: X = speed capability, Y = reasoning capability
-        const capToScore = { strong: 1.0, partial: 0.5, none: 0.0 };
-        plots.innerHTML = modelsData.models.map(m => {
-            const cap = m.capabilities || {};
-            const x = capToScore[cap.speed] ?? 0.5;
-            const y = capToScore[cap.reasoning] ?? 0.5;
-            // Add jitter by hashing the id so clustered models don't overlap
-            const hash = [...m.id].reduce((a, c) => a + c.charCodeAt(0), 0);
-            const jitterX = ((hash % 13) - 6) / 100;
-            const jitterY = (((hash * 7) % 13) - 6) / 100;
-            const left = Math.min(0.95, Math.max(0.05, x + jitterX)) * 100;
-            const top = Math.min(0.95, Math.max(0.05, (1 - y) + jitterY)) * 100;
-            return `<a class="airspace-dot ${providerClass(m.provider)} status-${m.status}"
-                       href="#model-${escapeHtml(m.id)}"
-                       style="left:${left.toFixed(1)}%;top:${top.toFixed(1)}%"
-                       title="${escapeHtml(m.displayName)} (${escapeHtml(m.provider)})"
-                       data-model-id="${escapeHtml(m.id)}">
-                        <span class="airspace-dot-label">${escapeHtml(m.displayName)}</span>
-                    </a>`;
-        }).join('');
-    }
-
-    // --- Capability Matrix ---
-    function renderCapabilityMatrix() {
-        const table = document.getElementById('capability-matrix');
-        const caps = modelsData.capabilities;
-        const mark = (v) => {
-            if (v === 'strong') return '<span class="cap-mark strong">●</span>';
-            if (v === 'partial') return '<span class="cap-mark partial">◐</span>';
-            return '<span class="cap-mark none">○</span>';
-        };
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Model</th>
-                    ${caps.map(c => `<th>${escapeHtml(c.label)}</th>`).join('')}
-                </tr>
-            </thead>
-            <tbody>
-                ${modelsData.models.map(m => `
-                    <tr id="model-${escapeHtml(m.id)}" data-model-id="${escapeHtml(m.id)}">
-                        <td class="matrix-name"><span class="departure-led status-${m.status}"></span> ${escapeHtml(m.displayName)}</td>
-                        ${caps.map(c => `<td class="matrix-cell">${mark((m.capabilities || {})[c.id])}</td>`).join('')}
-                    </tr>
-                `).join('')}
-            </tbody>
-        `;
-    }
-
-    // --- Plan Matrix ---
-    function renderPlanMatrix() {
-        const table = document.getElementById('plan-matrix');
-        const plans = modelsData.plans;
-        const cell = (v) => {
-            if (v === true) return '<span class="cap-mark strong">●</span>';
-            if (v === 'limited') return '<span class="cap-mark partial">◐</span>';
-            if (v === false) return '<span class="cap-mark none">○</span>';
-            return '<span class="cap-mark unknown" title="unverified">?</span>';
-        };
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Model</th>
-                    ${plans.map(p => `<th>${escapeHtml(p.label)}</th>`).join('')}
-                </tr>
-            </thead>
-            <tbody>
-                ${modelsData.models.map(m => `
-                    <tr>
-                        <td class="matrix-name"><span class="departure-led status-${m.status}"></span> ${escapeHtml(m.displayName)}</td>
-                        ${plans.map(p => `<td class="matrix-cell">${cell((m.planAvailability || {})[p.id])}</td>`).join('')}
-                    </tr>
-                `).join('')}
-            </tbody>
-        `;
-    }
-
-    // --- Surface Matrix ---
-    function renderSurfaceMatrix() {
-        const table = document.getElementById('surface-matrix');
-        const surfaces = modelsData.surfaces;
-        const cell = (v) => {
-            if (v === true) return '<span class="cap-mark strong">●</span>';
-            if (v === false) return '<span class="cap-mark none">○</span>';
-            return '<span class="cap-mark unknown" title="unverified">?</span>';
-        };
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Model</th>
-                    ${surfaces.map(s => `<th>${escapeHtml(s.label)}</th>`).join('')}
-                </tr>
-            </thead>
-            <tbody>
-                ${modelsData.models.map(m => `
-                    <tr>
-                        <td class="matrix-name"><span class="departure-led status-${m.status}"></span> ${escapeHtml(m.displayName)}</td>
-                        ${surfaces.map(s => `<td class="matrix-cell">${cell((m.surfaceAvailability || {})[s.id])}</td>`).join('')}
-                    </tr>
-                `).join('')}
-            </tbody>
-        `;
-    }
-
-    // --- Weight & Balance (pricing multipliers) ---
-    function renderWeightBalance() {
-        const el = document.getElementById('weight-balance');
-        el.innerHTML = modelsData.models.map(m => {
-            const mult = m.pricingMultiplier;
-            const display = mult == null ? '?' : `×${mult}`;
-            const cls = mult == null ? 'unknown' : (mult >= 2 ? 'heavy' : mult >= 1 ? 'standard' : 'light');
-            return `<div class="weight-card ${cls}" data-model-id="${escapeHtml(m.id)}">
-                <div class="weight-card-label">${escapeHtml(m.displayName)}</div>
-                <div class="weight-card-value">${display}</div>
-                <div class="weight-card-note">${mult == null ? 'unverified' : 'premium request multiplier'}</div>
-            </div>`;
-        }).join('');
+        // Wire up blade opening
+        board.querySelectorAll('.departure-row').forEach(row => {
+            row.addEventListener('click', () => openBlade(row.dataset.modelId));
+        });
     }
 
     // --- Flight Plans ---
@@ -418,7 +361,7 @@ flowchart LR
                         ${(fp.recommendedModels || []).map(id => {
                             const m = modelById[id];
                             if (!m) return '';
-                            return `<a class="flight-plan-pill recommended" href="#model-${escapeHtml(id)}">${escapeHtml(m.displayName)}</a>`;
+                            return `<button type="button" class="flight-plan-pill recommended" data-model-id="${escapeHtml(id)}">${escapeHtml(m.displayName)}</button>`;
                         }).join('')}
                     </div>
                 </div>
@@ -430,7 +373,7 @@ flowchart LR
                         ${fp.avoidModels.map(id => {
                             const m = modelById[id];
                             if (!m) return '';
-                            return `<a class="flight-plan-pill avoid" href="#model-${escapeHtml(id)}">${escapeHtml(m.displayName)}</a>`;
+                            return `<button type="button" class="flight-plan-pill avoid" data-model-id="${escapeHtml(id)}">${escapeHtml(m.displayName)}</button>`;
                         }).join('')}
                     </div>
                 </div>
@@ -438,6 +381,10 @@ flowchart LR
                 ` : ''}
             </div>
         `).join('');
+        // Flight-plan pills also open the blade
+        el.querySelectorAll('.flight-plan-pill[data-model-id]').forEach(btn => {
+            btn.addEventListener('click', () => openBlade(btn.dataset.modelId));
+        });
     }
 
     // --- NOTAMs ---
@@ -452,10 +399,13 @@ flowchart LR
                 </div>
                 <div class="notam-body">${escapeHtml(n.body)}</div>
                 ${(n.affectedModels || []).length ? `
-                <div class="notam-affected">Affects: ${n.affectedModels.map(id => `<a href="#model-${escapeHtml(id)}">${escapeHtml(id)}</a>`).join(' · ')}</div>
+                <div class="notam-affected">Affects: ${n.affectedModels.map(id => `<button type="button" class="notam-model-link" data-model-id="${escapeHtml(id)}">${escapeHtml(id)}</button>`).join(' · ')}</div>
                 ` : ''}
             </div>
         `).join('');
+        el.querySelectorAll('.notam-model-link').forEach(btn => {
+            btn.addEventListener('click', () => openBlade(btn.dataset.modelId));
+        });
     }
 
     // --- Engine explainer ---
@@ -466,17 +416,153 @@ flowchart LR
             (eng.capabilities || []).map(c => `<li>${escapeHtml(c)}</li>`).join('');
     }
 
+    // --- Model Detail Blade ---
+    function openBlade(modelId) {
+        const m = modelsData.models.find(x => x.id === modelId);
+        if (!m) return;
+
+        document.getElementById('blade-title').textContent = m.displayName;
+        document.getElementById('blade-subtitle').textContent =
+            `${m.provider || ''}${m.family ? ' · ' + m.family : ''} · ${statusLabel(m.status)}`;
+        const led = document.getElementById('blade-led');
+        led.className = 'departure-led status-' + m.status;
+
+        document.getElementById('blade-body').innerHTML = renderBladeBody(m);
+
+        const blade = document.getElementById('model-blade');
+        blade.classList.add('open');
+        blade.setAttribute('aria-hidden', 'false');
+        document.getElementById('blade-backdrop').hidden = false;
+
+        // Update URL hash without scrolling
+        history.replaceState({ modelId }, '', `#model-${modelId}`);
+    }
+
+    function closeBlade() {
+        const blade = document.getElementById('model-blade');
+        blade.classList.remove('open');
+        blade.setAttribute('aria-hidden', 'true');
+        document.getElementById('blade-backdrop').hidden = true;
+        if (window.location.hash.startsWith('#model-')) {
+            history.replaceState(null, '', window.location.pathname);
+        }
+    }
+
+    document.getElementById('blade-close').addEventListener('click', closeBlade);
+    document.getElementById('blade-backdrop').addEventListener('click', closeBlade);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeBlade();
+    });
+
+    function renderBladeBody(m) {
+        const sections = [];
+
+        // Tagline
+        if (m.tagline) {
+            sections.push(`<div class="blade-tagline">${escapeHtml(m.tagline)}</div>`);
+        }
+
+        // Strengths & Limitations
+        if ((m.strengths || []).length || (m.limitations || []).length) {
+            sections.push(`
+                <div class="blade-section">
+                    ${(m.strengths || []).length ? `
+                    <div class="blade-subsection">
+                        <div class="blade-subsection-title">✓ Strengths</div>
+                        <ul class="blade-list strong">${m.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
+                    </div>` : ''}
+                    ${(m.limitations || []).length ? `
+                    <div class="blade-subsection">
+                        <div class="blade-subsection-title">⚠ Limitations</div>
+                        <ul class="blade-list warn">${m.limitations.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
+                    </div>` : ''}
+                </div>
+            `);
+        }
+
+        // Capabilities pill row
+        const caps = m.capabilities || {};
+        const capEntries = (modelsData.capabilities || []).map(c => ({
+            label: c.label,
+            value: caps[c.id] || 'unknown'
+        }));
+        if (capEntries.length) {
+            sections.push(`
+                <div class="blade-section">
+                    <div class="blade-section-title">Capabilities</div>
+                    <div class="blade-cap-grid">
+                        ${capEntries.map(c => `
+                            <div class="blade-cap-pill value-${c.value}">
+                                <span class="blade-cap-label">${escapeHtml(c.label)}</span>
+                                <span class="blade-cap-value">${escapeHtml(c.value)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `);
+        }
+
+        // Plan access row
+        const planAvail = m.planAvailability || {};
+        sections.push(`
+            <div class="blade-section">
+                <div class="blade-section-title">Plan access</div>
+                <div class="blade-row-grid">
+                    ${(modelsData.plans || []).map(p => {
+                        const v = planAvail[p.id];
+                        const cls = v === true ? 'yes' : v === 'limited' ? 'limited' : v === false ? 'no' : 'unknown';
+                        const mark = v === true ? '●' : v === 'limited' ? '◐' : v === false ? '○' : '?';
+                        return `<div class="blade-row-cell ${cls}"><span class="blade-row-mark">${mark}</span>${escapeHtml(p.label)}</div>`;
+                    }).join('')}
+                </div>
+            </div>
+        `);
+
+        // Surface availability row
+        const surfAvail = m.surfaceAvailability || {};
+        sections.push(`
+            <div class="blade-section">
+                <div class="blade-section-title">Surfaces</div>
+                <div class="blade-row-grid">
+                    ${(modelsData.surfaces || []).map(s => {
+                        const v = surfAvail[s.id];
+                        const cls = v === true ? 'yes' : v === false ? 'no' : 'unknown';
+                        const mark = v === true ? '●' : v === false ? '○' : '?';
+                        return `<div class="blade-row-cell ${cls}"><span class="blade-row-mark">${mark}</span>${escapeHtml(s.label)}</div>`;
+                    }).join('')}
+                </div>
+            </div>
+        `);
+
+        // Weight & dates
+        const meta = [];
+        if (m.contextWindow != null) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Context window</span><span class="blade-meta-value">${m.contextWindow.toLocaleString()} tokens</span></div>`);
+        if (m.pricingMultiplier != null) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Premium multiplier</span><span class="blade-meta-value">×${m.pricingMultiplier}</span></div>`);
+        if (m.releasedAt) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Released</span><span class="blade-meta-value">${escapeHtml(m.releasedAt)}</span></div>`);
+        if (m.deprecatedAt) meta.push(`<div class="blade-meta-item warn"><span class="blade-meta-label">Grounded</span><span class="blade-meta-value">${escapeHtml(m.deprecatedAt)}</span></div>`);
+        if (meta.length) {
+            sections.push(`<div class="blade-section"><div class="blade-section-title">Weight &amp; dates</div><div class="blade-meta-grid">${meta.join('')}</div></div>`);
+        }
+
+        // Source links
+        if ((m.sourceLinks || []).length) {
+            sections.push(`
+                <div class="blade-section">
+                    <div class="blade-section-title">Sources</div>
+                    <ul class="blade-sources">
+                        ${m.sourceLinks.map(l => `<li><a href="${escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(l.label || l.url)}</a></li>`).join('')}
+                    </ul>
+                </div>
+            `);
+        }
+
+        return sections.join('');
+    }
+
     // --- Deep link ---
     function handleDeepLink() {
-        const hash = window.location.hash;
-        const m = hash.match(/#model-([\w-]+)/);
-        if (!m) return;
-        const row = document.querySelector(`#model-${CSS.escape(m[1])}`);
-        if (row) {
-            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            row.classList.add('highlight');
-            setTimeout(() => row.classList.remove('highlight'), 2000);
-        }
+        const m = window.location.hash.match(/#model-([\w.-]+)/);
+        if (m) openBlade(m[1]);
     }
     window.addEventListener('hashchange', handleDeepLink);
 
