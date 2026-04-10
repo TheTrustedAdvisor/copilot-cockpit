@@ -469,6 +469,13 @@ flowchart LR
             sections.push(`<div class="blade-tagline">${escapeHtml(m.tagline)}</div>`);
         }
 
+        // Task area badge + excels-at (docs.github.com model-comparison)
+        if (m.taskArea || m.excelsAt) {
+            const badge = m.taskArea ? `<span class="blade-task-badge">${escapeHtml(m.taskArea)}</span>` : '';
+            const excels = m.excelsAt ? `<div class="blade-excels">${escapeHtml(m.excelsAt)}</div>` : '';
+            sections.push(`<div class="blade-task-block">${badge}${excels}</div>`);
+        }
+
         // Strengths & Limitations
         if ((m.strengths || []).length || (m.limitations || []).length) {
             sections.push(`
@@ -505,6 +512,31 @@ flowchart LR
                             </div>
                         `).join('')}
                     </div>
+                </div>
+            `);
+        }
+
+        // Best-fit prose per task category (github-docs-model-comparison)
+        const fit = m.taskFit;
+        if (fit && typeof fit === 'object' && Object.keys(fit).length) {
+            const TASK_LABELS = {
+                'general-purpose': 'General-purpose coding',
+                'fast-help': 'Fast help',
+                'deep-reasoning': 'Deep reasoning',
+                'visuals': 'Working with visuals',
+                'agentic': 'Agentic development',
+                'general-purpose-agent': 'Agent tasks'
+            };
+            const items = Object.entries(fit).map(([k, prose]) => `
+                <div class="blade-fit-item">
+                    <div class="blade-fit-label">${escapeHtml(TASK_LABELS[k] || k)}</div>
+                    <div class="blade-fit-prose">${escapeHtml(prose)}</div>
+                </div>
+            `).join('');
+            sections.push(`
+                <div class="blade-section">
+                    <div class="blade-section-title">Best fit</div>
+                    <div class="blade-fit-grid">${items}</div>
                 </div>
             `);
         }
@@ -613,14 +645,19 @@ flowchart LR
             sections.push(`<div class="blade-section"><div class="blade-section-title">Weight &amp; capacity</div><div class="blade-meta-grid">${meta.join('')}</div></div>`);
         }
 
-        // Source links
-        if ((m.sourceLinks || []).length) {
+        // Source links (plain strings or {url,label} objects) + model card
+        const srcs = [...(m.sourceLinks || [])];
+        if (m.modelCardUrl) srcs.push({ url: m.modelCardUrl, label: 'Provider model card' });
+        if (srcs.length) {
+            const items = srcs.map(l => {
+                const url = typeof l === 'string' ? l : l.url;
+                const label = typeof l === 'string' ? l : (l.label || l.url);
+                return `<li><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a></li>`;
+            }).join('');
             sections.push(`
                 <div class="blade-section">
                     <div class="blade-section-title">Sources</div>
-                    <ul class="blade-sources">
-                        ${m.sourceLinks.map(l => `<li><a href="${escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(l.label || l.url)}</a></li>`).join('')}
-                    </ul>
+                    <ul class="blade-sources">${items}</ul>
                 </div>
             `);
         }

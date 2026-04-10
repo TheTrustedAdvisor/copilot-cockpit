@@ -57,6 +57,11 @@ PRECEDENCE: dict[str, list[str]] = {
     "modeAvailability": ["github-docs-supported-models"],
     "pricingMultiplier": ["github-docs-supported-models"],
     "suggestedAlternative": ["github-docs-supported-models"],
+    # docs.github.com model-comparison page (task-fit + authoritative blurb)
+    "taskArea": ["github-docs-model-comparison"],
+    "excelsAt": ["github-docs-model-comparison"],
+    "modelCardUrl": ["github-docs-model-comparison"],
+    "taskFit": ["github-docs-model-comparison"],
     "pricing": ["anthropic-api", "openrouter-api"],  # OpenAI via OR
     "knowledgeCutoff": ["openrouter-api"],  # only OR currently has this
     "inputModalities": ["openrouter-api"],
@@ -113,6 +118,11 @@ def canonicalize_id(raw: str) -> str:
 
     # Strip -preview / -exp / -latest variants that don't change identity
     s = re.sub(r"-(preview|exp|experimental|latest)(-.*)?$", "", s)
+
+    # Strip trailing `-0` minor-version (Claude Sonnet 4.0 → claude-sonnet-4,
+    # matching the unversioned Anthropic API id). Semver convention: .0 and
+    # no suffix refer to the same release.
+    s = re.sub(r"-0$", "", s)
 
     return s
 
