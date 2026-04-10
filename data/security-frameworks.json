@@ -1,0 +1,112 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-10",
+  "verificationRequired": true,
+  "description": "Framework registry mapping OWASP LLM Top 10 (2025, v2.0) and MITRE ATLAS technique IDs to their canonical URLs and summaries. Each threat in data/security-threats.json references framework IDs from this registry via its 'frameworks' object. CWE links use a URL pattern against cwe.mitre.org. IMPORTANT: Every URL, title, and summary in this file was authored from the model's training-time knowledge and MUST be manually verified against the official sources listed under 'sources' before being treated as authoritative. Flip verificationRequired to false once each entry has been reviewed.",
+  "sources": {
+    "owasp-llm": {
+      "name": "OWASP Top 10 for LLM Applications",
+      "version": "2025 (v2.0)",
+      "baseUrl": "https://genai.owasp.org/llm-top-10/",
+      "verificationNote": "Open the landing page and compare each LLMxx:2025 ID, title and slug. The per-risk URL pattern is https://genai.owasp.org/llmrisk/<slug>/ — confirm each slug exactly before trusting the link.",
+      "lastVerified": null
+    },
+    "mitre-atlas": {
+      "name": "MITRE ATLAS (Adversarial Threat Landscape for Artificial-Intelligence Systems)",
+      "version": "Current (living document)",
+      "baseUrl": "https://atlas.mitre.org/",
+      "techniquesIndex": "https://atlas.mitre.org/techniques/",
+      "verificationNote": "Technique URLs follow https://atlas.mitre.org/techniques/AML.TXXXX. Verify each ID resolves and the title still matches — ATLAS revises names and merges techniques periodically.",
+      "lastVerified": null
+    },
+    "cwe": {
+      "name": "Common Weakness Enumeration (MITRE)",
+      "baseUrl": "https://cwe.mitre.org/",
+      "definitionUrlPattern": "https://cwe.mitre.org/data/definitions/{id}.html",
+      "verificationNote": "CWE IDs are stable; URL pattern has not changed in years. Safe to trust the pattern, but confirm that each CWE ID referenced in security-threats.json is still the canonical one for the weakness described.",
+      "lastVerified": null
+    }
+  },
+  "frameworks": {
+    "owaspLLM": {
+      "LLM01:2025": {
+        "title": "Prompt Injection",
+        "url": "https://genai.owasp.org/llmrisk/llm01-2025-prompt-injection/",
+        "summary": "User or system inputs manipulate the LLM into executing unintended instructions, bypassing guardrails, or leaking data.",
+        "verified": false
+      },
+      "LLM02:2025": {
+        "title": "Sensitive Information Disclosure",
+        "url": "https://genai.owasp.org/llmrisk/llm02-2025-sensitive-information-disclosure/",
+        "summary": "The model reveals confidential data via completions, context leakage, or indexed source material.",
+        "verified": false
+      },
+      "LLM03:2025": {
+        "title": "Supply Chain",
+        "url": "https://genai.owasp.org/llmrisk/llm03-2025-supply-chain/",
+        "summary": "Compromised models, datasets, plugins, or extensions introduce vulnerabilities into the LLM stack.",
+        "verified": false
+      },
+      "LLM05:2025": {
+        "title": "Improper Output Handling",
+        "url": "https://genai.owasp.org/llmrisk/llm05-2025-improper-output-handling/",
+        "summary": "Downstream systems trust LLM output without validation — leading to XSS, SSRF, code execution, or license contamination.",
+        "verified": false
+      },
+      "LLM06:2025": {
+        "title": "Excessive Agency",
+        "url": "https://genai.owasp.org/llmrisk/llm06-2025-excessive-agency/",
+        "summary": "The LLM is granted tools, permissions, or autonomy beyond what is strictly required — amplifying the impact of any other failure.",
+        "verified": false
+      },
+      "LLM07:2025": {
+        "title": "System Prompt Leakage",
+        "url": "https://genai.owasp.org/llmrisk/llm07-2025-system-prompt-leakage/",
+        "summary": "The system prompt or embedded context leaks to untrusted parties, exposing secrets, policies, or prior conversation data.",
+        "verified": false
+      }
+    },
+    "atlas": {
+      "AML.T0010": {
+        "title": "ML Supply Chain Compromise",
+        "url": "https://atlas.mitre.org/techniques/AML.T0010",
+        "summary": "Adversaries tamper with ML models, datasets, or software dependencies along the supply chain to gain an initial foothold.",
+        "verified": false
+      },
+      "AML.T0050": {
+        "title": "Command and Scripting Interpreter",
+        "url": "https://atlas.mitre.org/techniques/AML.T0050",
+        "summary": "Adversaries abuse command and script interpreters — often via tool-using agents — to execute arbitrary code.",
+        "verified": false
+      },
+      "AML.T0051": {
+        "title": "LLM Prompt Injection",
+        "url": "https://atlas.mitre.org/techniques/AML.T0051",
+        "summary": "Adversarial instructions injected into prompts, documents, issues, or tool outputs alter LLM behavior.",
+        "verified": false
+      },
+      "AML.T0053": {
+        "title": "LLM Plugin Compromise",
+        "url": "https://atlas.mitre.org/techniques/AML.T0053",
+        "summary": "Adversaries leverage untrusted or compromised plugins/tools/extensions invoked by the LLM to exfiltrate data or escalate privilege.",
+        "verified": false
+      },
+      "AML.T0054": {
+        "title": "LLM Jailbreak",
+        "url": "https://atlas.mitre.org/techniques/AML.T0054",
+        "summary": "Adversaries bypass alignment or policy controls to elicit unsafe or prohibited model behaviors.",
+        "verified": false
+      },
+      "AML.T0057": {
+        "title": "LLM Data Leakage",
+        "url": "https://atlas.mitre.org/techniques/AML.T0057",
+        "summary": "Sensitive information from training, context, or tool responses leaks to unauthorized parties via the LLM.",
+        "verified": false
+      }
+    }
+  },
+  "cwePattern": {
+    "urlTemplate": "https://cwe.mitre.org/data/definitions/{id}.html",
+    "note": "Strip the 'CWE-' prefix when substituting {id}. Example: CWE-200 → https://cwe.mitre.org/data/definitions/200.html"
+  }
+}

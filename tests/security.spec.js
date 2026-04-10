@@ -113,6 +113,46 @@ test.describe('X-Ray Scanner', () => {
         expect(['low', 'medium', 'high']).toContain(level);
     });
 
+    test('scanner renders OWASP LLM framework chips linking to genai.owasp.org', async ({ page }) => {
+        // coding-agent has LLM01:2025 + LLM06:2025
+        await page.goto('/security.html#scan=coding-agent');
+        const owaspChips = page.locator('.fw-chip.owasp');
+        await expect(owaspChips.first()).toBeVisible({ timeout: 5000 });
+        expect(await owaspChips.count()).toBeGreaterThanOrEqual(2);
+        await expect(owaspChips.first()).toContainText(/LLM0\d:2025/);
+        const href = await owaspChips.first().getAttribute('href');
+        expect(href).toMatch(/genai\.owasp\.org/);
+    });
+
+    test('scanner renders MITRE ATLAS chips linking to atlas.mitre.org', async ({ page }) => {
+        // agent-mode has AML.T0050 + AML.T0053
+        await page.goto('/security.html#scan=agent-mode');
+        const atlasChips = page.locator('.fw-chip.atlas');
+        await expect(atlasChips.first()).toBeVisible({ timeout: 5000 });
+        expect(await atlasChips.count()).toBeGreaterThanOrEqual(2);
+        await expect(atlasChips.first()).toContainText(/AML\.T\d{4}/);
+        const href = await atlasChips.first().getAttribute('href');
+        expect(href).toMatch(/atlas\.mitre\.org\/techniques\/AML\.T\d{4}/);
+    });
+
+    test('threats with no framework mapping show the "not an AI attack class" note', async ({ page }) => {
+        // copilot-autofix has empty owaspLLM and atlas arrays
+        await page.goto('/security.html#scan=copilot-autofix');
+        await expect(page.locator('.frameworks-bar.empty')).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.fw-none')).toContainText('not an adversarial-AI attack class');
+    });
+
+    test('CWE chips render as anchors linking to cwe.mitre.org', async ({ page }) => {
+        await page.goto('/security.html#scan=content-exclusion');
+        const cweLink = page.locator('a.cwe-chip').first();
+        await expect(cweLink).toBeVisible({ timeout: 5000 });
+        await expect(cweLink).toContainText(/CWE-\d+/);
+        const href = await cweLink.getAttribute('href');
+        expect(href).toMatch(/cwe\.mitre\.org\/data\/definitions\/\d+\.html/);
+        // target=_blank so external links open in a new tab
+        expect(await cweLink.getAttribute('target')).toBe('_blank');
+    });
+
     test('"Open in Cockpit" link navigates to instrument deep link', async ({ page }) => {
         await page.goto('/security.html');
         await expect(page.locator('.scanner-open-cockpit')).toBeVisible({ timeout: 5000 });

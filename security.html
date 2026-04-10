@@ -154,6 +154,7 @@
 
     let instrumentsData = null;
     let threatsData = null;
+    let frameworksData = null;
     let currentScanId = null;
 
     // --- Theme ---
@@ -225,12 +226,14 @@
 
     // --- Load data in parallel ---
     async function loadAllData() {
-        const [inst, threats] = await Promise.all([
+        const [inst, threats, frameworks] = await Promise.all([
             fetch('data/copilot-instruments.json').then(r => r.json()),
-            fetch('data/security-threats.json').then(r => r.json())
+            fetch('data/security-threats.json').then(r => r.json()),
+            fetch('data/security-frameworks.json').then(r => r.json())
         ]);
         instrumentsData = inst;
         threatsData = threats;
+        frameworksData = frameworks;
         init();
     }
 
@@ -338,14 +341,80 @@
         }
     }
 
+    // --- Render framework chips (OWASP LLM + ATLAS) as links to official sources ---
+    function renderFrameworksBar(threat) {
+        if (!frameworksData || !threat.frameworks) return '';
+        const fw = threat.frameworks;
+        const owaspIds  = fw.owaspLLM || [];
+        const atlasIds  = fw.atlas    || [];
+        if (owaspIds.length === 0 && atlasIds.length === 0) {
+            return `<div class="frameworks-bar empty">
+                <span class="fw-label">Framework mapping:</span>
+                <span class="fw-none">— (not an adversarial-AI attack class)</span>
+            </div>`;
+        }
+
+        const owaspReg = frameworksData.frameworks.owaspLLM || {};
+        const atlasReg = frameworksData.frameworks.atlas    || {};
+
+        const owaspChips = owaspIds.map(id => {
+            const entry = owaspReg[id];
+            if (!entry) return `<span class="fw-chip owasp broken">${escapeHtml(id)}</span>`;
+            return `<a class="fw-chip owasp"
+                       href="${escapeHtml(entry.url)}"
+                       target="_blank" rel="noopener noreferrer"
+                       title="${escapeHtml(entry.summary || '')}">
+                        <span class="fw-chip-id">${escapeHtml(id)}</span>
+                        <span class="fw-chip-title">${escapeHtml(entry.title)}</span>
+                    </a>`;
+        }).join('');
+
+        const atlasChips = atlasIds.map(id => {
+            const entry = atlasReg[id];
+            if (!entry) return `<span class="fw-chip atlas broken">${escapeHtml(id)}</span>`;
+            return `<a class="fw-chip atlas"
+                       href="${escapeHtml(entry.url)}"
+                       target="_blank" rel="noopener noreferrer"
+                       title="${escapeHtml(entry.summary || '')}">
+                        <span class="fw-chip-id">${escapeHtml(id)}</span>
+                        <span class="fw-chip-title">${escapeHtml(entry.title)}</span>
+                    </a>`;
+        }).join('');
+
+        return `
+            <div class="frameworks-bar">
+                ${owaspChips ? `<div class="fw-group">
+                    <span class="fw-label">OWASP LLM:</span>
+                    ${owaspChips}
+                </div>` : ''}
+                ${atlasChips ? `<div class="fw-group">
+                    <span class="fw-label">ATLAS:</span>
+                    ${atlasChips}
+                </div>` : ''}
+            </div>
+        `;
+    }
+
+    // --- CWE chip builder: resolves to an anchor linking mitre.org definition ---
+    function renderCweChips(cweList) {
+        if (!cweList || cweList.length === 0) return '';
+        const pattern = frameworksData?.cwePattern?.urlTemplate || 'https://cwe.mitre.org/data/definitions/{id}.html';
+        return cweList.map(c => {
+            const num = String(c).replace(/^CWE-/i, '');
+            const url = pattern.replace('{id}', num);
+            return `<a class="cwe-chip"
+                       href="${escapeHtml(url)}"
+                       target="_blank" rel="noopener noreferrer"
+                       title="View ${escapeHtml(c)} on cwe.mitre.org">${escapeHtml(c)}</a>`;
+        }).join('');
+    }
+
     // --- Render scanner content HTML ---
     function renderScannerContent(inst, threat) {
         const s = threat.scenario;
         const d = threat.demo;
 
-        const cweBadges = (threat.mitigatesCWE || []).map(c =>
-            `<span class="cwe-chip">${c}</span>`
-        ).join('');
+        const cweBadges = renderCweChips(threat.mitigatesCWE);
 
         return `
             <div class="scanner-header">
@@ -356,6 +425,8 @@
                 </div>
                 <a href="index.html#instrument-${inst.id}" class="scanner-open-cockpit">Open in Cockpit ▸</a>
             </div>
+
+            ${renderFrameworksBar(threat)}
 
             <div class="scanner-section">
                 <div class="scanner-section-title">◉ Threat Model</div>
