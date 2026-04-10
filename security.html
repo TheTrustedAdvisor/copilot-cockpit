@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security — Copilot Cockpit</title>
+    <meta name="description" content="Security perspective for GitHub Copilot: posture score, critical controls, compliance mapping, and all security-relevant features in one focused view.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="cockpit-header">
+        <div class="cockpit-title">
+            <span class="icon">✈</span>
+            <div>
+                <h1>Security Perspective</h1>
+                <div class="subtitle">Copilot — CISO View</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <nav class="header-nav" aria-label="Perspectives">
+                <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Terminal<span class="nav-soon">SOON</span></a>
+                <a href="security.html" class="nav-link active">Security</a>
+                <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Gangway<span class="nav-soon">SOON</span></a>
+                <a href="index.html" class="nav-link">Cockpit</a>
+                <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Tower<span class="nav-soon">SOON</span></a>
+                <span class="nav-separator">·</span>
+                <a href="flight-log.html" class="nav-link">Flight Log</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">DAY</button>
+        </div>
+    </header>
+
+    <!-- ==================== SECURITY CONTENT ==================== -->
+    <main class="security-main" id="security-main">
+        <section class="security-intro">
+            <h2>⚠ Pre-Flight Security Briefing</h2>
+            <p>Copilot's security posture is the sum of controls you enable. This perspective pulls every
+            security-relevant instrument from the cockpit into one focused view for CISOs, security teams,
+            and enterprise evaluators. Check off the controls you've enabled to compute your posture score.</p>
+        </section>
+
+        <!-- Security Posture Score -->
+        <section class="security-section">
+            <h3 class="security-section-title">Security Posture Score</h3>
+            <div class="posture-score-card">
+                <div class="posture-score-display">
+                    <div class="posture-score-value" id="posture-score">0%</div>
+                    <div class="posture-score-label">Posture</div>
+                    <div class="posture-score-status" id="posture-status" style="color: #ff4444;">At Risk</div>
+                </div>
+                <ul class="posture-checklist" id="posture-checklist">
+                    <!-- Populated by JS -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- Critical Controls -->
+        <section class="security-section">
+            <h3 class="security-section-title">Critical Controls</h3>
+            <div class="critical-controls-grid" id="critical-controls-grid">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- All Security-Relevant Instruments -->
+        <section class="security-section">
+            <h3 class="security-section-title">All Security-Relevant Instruments</h3>
+            <div id="security-instruments-by-zone">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Compliance Mapping -->
+        <section class="security-section">
+            <h3 class="security-section-title">Compliance Mapping</h3>
+            <table class="compliance-table">
+                <thead>
+                    <tr>
+                        <th>Framework</th>
+                        <th>Control</th>
+                        <th>Copilot Feature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="compliance-control">SOC 2</td>
+                        <td>CC6.1 — Logical Access Controls</td>
+                        <td>Feature Policies, Seat Management, SSO integration</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">SOC 2</td>
+                        <td>CC7.2 — System Monitoring</td>
+                        <td>Audit Logs, Usage Metrics</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">SOC 2</td>
+                        <td>CC8.1 — Change Management</td>
+                        <td>Copilot Autofix, Security Scanning, Agent Self-Review</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">GDPR</td>
+                        <td>Art. 5(1)(b) — Purpose Limitation</td>
+                        <td>Content Exclusion, Data Residency (EU)</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">GDPR</td>
+                        <td>Art. 32 — Security of Processing</td>
+                        <td>BYOK, Copilot Instructions (guardrails)</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">GDPR</td>
+                        <td>Art. 30 — Records of Processing</td>
+                        <td>Audit Logs</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">HIPAA</td>
+                        <td>§164.312(a) — Access Control</td>
+                        <td>Feature Policies, Content Exclusion</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">HIPAA</td>
+                        <td>§164.312(b) — Audit Controls</td>
+                        <td>Audit Logs</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">IP / Legal</td>
+                        <td>Third-party code risk</td>
+                        <td>IP Indemnity (Business/Enterprise), Content Exclusion</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+    // ============================================================
+    // SECURITY PERSPECTIVE APP
+    // ============================================================
+
+    let instrumentsData = null;
+
+    // --- Theme ---
+    function initTheme() {
+        const saved = localStorage.getItem('cockpit-theme');
+        if (saved === 'light') {
+            document.body.classList.add('light-theme');
+            document.getElementById('theme-toggle').textContent = 'NIGHT';
+        }
+    }
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('cockpit-theme', isLight ? 'light' : 'dark');
+        document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
+    });
+
+    // --- Zone metadata ---
+    const ZONE_META = {
+        pfd: { name: 'Primary Flight Display', color: 'var(--color-pfd)' },
+        nd: { name: 'Navigation Display', color: 'var(--color-nd)' },
+        glareshield: { name: 'Glareshield', color: 'var(--color-glareshield)' },
+        eicas: { name: 'EICAS', color: 'var(--color-eicas)' },
+        pedestal: { name: 'Pedestal', color: 'var(--color-pedestal)' },
+        overhead: { name: 'Overhead Panel', color: 'var(--color-overhead)' },
+        side: { name: 'Side Panel', color: 'var(--color-side)' },
+        fms: { name: 'FMS', color: 'var(--color-fms)' }
+    };
+
+    // --- Posture checklist items (9 critical controls) ---
+    // Each links to an instrument id so the "Critical Controls" grid can reuse the same data.
+    const POSTURE_ITEMS = [
+        {
+            id: 'content-exclusion',
+            name: 'Content Exclusion configured',
+            desc: 'Sensitive files (secrets, PII, proprietary logic) blocked from Copilot context.'
+        },
+        {
+            id: 'feature-policies',
+            name: 'Feature Policies enforced',
+            desc: 'Central control over which Copilot features are available to your org.'
+        },
+        {
+            id: 'ip-indemnity',
+            name: 'IP Indemnity enabled',
+            desc: 'Duplication filter on + Business/Enterprise plan for legal protection.'
+        },
+        {
+            id: 'audit-logs',
+            name: 'Audit Logs monitored',
+            desc: 'Copilot admin events streamed to SIEM / compliance tooling.'
+        },
+        {
+            id: 'data-residency',
+            name: 'Data Residency set (if required)',
+            desc: 'EU or US data residency configured for regulatory jurisdictions.'
+        },
+        {
+            id: 'copilot-autofix',
+            name: 'Copilot Autofix enabled',
+            desc: 'Automatic remediation suggestions for Code Scanning alerts.'
+        },
+        {
+            id: 'security-scanning',
+            name: 'Security Scanning enabled',
+            desc: 'CodeQL analysis + secret scanning active on all repos.'
+        },
+        {
+            id: 'byok',
+            name: 'BYOK evaluated',
+            desc: 'Bring Your Own Key reviewed for data sovereignty requirements.'
+        },
+        {
+            id: 'copilot-instructions',
+            name: 'copilot-instructions.md in place',
+            desc: 'Repo-level guardrails defining security constraints for Copilot.'
+        }
+    ];
+
+    // --- Load data ---
+    async function loadInstruments() {
+        const res = await fetch('data/copilot-instruments.json');
+        instrumentsData = await res.json();
+        render();
+    }
+
+    // --- Render everything ---
+    function render() {
+        renderPostureChecklist();
+        renderCriticalControls();
+        renderSecurityInstruments();
+        updatePostureScore();
+    }
+
+    // --- Posture Checklist ---
+    function renderPostureChecklist() {
+        const ul = document.getElementById('posture-checklist');
+        const saved = JSON.parse(localStorage.getItem('cockpit-security-posture') || '{}');
+        ul.innerHTML = POSTURE_ITEMS.map(item => `
+            <li>
+                <input type="checkbox"
+                       class="posture-checkbox"
+                       id="posture-${item.id}"
+                       data-posture-id="${item.id}"
+                       ${saved[item.id] ? 'checked' : ''}>
+                <label class="posture-item-label" for="posture-${item.id}">
+                    <span class="posture-item-name">${item.name}</span>
+                    <span class="posture-item-desc">${item.desc}</span>
+                </label>
+            </li>
+        `).join('');
+
+        ul.querySelectorAll('.posture-checkbox').forEach(cb => {
+            cb.addEventListener('change', () => {
+                const state = JSON.parse(localStorage.getItem('cockpit-security-posture') || '{}');
+                state[cb.dataset.postureId] = cb.checked;
+                localStorage.setItem('cockpit-security-posture', JSON.stringify(state));
+                updatePostureScore();
+            });
+        });
+    }
+
+    function updatePostureScore() {
+        const saved = JSON.parse(localStorage.getItem('cockpit-security-posture') || '{}');
+        const enabled = POSTURE_ITEMS.filter(i => saved[i.id]).length;
+        const pct = Math.round((enabled / POSTURE_ITEMS.length) * 100);
+
+        const valEl = document.getElementById('posture-score');
+        const statusEl = document.getElementById('posture-status');
+        valEl.textContent = `${pct}%`;
+
+        valEl.classList.remove('low', 'mid');
+        if (pct < 40) {
+            valEl.classList.add('low');
+            statusEl.textContent = 'At Risk';
+            statusEl.style.color = '#ff4444';
+        } else if (pct < 75) {
+            valEl.classList.add('mid');
+            statusEl.textContent = 'Improving';
+            statusEl.style.color = 'var(--color-glareshield)';
+        } else {
+            statusEl.textContent = 'Cleared for Flight';
+            statusEl.style.color = 'var(--color-pfd)';
+        }
+    }
+
+    // --- Critical Controls Grid ---
+    function renderCriticalControls() {
+        const grid = document.getElementById('critical-controls-grid');
+        const controls = POSTURE_ITEMS.map(p => {
+            const inst = instrumentsData.instruments.find(i => i.id === p.id);
+            return inst ? { inst, posture: p } : null;
+        }).filter(Boolean);
+
+        grid.innerHTML = controls.map(({ inst }) => {
+            const aspects = (inst.securityRelevance && inst.securityRelevance.aspects) || [];
+            return `
+                <a href="index.html#instrument-${inst.id}" class="critical-control-card" data-id="${inst.id}">
+                    <div class="critical-control-symbol">${inst.symbol}</div>
+                    <div class="critical-control-name">${inst.name}</div>
+                    <div class="critical-control-aspects">${aspects.slice(0, 2).join(' · ')}</div>
+                </a>
+            `;
+        }).join('');
+    }
+
+    // --- All Security Instruments, grouped by zone ---
+    function renderSecurityInstruments() {
+        const container = document.getElementById('security-instruments-by-zone');
+        const secRelevant = instrumentsData.instruments.filter(
+            i => i.securityRelevance && i.securityRelevance.relevant
+        );
+
+        // Group by zone
+        const byZone = {};
+        secRelevant.forEach(i => {
+            if (!byZone[i.zone]) byZone[i.zone] = [];
+            byZone[i.zone].push(i);
+        });
+
+        // Render in zone order defined in data, fallback to alphabetic
+        const zoneOrder = (instrumentsData.zones || []).map(z => z.id);
+        const zones = Object.keys(byZone).sort((a, b) => {
+            const ai = zoneOrder.indexOf(a);
+            const bi = zoneOrder.indexOf(b);
+            return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+        });
+
+        container.innerHTML = zones.map(zone => {
+            const meta = ZONE_META[zone] || { name: zone, color: '#888' };
+            return `
+                <div class="security-zone-group" data-zone="${zone}">
+                    <div class="security-zone-title" style="color:${meta.color};">
+                        ${meta.name} (${byZone[zone].length})
+                    </div>
+                    <div class="security-instrument-grid">
+                        ${byZone[zone].map(i => `
+                            <a href="index.html#instrument-${i.id}" class="security-instrument-chip" data-id="${i.id}">
+                                <span class="security-chip-symbol">${i.symbol}</span>
+                                <span class="security-chip-name">${i.name}</span>
+                            </a>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // --- Init ---
+    initTheme();
+    loadInstruments();
+    </script>
+</body>
+</html>

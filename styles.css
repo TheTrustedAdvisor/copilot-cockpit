@@ -926,6 +926,269 @@ body.light-theme .nav-link { color: rgba(0, 0, 0, 0.4); border-color: rgba(0, 0,
 body.light-theme .nav-link:hover,
 body.light-theme .nav-link.active { color: var(--color-pfd); border-color: var(--color-pfd); background: rgba(0, 153, 77, 0.06); }
 
+.nav-link.disabled {
+    color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.05);
+    cursor: not-allowed;
+    position: relative;
+    pointer-events: none;
+}
+.nav-link.disabled:hover { color: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.05); }
+.nav-soon {
+    position: absolute; top: -6px; right: -4px;
+    font-size: 0.42rem; letter-spacing: 0.5px;
+    padding: 1px 4px;
+    background: rgba(255, 170, 0, 0.15);
+    color: var(--color-glareshield);
+    border: 1px solid rgba(255, 170, 0, 0.25);
+    border-radius: 2px;
+}
+
+.nav-separator {
+    color: rgba(255, 255, 255, 0.15);
+    font-family: var(--font-mono);
+    align-self: center;
+    margin: 0 4px;
+}
+
+body.light-theme .nav-link.disabled { color: rgba(0, 0, 0, 0.18); border-color: rgba(0, 0, 0, 0.06); }
+body.light-theme .nav-separator { color: rgba(0, 0, 0, 0.15); }
+
+/* --- Security Perspective --- */
+.security-main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 32px;
+}
+
+.security-intro {
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+}
+.security-intro h2 {
+    font-family: var(--font-mono);
+    font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--color-pfd); margin-bottom: 8px;
+}
+.security-intro p {
+    font-size: 0.75rem; line-height: 1.7;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.security-section { margin-bottom: 36px; }
+.security-section-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    padding-bottom: 6px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Posture Score */
+.posture-score-card {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    padding: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.15);
+    background: rgba(0, 255, 136, 0.02);
+}
+.posture-score-display {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+.posture-score-value {
+    font-family: var(--font-mono);
+    font-size: 3rem; font-weight: 700;
+    color: var(--color-pfd);
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+.posture-score-value.low { color: #ff4444; text-shadow: 0 0 20px rgba(255, 68, 68, 0.3); }
+.posture-score-value.mid { color: var(--color-glareshield); text-shadow: 0 0 20px rgba(255, 170, 0, 0.3); }
+.posture-score-label {
+    font-family: var(--font-mono);
+    font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 8px;
+}
+.posture-score-status {
+    font-family: var(--font-mono);
+    font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase;
+    margin-top: 12px;
+    padding: 2px 8px;
+    border: 1px solid currentColor;
+}
+
+.posture-checklist { list-style: none; }
+.posture-checklist li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.posture-checklist li:last-child { border-bottom: none; }
+.posture-checkbox {
+    width: 14px; height: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+    appearance: none;
+    position: relative;
+}
+.posture-checkbox:checked {
+    background: var(--color-pfd);
+    border-color: var(--color-pfd);
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+}
+.posture-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+}
+.posture-item-label {
+    display: flex; flex-direction: column; gap: 2px;
+    flex: 1;
+    cursor: pointer;
+}
+.posture-item-name {
+    font-family: var(--font-mono);
+    font-size: 0.68rem; font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.5px;
+}
+.posture-item-desc {
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.5;
+}
+
+/* Critical Controls Grid */
+.critical-controls-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+.critical-control-card {
+    display: block;
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.critical-control-card:hover {
+    border-color: var(--color-pfd);
+    background: rgba(0, 255, 136, 0.04);
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.08);
+}
+.critical-control-symbol {
+    font-family: var(--font-mono);
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--color-pfd);
+}
+.critical-control-name {
+    font-family: var(--font-mono);
+    font-size: 0.75rem; font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 2px;
+}
+.critical-control-aspects {
+    margin-top: 8px;
+    font-size: 0.58rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.5;
+}
+
+/* Security Instruments (all 34) */
+.security-zone-group { margin-bottom: 20px; }
+.security-zone-title {
+    font-family: var(--font-mono);
+    font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 8px;
+    padding-left: 8px;
+    border-left: 2px solid currentColor;
+}
+.security-instrument-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+}
+.security-instrument-chip {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.015);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.security-instrument-chip:hover {
+    border-color: var(--color-pfd);
+    background: rgba(0, 255, 136, 0.03);
+}
+.security-chip-symbol {
+    font-family: var(--font-mono);
+    font-size: 0.65rem; font-weight: 700;
+    color: var(--color-pfd);
+    min-width: 32px;
+}
+.security-chip-name {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Compliance Table */
+.compliance-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+}
+.compliance-table th,
+.compliance-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.compliance-table th {
+    font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    border-bottom-color: rgba(255, 255, 255, 0.15);
+}
+.compliance-table td {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+}
+.compliance-control {
+    color: var(--color-pfd);
+    font-weight: 600;
+}
+
+body.light-theme .security-intro,
+body.light-theme .critical-control-card,
+body.light-theme .security-instrument-chip {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .security-intro p,
+body.light-theme .posture-item-desc,
+body.light-theme .security-chip-name,
+body.light-theme .compliance-table td { color: rgba(0, 0, 0, 0.7); }
+body.light-theme .posture-item-name,
+body.light-theme .critical-control-name { color: rgba(0, 0, 0, 0.9); }
+body.light-theme .posture-checkbox { border-color: rgba(0, 0, 0, 0.3); }
+body.light-theme .posture-checkbox:checked::after { color: #fff; }
+
 /* --- Flight Log --- */
 .flight-log-main {
     max-width: 900px;
