@@ -1,0 +1,55 @@
+# Model enrichment source registry.
+#
+# Each entry declares one upstream source and the adapter that parses it.
+# Adapters live in tools/enrich/adapters/<adapter>.py and export:
+#     SOURCE_ID: str   — must match the key in this file
+#     parse(html)      — returns list[dict] of parsed records
+#
+# P0 (#23) ships this file with documented placeholders.
+# P1 (#24) adds the github-docs-* adapters.
+# P2 (#25) adds the provider-* adapters.
+# P3+ add ms-learn, changelog, etc.
+
+sources:
+
+  # ── P1: docs.github.com (HTML article pages, WebFetch-compatible) ────────
+  github-docs-supported-models:
+    url: https://docs.github.com/en/copilot/reference/ai-models/supported-models
+    type: html
+    adapter: github_supported_models
+    slug: supported-models
+    fields: [id, name, provider, status, closingDownDate, modeAvailability]
+    phase: P1
+
+  github-docs-model-comparison:
+    url: https://docs.github.com/en/copilot/reference/ai-models/model-comparison
+    type: html
+    adapter: github_model_comparison
+    slug: model-comparison
+    fields: [taskFit, strengths]
+    phase: P1
+
+  # ── P2: provider docs (contextWindow + knowledgeCutoff) ──────────────────
+  openai-models:
+    url: https://platform.openai.com/docs/models
+    type: html
+    adapter: openai_models
+    slug: models
+    fields: [contextWindow, knowledgeCutoff]
+    phase: P2
+
+  anthropic-models:
+    url: https://docs.anthropic.com/en/docs/about-claude/models
+    type: html
+    adapter: anthropic_models
+    slug: models
+    fields: [contextWindow, knowledgeCutoff]
+    phase: P2
+
+  google-models:
+    url: https://ai.google.dev/gemini-api/docs/models
+    type: html
+    adapter: google_models
+    slug: models
+    fields: [contextWindow, knowledgeCutoff]
+    phase: P2

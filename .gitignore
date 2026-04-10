@@ -22,6 +22,10 @@ __pycache__/
 *.pyc
 .venv/
 
+# Enrichment pipeline cache (tools/enrich/)
+tools/cache/sources/
+tools/cache/parsed/
+
 # Env files
 .env
 .env.*
