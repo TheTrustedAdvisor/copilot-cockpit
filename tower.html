@@ -427,7 +427,14 @@ flowchart LR
         const led = document.getElementById('blade-led');
         led.className = 'departure-led status-' + m.status;
 
-        document.getElementById('blade-body').innerHTML = renderBladeBody(m);
+        const bladeBody = document.getElementById('blade-body');
+        bladeBody.innerHTML = renderBladeBody(m);
+        bladeBody.querySelectorAll('.blade-alt-link[data-model-id]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openBlade(btn.dataset.modelId);
+            });
+        });
 
         const blade = document.getElementById('model-blade');
         blade.classList.add('open');
@@ -502,6 +509,36 @@ flowchart LR
             `);
         }
 
+        // Modalities (input / output)
+        const inMods = m.inputModalities || [];
+        const outMods = m.outputModalities || [];
+        if (inMods.length || outMods.length) {
+            sections.push(`
+                <div class="blade-section">
+                    <div class="blade-section-title">Modalities</div>
+                    <div class="blade-mod-grid">
+                        ${inMods.length ? `<div class="blade-mod-row"><span class="blade-mod-label">In</span>${inMods.map(m => `<span class="blade-mod-pill">${escapeHtml(m)}</span>`).join('')}</div>` : ''}
+                        ${outMods.length ? `<div class="blade-mod-row"><span class="blade-mod-label">Out</span>${outMods.map(m => `<span class="blade-mod-pill">${escapeHtml(m)}</span>`).join('')}</div>` : ''}
+                    </div>
+                </div>
+            `);
+        }
+
+        // Reasoning controls (Anthropic/Google extended thinking)
+        const thinking = m.thinkingTypes || [];
+        const efforts = m.effortLevels || [];
+        if (thinking.length || efforts.length) {
+            const parts = [];
+            if (thinking.length) parts.push(`<div class="blade-mod-row"><span class="blade-mod-label">Thinking</span>${thinking.map(t => `<span class="blade-mod-pill reason">${escapeHtml(t)}</span>`).join('')}</div>`);
+            if (efforts.length) parts.push(`<div class="blade-mod-row"><span class="blade-mod-label">Effort</span>${efforts.map(e => `<span class="blade-mod-pill reason">${escapeHtml(e)}</span>`).join('')}</div>`);
+            sections.push(`
+                <div class="blade-section">
+                    <div class="blade-section-title">Reasoning controls</div>
+                    <div class="blade-mod-grid">${parts.join('')}</div>
+                </div>
+            `);
+        }
+
         // Plan access row
         const planAvail = m.planAvailability || {};
         sections.push(`
@@ -534,14 +571,46 @@ flowchart LR
             </div>
         `);
 
-        // Weight & dates
+        // IDE support row
+        const ideAvail = m.ideAvailability;
+        if (ideAvail && typeof ideAvail === 'object') {
+            const IDE_LABELS = {
+                'github-com': 'GitHub.com',
+                'copilot-cli': 'CLI',
+                'vscode': 'VS Code',
+                'visual-studio': 'Visual Studio',
+                'eclipse': 'Eclipse',
+                'xcode': 'Xcode',
+                'jetbrains': 'JetBrains'
+            };
+            sections.push(`
+                <div class="blade-section">
+                    <div class="blade-section-title">IDE support</div>
+                    <div class="blade-row-grid">
+                        ${Object.entries(IDE_LABELS).map(([id, label]) => {
+                            const v = ideAvail[id];
+                            const cls = v === true ? 'yes' : v === false ? 'no' : 'unknown';
+                            const mark = v === true ? '●' : v === false ? '○' : '?';
+                            return `<div class="blade-row-cell ${cls}"><span class="blade-row-mark">${mark}</span>${escapeHtml(label)}</div>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `);
+        }
+
+        // Weight & capacity
         const meta = [];
         if (m.contextWindow != null) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Context window</span><span class="blade-meta-value">${m.contextWindow.toLocaleString()} tokens</span></div>`);
+        if (m.maxOutputTokens != null) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Max output</span><span class="blade-meta-value">${m.maxOutputTokens.toLocaleString()} tokens</span></div>`);
         if (m.pricingMultiplier != null) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Premium multiplier</span><span class="blade-meta-value">×${m.pricingMultiplier}</span></div>`);
         if (m.releasedAt) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Released</span><span class="blade-meta-value">${escapeHtml(m.releasedAt)}</span></div>`);
-        if (m.deprecatedAt) meta.push(`<div class="blade-meta-item warn"><span class="blade-meta-label">Grounded</span><span class="blade-meta-value">${escapeHtml(m.deprecatedAt)}</span></div>`);
+        if (m.knowledgeCutoff) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Knowledge cutoff</span><span class="blade-meta-value">${escapeHtml(m.knowledgeCutoff)}</span></div>`);
+        if (m.deprecatedAt) {
+            const alt = m.suggestedAlternative ? ` <span class="blade-meta-alt">→ use <button type="button" class="blade-alt-link" data-model-id="${escapeHtml(m.suggestedAlternative)}">${escapeHtml(m.suggestedAlternative)}</button></span>` : '';
+            meta.push(`<div class="blade-meta-item warn"><span class="blade-meta-label">Grounded</span><span class="blade-meta-value">${escapeHtml(m.deprecatedAt)}${alt}</span></div>`);
+        }
         if (meta.length) {
-            sections.push(`<div class="blade-section"><div class="blade-section-title">Weight &amp; dates</div><div class="blade-meta-grid">${meta.join('')}</div></div>`);
+            sections.push(`<div class="blade-section"><div class="blade-section-title">Weight &amp; capacity</div><div class="blade-meta-grid">${meta.join('')}</div></div>`);
         }
 
         // Source links

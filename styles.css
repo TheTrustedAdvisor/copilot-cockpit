@@ -2852,6 +2852,64 @@ body.light-theme .gov-callout-text {
 
 .blade-meta-item.warn { border-left-color: #ff6666; }
 
+.blade-meta-alt {
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.55);
+    margin-left: 4px;
+}
+
+.blade-alt-link {
+    background: none;
+    border: none;
+    color: #00ddff;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+}
+
+.blade-alt-link:hover { color: #66eeff; }
+
+.blade-mod-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.blade-mod-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.blade-mod-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    min-width: 44px;
+}
+
+.blade-mod-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: rgba(0, 255, 136, 0.08);
+    border: 1px solid rgba(0, 255, 136, 0.25);
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: rgba(255, 255, 255, 0.88);
+    text-transform: lowercase;
+}
+
+.blade-mod-pill.reason {
+    background: rgba(255, 170, 0, 0.08);
+    border-color: rgba(255, 170, 0, 0.3);
+}
+
 .blade-meta-label {
     display: block;
     font-family: 'JetBrains Mono', monospace;
