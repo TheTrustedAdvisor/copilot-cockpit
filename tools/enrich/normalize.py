@@ -42,12 +42,21 @@ PRECEDENCE: dict[str, list[str]] = {
     # that provider; otherwise aggregator fills in.
     "displayName": ["anthropic-api", "google-genai-api", "openrouter-api"],
     "description": ["google-genai-api", "openrouter-api"],  # Anthropic has none
-    "provider": ["openrouter-api"],
+    # Provider name: docs.github.com is the authority for Copilot-specific
+    # cases (e.g. "Fine-tuned GPT-5 mini" for raptor-mini).
+    "provider": ["github-docs-supported-models", "openrouter-api"],
     "version": ["google-genai-api"],
     "contextWindow": ["anthropic-api", "google-genai-api", "openrouter-api"],
     "maxOutputTokens": ["anthropic-api", "google-genai-api", "openrouter-api"],
     "releasedAt": ["anthropic-api", "openrouter-api", "google-genai-api"],
-    "deprecatedAt": ["anthropic-api", "openrouter-api"],
+    "deprecatedAt": ["github-docs-supported-models", "anthropic-api", "openrouter-api"],
+    # docs.github.com-only overlay fields (Copilot-specific)
+    "status": ["github-docs-supported-models"],
+    "planAvailability": ["github-docs-supported-models"],
+    "ideAvailability": ["github-docs-supported-models"],
+    "modeAvailability": ["github-docs-supported-models"],
+    "pricingMultiplier": ["github-docs-supported-models"],
+    "suggestedAlternative": ["github-docs-supported-models"],
     "pricing": ["anthropic-api", "openrouter-api"],  # OpenAI via OR
     "knowledgeCutoff": ["openrouter-api"],  # only OR currently has this
     "inputModalities": ["openrouter-api"],

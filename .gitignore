@@ -30,6 +30,7 @@ __pycache__/
 # Enrichment pipeline cache (tools/enrich/)
 tools/cache/sources/
 tools/cache/parsed/
+tools/cache/merged-candidate.json
 
 # Env files
 .env
