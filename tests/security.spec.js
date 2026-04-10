@@ -258,7 +258,7 @@ test.describe('Perspective Navigation Bar', () => {
         await expect(nav).toBeVisible();
         await expect(nav).toContainText('Terminal');
         await expect(nav).toContainText('Security');
-        await expect(nav).toContainText('Gangway');
+        await expect(nav).toContainText('Jet Bridge');
         await expect(nav).toContainText('Cockpit');
         await expect(nav).toContainText('Tower');
         await expect(nav).toContainText('Flight Log');
@@ -288,7 +288,7 @@ test.describe('Perspective Navigation Bar', () => {
     test('disabled perspectives have SOON badge and are not clickable', async ({ page }) => {
         await page.goto('/');
         const disabled = page.locator('.nav-link.disabled');
-        await expect(disabled).toHaveCount(2); // Terminal, Gangway (Tower now live)
+        await expect(disabled).toHaveCount(2); // Terminal, Jet Bridge (Tower now live)
 
         const soonBadges = page.locator('.nav-soon');
         await expect(soonBadges).toHaveCount(2);
