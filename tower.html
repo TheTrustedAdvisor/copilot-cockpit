@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tower — Copilot Cockpit</title>
-    <meta name="description" content="Tower perspective for GitHub Copilot: governance, seat management, compliance mapping and incident runbooks for org owners and enterprise IT.">
+    <meta name="description" content="Tower perspective for GitHub Copilot: every model that powers Copilot, their strengths, limitations, surfaces, plan access and how the Copilot engine routes between them.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +13,9 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Mermaid (lazy, only used by the Copilot Engine explainer) -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 </head>
 <body>
 
@@ -22,7 +25,7 @@
             <span class="icon">✈</span>
             <div>
                 <h1>Tower Perspective</h1>
-                <div class="subtitle">Copilot — Admin & Governance View</div>
+                <div class="subtitle">Airfield Control — every model, one tower</div>
             </div>
         </div>
         <div class="header-right">
@@ -43,107 +46,142 @@
     <main class="tower-main" id="tower-main">
         <section class="tower-intro">
             <h2>🗼 Air Traffic Control Briefing</h2>
-            <p>The Tower doesn't fly the plane — it governs the airspace. This is the admin &amp; governance view for org owners,
-            CISOs' deputies, and enterprise IT. See which controls you've enabled, how they map to compliance frameworks,
-            what's running across your fleet of seats, and what to do when a squawk goes off.</p>
-        </section>
-
-        <!-- ============ RADAR SCOPE — HERO ============ -->
-        <section class="radar-scope tower-section" aria-label="Governance Radar Scope">
-            <h3 class="tower-section-title">◉ Governance Radar</h3>
-            <div class="radar-container">
-                <div class="radar-display" aria-hidden="true">
-                    <div class="radar-ring ring-outer"></div>
-                    <div class="radar-ring ring-middle"></div>
-                    <div class="radar-ring ring-inner"></div>
-                    <div class="radar-crosshair radar-crosshair-h"></div>
-                    <div class="radar-crosshair radar-crosshair-v"></div>
-                    <div class="radar-sweep"></div>
-                    <div class="radar-blips" id="radar-blips">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-                <div class="radar-legend">
-                    <div class="radar-score">
-                        <div class="radar-score-value" id="governance-score">--</div>
-                        <div class="radar-score-label">Governance Score</div>
-                        <div class="radar-score-status" id="governance-status">Scanning…</div>
-                    </div>
-                    <div class="radar-breakdown" id="radar-breakdown">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
+            <p>The Tower doesn't fly the plane — it controls the airfield. This view aggregates every AI model
+            GitHub Copilot can dispatch: their strengths, limitations, surface availability, plan access and how
+            the Copilot engine routes between them. Use it to pick the right model for the job instead of
+            reaching for the default.</p>
+            <div id="verification-banner" class="verification-banner" hidden>
+                <strong>⚠ VERIFICATION REQUIRED</strong>
+                <span id="verification-banner-text"></span>
             </div>
         </section>
 
-        <!-- ============ GOVERNANCE CONTROLS MATRIX ============ -->
-        <section class="tower-section">
-            <h3 class="tower-section-title">Governance Controls</h3>
-            <p class="tower-section-intro">Every control an org owner can configure, cross-cutting across Overhead, Glareshield, Side and FMS zones. Click any control to open it in the Cockpit.</p>
-            <div class="governance-grid" id="governance-grid">
+        <!-- ============ DEPARTURE BOARD — HERO ============ -->
+        <section class="tower-section" aria-label="Departure Board">
+            <h3 class="tower-section-title">◉ Departure Board</h3>
+            <p class="tower-section-intro">Every model cleared for takeoff. Status LED shows GA / preview / grounded. Click any row to jump to its detail entry below.</p>
+            <div class="departure-board" id="departure-board" role="list">
                 <!-- Populated by JS -->
             </div>
         </section>
 
-        <!-- ============ SEAT MANAGEMENT ============ -->
-        <section class="tower-section">
-            <h3 class="tower-section-title">Seat Management</h3>
-            <div class="seat-widget" id="seat-widget">
-                <!-- Populated by JS -->
+        <!-- ============ AIRSPACE MAP ============ -->
+        <section class="tower-section" aria-label="Airspace Map">
+            <h3 class="tower-section-title">🛰 Airspace Map</h3>
+            <p class="tower-section-intro">Every model positioned by reasoning depth (Y axis) and speed (X axis). Flagship reasoners cluster top-left, fast inline completers cluster bottom-right.</p>
+            <div class="airspace-map" id="airspace-map" aria-hidden="true">
+                <div class="airspace-axis-y">reasoning ▲</div>
+                <div class="airspace-axis-x">speed ▶</div>
+                <div class="airspace-grid"></div>
+                <div class="airspace-plots" id="airspace-plots"></div>
+            </div>
+            <div class="airspace-legend">
+                <span class="airspace-legend-dot provider-openai"></span>OpenAI
+                <span class="airspace-legend-dot provider-anthropic"></span>Anthropic
+                <span class="airspace-legend-dot provider-google"></span>Google
+                <span class="airspace-legend-dot provider-xai"></span>xAI
+                <span class="airspace-legend-dot provider-github"></span>GitHub fine-tune
             </div>
         </section>
 
-        <!-- ============ ADOPTION METRICS ============ -->
-        <section class="tower-section">
-            <h3 class="tower-section-title">Adoption Metrics</h3>
-            <div class="metrics-grid" id="metrics-grid">
-                <!-- Populated by JS -->
-            </div>
-            <h4 class="tower-subsection-title">Top Instruments (last 30 days)</h4>
-            <table class="instrument-usage-table" id="instrument-usage-table">
-                <thead>
-                    <tr>
-                        <th>Instrument</th>
-                        <th class="num">Active Users</th>
-                        <th class="num">Events (30d)</th>
-                        <th>Trend</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <!-- ============ CAPABILITY MATRIX ============ -->
+        <section class="tower-section" aria-label="Capability Matrix">
+            <h3 class="tower-section-title">⚙ Capability Matrix</h3>
+            <p class="tower-section-intro">Rows = models, columns = capabilities. <span class="cap-mark strong">●</span> strong, <span class="cap-mark partial">◐</span> partial, <span class="cap-mark none">○</span> none / not applicable.</p>
+            <div class="matrix-wrapper">
+                <table class="capability-matrix" id="capability-matrix">
                     <!-- Populated by JS -->
-                </tbody>
-            </table>
+                </table>
+            </div>
         </section>
 
-        <!-- ============ COMPLIANCE MAPPING ============ -->
-        <section class="tower-section">
-            <h3 class="tower-section-title">Compliance Mapping</h3>
-            <p class="tower-section-intro">Which frameworks Copilot supports, which controls underpin them, and where to find canonical evidence. External links open in a new tab.</p>
-            <div class="compliance-framework-grid" id="compliance-framework-grid">
+        <!-- ============ PLAN ACCESS MATRIX ============ -->
+        <section class="tower-section" aria-label="Plan Access Matrix">
+            <h3 class="tower-section-title">🎫 Plan Access Matrix</h3>
+            <p class="tower-section-intro">Which plan ticket gets you aboard which model. Cells marked <em>unverified</em> are pending the freshness pipeline.</p>
+            <div class="matrix-wrapper">
+                <table class="plan-matrix" id="plan-matrix">
+                    <!-- Populated by JS -->
+                </table>
+            </div>
+        </section>
+
+        <!-- ============ SURFACE MATRIX ============ -->
+        <section class="tower-section" aria-label="Surface Matrix">
+            <h3 class="tower-section-title">📡 Surface Matrix</h3>
+            <p class="tower-section-intro">Which Copilot surface (Chat, Inline, Edits, Agent, Coding Agent, Code Review) can dispatch which model.</p>
+            <div class="matrix-wrapper">
+                <table class="surface-matrix" id="surface-matrix">
+                    <!-- Populated by JS -->
+                </table>
+            </div>
+        </section>
+
+        <!-- ============ WEIGHT & BALANCE (pricing) ============ -->
+        <section class="tower-section" aria-label="Weight and Balance">
+            <h3 class="tower-section-title">⚖ Weight &amp; Balance</h3>
+            <p class="tower-section-intro">Premium-request multipliers per model. All entries are <em>unverified</em> until issue #20's freshness pipeline runs — do not use for capacity planning yet.</p>
+            <div class="weight-balance" id="weight-balance">
                 <!-- Populated by JS -->
             </div>
         </section>
 
-        <!-- ============ INCIDENT RUNBOOK ============ -->
-        <section class="tower-section">
-            <h3 class="tower-section-title">⚠ Incident Runbook</h3>
-            <p class="tower-section-intro">Three scenarios you should be able to run from muscle memory. Drill them before you need them.</p>
-            <div class="incident-list" id="incident-list">
+        <!-- ============ FLIGHT PLANS ============ -->
+        <section class="tower-section" aria-label="Flight Plans">
+            <h3 class="tower-section-title">📋 Flight Plans</h3>
+            <p class="tower-section-intro">Suggested model picks per task profile. Opinionated, cross-verified against the model's tagline and capability profile.</p>
+            <div class="flight-plans" id="flight-plans">
                 <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ NOTAMs ============ -->
+        <section class="tower-section" aria-label="NOTAMs">
+            <h3 class="tower-section-title">⚠ NOTAMs</h3>
+            <p class="tower-section-intro">Notices to Air Missions — deprecations, preview status caveats, regional availability, anything that changes routing decisions.</p>
+            <div class="notam-list" id="notam-list">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ COPILOT ENGINE EXPLAINER ============ -->
+        <section class="tower-section" aria-label="Copilot Engine">
+            <h3 class="tower-section-title">🛠 Copilot Engine</h3>
+            <p class="tower-section-intro" id="engine-summary">
+                <!-- Populated by JS -->
+            </p>
+            <ul class="engine-capabilities" id="engine-capabilities">
+                <!-- Populated by JS -->
+            </ul>
+            <div class="engine-diagram">
+                <pre class="mermaid">
+flowchart LR
+    U[You - IDE / CLI / GitHub.com] --> E[Copilot Engine]
+    E --> R[Router]
+    R --> P[Policy Gate]
+    P --> X[Context Assembler]
+    X --> M{Model Pool}
+    M --> O[OpenAI]
+    M --> A[Anthropic]
+    M --> G[Google]
+    M --> I[xAI]
+    M --> F[GitHub fine-tunes]
+    M --> RES[Response]
+    RES --> AUD[Audit Log]
+    AUD --> U
+                </pre>
             </div>
         </section>
     </main>
 
     <script>
     // ============================================================
-    // TOWER PERSPECTIVE — Admin & Governance View
+    // TOWER PERSPECTIVE — Model Control Tower
     // ============================================================
 
-    let instrumentsData = null;
-    let governanceData = null;
-    let metricsData = null;
+    let modelsData = null;
 
-    // --- Theme ---
+    // --- Theme (shared pattern with cockpit) ---
     function initTheme() {
         const saved = localStorage.getItem('cockpit-theme');
         if (saved === 'light') {
@@ -158,27 +196,32 @@
         document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
     });
 
-    // --- Load data in parallel ---
+    // --- Load data ---
     async function loadAllData() {
-        const [inst, gov, met] = await Promise.all([
-            fetch('data/copilot-instruments.json').then(r => r.json()),
-            fetch('data/tower-governance.json').then(r => r.json()),
-            fetch('data/tower-metrics.json').then(r => r.json())
-        ]);
-        instrumentsData = inst;
-        governanceData = gov;
-        metricsData = met;
-        init();
+        try {
+            const resp = await fetch('data/copilot-models.json');
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            modelsData = await resp.json();
+            init();
+        } catch (err) {
+            document.getElementById('tower-main').innerHTML =
+                `<p style="color:#ff4444;padding:40px;">DATA LINK LOST — ${escapeHtml(err.message)}</p>`;
+        }
     }
 
     function init() {
-        renderRadar();
-        renderGovernanceGrid();
-        renderSeatWidget();
-        renderMetrics();
-        renderCompliance();
-        renderIncidents();
+        renderVerificationBanner();
+        renderDepartureBoard();
+        renderAirspaceMap();
+        renderCapabilityMatrix();
+        renderPlanMatrix();
+        renderSurfaceMatrix();
+        renderWeightBalance();
+        renderFlightPlans();
+        renderNotams();
+        renderEngine();
         handleDeepLink();
+        initMermaid();
     }
 
     function escapeHtml(s) {
@@ -191,244 +234,268 @@
             .replace(/'/g, '&#39;');
     }
 
-    // --- Radar Scope ---
-    function renderRadar() {
-        const posture = metricsData.posture;
-        const scoreEl = document.getElementById('governance-score');
-        const statusEl = document.getElementById('governance-status');
-        const breakdownEl = document.getElementById('radar-breakdown');
-        const blipsEl = document.getElementById('radar-blips');
-
-        scoreEl.textContent = `${posture.governanceScore}%`;
-        scoreEl.classList.remove('low', 'mid', 'high');
-        if (posture.governanceScore < 40) {
-            scoreEl.classList.add('low');
-            statusEl.textContent = 'Squawk 7700 — At Risk';
-        } else if (posture.governanceScore < 75) {
-            scoreEl.classList.add('mid');
-            statusEl.textContent = 'Squawk 7600 — Improving';
-        } else {
-            scoreEl.classList.add('high');
-            statusEl.textContent = 'Cleared for Flight';
-        }
-
-        const checks = [
-            { label: `Policies configured`, value: `${posture.breakdown.policiesConfigured}/${posture.breakdown.policiesTotal}`, ok: posture.breakdown.policiesConfigured >= posture.breakdown.policiesTotal * 0.7 },
-            { label: `Content Exclusion`, value: posture.breakdown.contentExclusionEnabled ? 'Enabled' : 'Off', ok: posture.breakdown.contentExclusionEnabled },
-            { label: `Audit Log export`, value: posture.breakdown.auditLogsExported ? 'Active' : 'Off', ok: posture.breakdown.auditLogsExported },
-            { label: `Seat offboarding automated`, value: posture.breakdown.seatOffboardingAutomated ? 'Yes' : 'Manual', ok: posture.breakdown.seatOffboardingAutomated },
-            { label: `MCP allowlist`, value: posture.breakdown.mcpAllowlistSet ? 'Set' : 'Open', ok: posture.breakdown.mcpAllowlistSet },
-            { label: `Data residency pinned`, value: posture.breakdown.dataResidencyPinned ? 'Yes' : 'No', ok: posture.breakdown.dataResidencyPinned },
-            { label: `Runbook drilled`, value: posture.breakdown.incidentRunbookDrilled ? 'Yes' : 'Never', ok: posture.breakdown.incidentRunbookDrilled }
-        ];
-        breakdownEl.innerHTML = checks.map(c => `
-            <div class="radar-check ${c.ok ? 'ok' : 'warn'}">
-                <span class="radar-check-dot"></span>
-                <span class="radar-check-label">${escapeHtml(c.label)}</span>
-                <span class="radar-check-value">${escapeHtml(c.value)}</span>
-            </div>
-        `).join('');
-
-        // Place blips: deterministic positions around the scope
-        const blips = governanceData.controls.slice(0, 8).map((c, idx) => {
-            const angle = (idx / 8) * Math.PI * 2;
-            const radius = 32 + (idx % 3) * 14; // percent
-            const x = 50 + Math.cos(angle) * radius;
-            const y = 50 + Math.sin(angle) * radius;
-            const inst = instrumentsData.instruments.find(i => i.id === c.id);
-            const symbol = inst ? inst.symbol : c.id.slice(0, 3).toUpperCase();
-            return `<a class="radar-blip ${c.rolloutEffort}"
-                       href="#control=${c.id}"
-                       style="left:${x}%;top:${y}%;"
-                       title="${escapeHtml(inst ? inst.name : c.id)}">
-                        <span class="radar-blip-symbol">${escapeHtml(symbol)}</span>
-                    </a>`;
-        }).join('');
-        blipsEl.innerHTML = blips;
+    // --- Verification banner ---
+    function renderVerificationBanner() {
+        if (!modelsData.verificationRequired) return;
+        const banner = document.getElementById('verification-banner');
+        const text = document.getElementById('verification-banner-text');
+        text.textContent = modelsData.verificationNotes ||
+            'This catalog has not yet been verified by the freshness pipeline.';
+        banner.hidden = false;
     }
 
-    // --- Governance Grid ---
-    function renderGovernanceGrid() {
-        const grid = document.getElementById('governance-grid');
-        grid.innerHTML = governanceData.controls.map(c => {
-            const inst = instrumentsData.instruments.find(i => i.id === c.id);
-            if (!inst) return '';
-            const rolloutBadgeClass = `rollout-${c.rolloutEffort}`;
-            const stateBadgeClass = `state-${c.defaultState}`;
-            return `
-                <a class="governance-card" href="index.html#instrument-${inst.id}" data-control-id="${c.id}">
-                    <div class="governance-card-top">
-                        <span class="governance-card-symbol">${inst.symbol}</span>
-                        <span class="governance-card-rollout ${rolloutBadgeClass}">${c.rolloutEffort} effort</span>
-                    </div>
-                    <div class="governance-card-name">${escapeHtml(inst.name)}</div>
-                    <div class="governance-card-category">${escapeHtml(c.category)} · ${c.scope}</div>
-                    <div class="governance-card-note">${escapeHtml(c.governanceNote)}</div>
-                    <div class="governance-card-footer">
-                        <span class="governance-card-state ${stateBadgeClass}">Default: ${c.defaultState}</span>
-                        <span class="governance-card-compliance">${c.complianceRelevance.length} compliance refs</span>
-                    </div>
-                </a>
-            `;
-        }).join('');
+    function providerClass(provider) {
+        if (!provider) return '';
+        return 'provider-' + provider.toLowerCase().replace(/[^a-z]/g, '');
     }
 
-    // --- Seat Management Widget ---
-    function renderSeatWidget() {
-        const org = metricsData.org;
-        const s = org.seats;
-        const utilization = Math.round((s.activeLast30d / s.total) * 100);
-        const assignedPct = Math.round((s.assigned / s.total) * 100);
-        const activePct = Math.round((s.activeLast30d / s.total) * 100);
+    // --- Departure Board ---
+    function renderDepartureBoard() {
+        const board = document.getElementById('departure-board');
+        const grouped = {};
+        modelsData.models.forEach(m => {
+            const p = m.provider || 'Other';
+            if (!grouped[p]) grouped[p] = [];
+            grouped[p].push(m);
+        });
 
-        document.getElementById('seat-widget').innerHTML = `
-            <div class="seat-header">
-                <div>
-                    <div class="seat-org-name">${escapeHtml(org.name)}</div>
-                    <div class="seat-org-plan">${escapeHtml(org.plan)} · $${s.monthlySpend.toLocaleString()}/mo</div>
-                </div>
-                <div class="seat-utilization">
-                    <div class="seat-utilization-value">${utilization}%</div>
-                    <div class="seat-utilization-label">Utilization</div>
-                </div>
-            </div>
-            <div class="seat-bar" aria-label="Seat breakdown">
-                <div class="seat-bar-assigned" style="width:${assignedPct}%" title="Assigned: ${s.assigned}"></div>
-                <div class="seat-bar-active"   style="width:${activePct}%"   title="Active in 30d: ${s.activeLast30d}"></div>
-            </div>
-            <div class="seat-legend">
-                <span class="seat-legend-item"><span class="seat-legend-dot total"></span>Total ${s.total}</span>
-                <span class="seat-legend-item"><span class="seat-legend-dot assigned"></span>Assigned ${s.assigned}</span>
-                <span class="seat-legend-item"><span class="seat-legend-dot active"></span>Active 30d ${s.activeLast30d}</span>
-                <span class="seat-legend-item warn"><span class="seat-legend-dot orphan"></span>Orphaned ${s.inactiveWithSeat}</span>
-            </div>
-            <div class="seat-note">${escapeHtml(s.inactiveNote)}</div>
-            <div class="seat-regions">
-                ${org.regions.map(r => `
-                    <div class="seat-region">
-                        <div class="seat-region-label">${escapeHtml(r.label)}</div>
-                        <div class="seat-region-count">${r.seats}</div>
-                        <div class="seat-region-flag ${r.residencyPinned ? 'pinned' : 'open'}">
-                            ${r.residencyPinned ? '🔒 pinned' : '⚠ not pinned'}
-                        </div>
-                    </div>
+        const providerOrder = ['OpenAI', 'Anthropic', 'Google', 'xAI', 'GitHub'];
+        const ordered = [...providerOrder, ...Object.keys(grouped).filter(p => !providerOrder.includes(p))];
+
+        board.innerHTML = ordered.filter(p => grouped[p]).map(provider => `
+            <div class="departure-group ${providerClass(provider)}">
+                <div class="departure-group-label">${escapeHtml(provider)}</div>
+                ${grouped[provider].map(m => `
+                    <a class="departure-row status-${m.status}" href="#model-${m.id}" data-model-id="${escapeHtml(m.id)}" role="listitem">
+                        <span class="departure-led status-${m.status}" title="${escapeHtml(m.status)}"></span>
+                        <span class="departure-name">${escapeHtml(m.displayName)}</span>
+                        <span class="departure-family">${escapeHtml(m.family || '')}</span>
+                        <span class="departure-status">${escapeHtml(statusLabel(m.status))}</span>
+                        <span class="departure-tagline">${escapeHtml(m.tagline || '')}</span>
+                    </a>
                 `).join('')}
             </div>
-        `;
+        `).join('');
     }
 
-    // --- Adoption Metrics ---
-    function renderMetrics() {
-        const a = metricsData.adoption;
-        const cards = [
-            { label: 'Inline Acceptance', value: `${Math.round(a.inlineAcceptanceRate * 100)}%`, trend: a.inlineAcceptanceRateTrend },
-            { label: 'Chat sessions / user / day', value: a.chatSessionsPerUserPerDay.toFixed(1), trend: a.chatSessionsTrend },
-            { label: 'Agent Mode (weekly active)', value: a.agentModeWeeklyActive, trend: a.agentModeWeeklyActiveTrend },
-            { label: 'Time to first PR (median)', value: `${a.timeToFirstPr.medianDays}d`, trend: `P90 ${a.timeToFirstPr.p90Days}d` }
-        ];
-        document.getElementById('metrics-grid').innerHTML = cards.map(c => `
-            <div class="metric-card">
-                <div class="metric-card-label">${escapeHtml(c.label)}</div>
-                <div class="metric-card-value">${escapeHtml(String(c.value))}</div>
-                <div class="metric-card-trend">${escapeHtml(c.trend)}</div>
-            </div>
-        `).join('');
+    function statusLabel(s) {
+        return { ga: 'GA', preview: 'Preview', deprecated: 'Grounded' }[s] || s;
+    }
 
-        // Instrument usage table
-        const rows = metricsData.instrumentUsage.map(u => {
-            const inst = instrumentsData.instruments.find(i => i.id === u.id);
-            if (!inst) return '';
-            return `
+    // --- Airspace Map ---
+    function renderAirspaceMap() {
+        const plots = document.getElementById('airspace-plots');
+        // Heuristic: X = speed capability, Y = reasoning capability
+        const capToScore = { strong: 1.0, partial: 0.5, none: 0.0 };
+        plots.innerHTML = modelsData.models.map(m => {
+            const cap = m.capabilities || {};
+            const x = capToScore[cap.speed] ?? 0.5;
+            const y = capToScore[cap.reasoning] ?? 0.5;
+            // Add jitter by hashing the id so clustered models don't overlap
+            const hash = [...m.id].reduce((a, c) => a + c.charCodeAt(0), 0);
+            const jitterX = ((hash % 13) - 6) / 100;
+            const jitterY = (((hash * 7) % 13) - 6) / 100;
+            const left = Math.min(0.95, Math.max(0.05, x + jitterX)) * 100;
+            const top = Math.min(0.95, Math.max(0.05, (1 - y) + jitterY)) * 100;
+            return `<a class="airspace-dot ${providerClass(m.provider)} status-${m.status}"
+                       href="#model-${escapeHtml(m.id)}"
+                       style="left:${left.toFixed(1)}%;top:${top.toFixed(1)}%"
+                       title="${escapeHtml(m.displayName)} (${escapeHtml(m.provider)})"
+                       data-model-id="${escapeHtml(m.id)}">
+                        <span class="airspace-dot-label">${escapeHtml(m.displayName)}</span>
+                    </a>`;
+        }).join('');
+    }
+
+    // --- Capability Matrix ---
+    function renderCapabilityMatrix() {
+        const table = document.getElementById('capability-matrix');
+        const caps = modelsData.capabilities;
+        const mark = (v) => {
+            if (v === 'strong') return '<span class="cap-mark strong">●</span>';
+            if (v === 'partial') return '<span class="cap-mark partial">◐</span>';
+            return '<span class="cap-mark none">○</span>';
+        };
+        table.innerHTML = `
+            <thead>
                 <tr>
-                    <td><a href="index.html#instrument-${inst.id}"><strong>${inst.symbol}</strong> ${escapeHtml(inst.name)}</a></td>
-                    <td class="num">${u.users}</td>
-                    <td class="num">${u.events30d.toLocaleString()}</td>
-                    <td><span class="trend-badge ${u.trend.startsWith('+') ? 'up' : u.trend === 'new' ? 'new' : 'stable'}">${escapeHtml(u.trend)}</span></td>
+                    <th>Model</th>
+                    ${caps.map(c => `<th>${escapeHtml(c.label)}</th>`).join('')}
                 </tr>
-            `;
-        }).join('');
-        document.querySelector('#instrument-usage-table tbody').innerHTML = rows;
+            </thead>
+            <tbody>
+                ${modelsData.models.map(m => `
+                    <tr id="model-${escapeHtml(m.id)}" data-model-id="${escapeHtml(m.id)}">
+                        <td class="matrix-name"><span class="departure-led status-${m.status}"></span> ${escapeHtml(m.displayName)}</td>
+                        ${caps.map(c => `<td class="matrix-cell">${mark((m.capabilities || {})[c.id])}</td>`).join('')}
+                    </tr>
+                `).join('')}
+            </tbody>
+        `;
     }
 
-    // --- Compliance Mapping ---
-    function renderCompliance() {
-        const c = governanceData.compliance;
-        const order = ['SOC2', 'ISO27001', 'GDPR', 'HIPAA', 'FedRAMP', 'EU_AI_ACT'];
-        const grid = document.getElementById('compliance-framework-grid');
-        grid.innerHTML = order.map(k => {
-            const fw = c[k];
-            if (!fw) return '';
-            const extras = fw.controlFamilies || fw.annexControls || fw.keyArticles || fw.rules || null;
-            const extrasHtml = extras
-                ? `<ul class="compliance-extras">${Object.entries(extras).map(([id, label]) => `<li><strong>${escapeHtml(id)}</strong> — ${escapeHtml(label)}</li>`).join('')}</ul>`
-                : '';
-            const checklist = fw.evidencePackChecklist || fw.dpiaChecklist || fw.deployerObligations || null;
-            const checklistHtml = checklist
-                ? `<div class="compliance-checklist-title">Checklist</div>
-                   <ul class="compliance-checklist">${checklist.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>`
-                : '';
-            return `
-                <div class="compliance-card framework-${k.toLowerCase().replace(/_/g,'-')}" data-framework="${k}">
-                    <div class="compliance-card-header">
-                        <div>
-                            <div class="compliance-card-name">${escapeHtml(fw.fullName)}</div>
-                            <div class="compliance-card-status status-${fw.status}">${escapeHtml(fw.status)}</div>
-                        </div>
-                        <a class="compliance-card-link" href="${escapeHtml(fw.url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(fw.fullName)} reference">↗</a>
-                    </div>
-                    <div class="compliance-card-note">${escapeHtml(fw.statusNote)}</div>
-                    ${extrasHtml}
-                    ${checklistHtml}
-                </div>
-            `;
+    // --- Plan Matrix ---
+    function renderPlanMatrix() {
+        const table = document.getElementById('plan-matrix');
+        const plans = modelsData.plans;
+        const cell = (v) => {
+            if (v === true) return '<span class="cap-mark strong">●</span>';
+            if (v === 'limited') return '<span class="cap-mark partial">◐</span>';
+            if (v === false) return '<span class="cap-mark none">○</span>';
+            return '<span class="cap-mark unknown" title="unverified">?</span>';
+        };
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    ${plans.map(p => `<th>${escapeHtml(p.label)}</th>`).join('')}
+                </tr>
+            </thead>
+            <tbody>
+                ${modelsData.models.map(m => `
+                    <tr>
+                        <td class="matrix-name"><span class="departure-led status-${m.status}"></span> ${escapeHtml(m.displayName)}</td>
+                        ${plans.map(p => `<td class="matrix-cell">${cell((m.planAvailability || {})[p.id])}</td>`).join('')}
+                    </tr>
+                `).join('')}
+            </tbody>
+        `;
+    }
+
+    // --- Surface Matrix ---
+    function renderSurfaceMatrix() {
+        const table = document.getElementById('surface-matrix');
+        const surfaces = modelsData.surfaces;
+        const cell = (v) => {
+            if (v === true) return '<span class="cap-mark strong">●</span>';
+            if (v === false) return '<span class="cap-mark none">○</span>';
+            return '<span class="cap-mark unknown" title="unverified">?</span>';
+        };
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    ${surfaces.map(s => `<th>${escapeHtml(s.label)}</th>`).join('')}
+                </tr>
+            </thead>
+            <tbody>
+                ${modelsData.models.map(m => `
+                    <tr>
+                        <td class="matrix-name"><span class="departure-led status-${m.status}"></span> ${escapeHtml(m.displayName)}</td>
+                        ${surfaces.map(s => `<td class="matrix-cell">${cell((m.surfaceAvailability || {})[s.id])}</td>`).join('')}
+                    </tr>
+                `).join('')}
+            </tbody>
+        `;
+    }
+
+    // --- Weight & Balance (pricing multipliers) ---
+    function renderWeightBalance() {
+        const el = document.getElementById('weight-balance');
+        el.innerHTML = modelsData.models.map(m => {
+            const mult = m.pricingMultiplier;
+            const display = mult == null ? '?' : `×${mult}`;
+            const cls = mult == null ? 'unknown' : (mult >= 2 ? 'heavy' : mult >= 1 ? 'standard' : 'light');
+            return `<div class="weight-card ${cls}" data-model-id="${escapeHtml(m.id)}">
+                <div class="weight-card-label">${escapeHtml(m.displayName)}</div>
+                <div class="weight-card-value">${display}</div>
+                <div class="weight-card-note">${mult == null ? 'unverified' : 'premium request multiplier'}</div>
+            </div>`;
         }).join('');
     }
 
-    // --- Incident Runbook ---
-    function renderIncidents() {
-        const list = document.getElementById('incident-list');
-        list.innerHTML = governanceData.incidents.map(inc => `
-            <details class="incident-card severity-${inc.severity}" data-incident-id="${inc.id}">
-                <summary class="incident-summary">
-                    <span class="squawk-code">SQUAWK ${inc.squawkCode}</span>
-                    <span class="incident-title">${escapeHtml(inc.title)}</span>
-                    <span class="incident-severity">${inc.severity}</span>
-                </summary>
-                <div class="incident-body">
-                    <div class="incident-trigger"><strong>Trigger:</strong> ${escapeHtml(inc.trigger)}</div>
-                    <div class="incident-phases">
-                        ${renderIncidentPhase('🔍 Detection', inc.detection)}
-                        ${renderIncidentPhase('🚨 Containment', inc.containment)}
-                        ${renderIncidentPhase('🔬 Forensics', inc.forensics)}
-                        ${renderIncidentPhase('📋 Post-Incident', inc.postIncident)}
+    // --- Flight Plans ---
+    function renderFlightPlans() {
+        const el = document.getElementById('flight-plans');
+        const modelById = Object.fromEntries(modelsData.models.map(m => [m.id, m]));
+        el.innerHTML = modelsData.flightPlans.map(fp => `
+            <div class="flight-plan-card" id="plan-${escapeHtml(fp.id)}">
+                <div class="flight-plan-title">${escapeHtml(fp.title)}</div>
+                <div class="flight-plan-context">${escapeHtml(fp.context)}</div>
+                <div class="flight-plan-row">
+                    <span class="flight-plan-row-label">✓ Recommended</span>
+                    <div class="flight-plan-pills">
+                        ${(fp.recommendedModels || []).map(id => {
+                            const m = modelById[id];
+                            if (!m) return '';
+                            return `<a class="flight-plan-pill recommended" href="#model-${escapeHtml(id)}">${escapeHtml(m.displayName)}</a>`;
+                        }).join('')}
                     </div>
                 </div>
-            </details>
+                <div class="flight-plan-rationale">${escapeHtml(fp.rationale || '')}</div>
+                ${(fp.avoidModels && fp.avoidModels.length) ? `
+                <div class="flight-plan-row">
+                    <span class="flight-plan-row-label warn">✗ Avoid</span>
+                    <div class="flight-plan-pills">
+                        ${fp.avoidModels.map(id => {
+                            const m = modelById[id];
+                            if (!m) return '';
+                            return `<a class="flight-plan-pill avoid" href="#model-${escapeHtml(id)}">${escapeHtml(m.displayName)}</a>`;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="flight-plan-rationale warn">${escapeHtml(fp.avoidRationale || '')}</div>
+                ` : ''}
+            </div>
         `).join('');
     }
 
-    function renderIncidentPhase(label, items) {
-        return `
-            <div class="incident-phase">
-                <div class="incident-phase-label">${label}</div>
-                <ul>${items.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>
+    // --- NOTAMs ---
+    function renderNotams() {
+        const el = document.getElementById('notam-list');
+        el.innerHTML = (modelsData.notams || []).map(n => `
+            <div class="notam-card severity-${n.severity}">
+                <div class="notam-head">
+                    <span class="notam-severity">${escapeHtml(n.severity)}</span>
+                    <span class="notam-date">${escapeHtml(n.effectiveDate || '')}</span>
+                    <span class="notam-title">${escapeHtml(n.title)}</span>
+                </div>
+                <div class="notam-body">${escapeHtml(n.body)}</div>
+                ${(n.affectedModels || []).length ? `
+                <div class="notam-affected">Affects: ${n.affectedModels.map(id => `<a href="#model-${escapeHtml(id)}">${escapeHtml(id)}</a>`).join(' · ')}</div>
+                ` : ''}
             </div>
-        `;
+        `).join('');
+    }
+
+    // --- Engine explainer ---
+    function renderEngine() {
+        const eng = modelsData.copilotEngine || {};
+        document.getElementById('engine-summary').textContent = eng.summary || '';
+        document.getElementById('engine-capabilities').innerHTML =
+            (eng.capabilities || []).map(c => `<li>${escapeHtml(c)}</li>`).join('');
     }
 
     // --- Deep link ---
     function handleDeepLink() {
-        const m = window.location.hash.match(/#control=([\w-]+)/);
+        const hash = window.location.hash;
+        const m = hash.match(/#model-([\w-]+)/);
         if (!m) return;
-        const card = document.querySelector(`.governance-card[data-control-id="${m[1]}"]`);
-        if (card) {
-            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            card.classList.add('highlight');
-            setTimeout(() => card.classList.remove('highlight'), 2000);
+        const row = document.querySelector(`#model-${CSS.escape(m[1])}`);
+        if (row) {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            row.classList.add('highlight');
+            setTimeout(() => row.classList.remove('highlight'), 2000);
         }
     }
-
     window.addEventListener('hashchange', handleDeepLink);
+
+    // --- Mermaid ---
+    function initMermaid() {
+        if (typeof mermaid === 'undefined') return;
+        const isLight = document.body.classList.contains('light-theme');
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: isLight ? 'default' : 'dark',
+            themeVariables: {
+                primaryColor: '#1a2233',
+                primaryTextColor: '#c0c8d8',
+                lineColor: '#5a6a7a',
+                background: '#07080c'
+            },
+            securityLevel: 'loose'
+        });
+    }
 
     // --- Init ---
     initTheme();

@@ -11,6 +11,10 @@ let searchQuery = '';
 let mermaidReady = false;
 let scannerIndex = new Set(); // instrumentIds covered by the Security X-Ray Scanner
 let governanceIndex = new Set(); // instrumentIds present in the Tower governance registry
+// Instruments where the user would reasonably want the model catalog in the Tower.
+// Hardcoded (not derived from copilot-models.json) because these instruments *choose*
+// or *gate* models — they don't map 1:1 to catalog entries.
+const towerModelIndex = new Set(['byok', 'copilot-plans']);
 
 // --- Zone rendering order (matches CSS grid areas) ---
 const ZONE_ORDER = ['overhead', 'glareshield', 'pfd', 'nd', 'side', 'pedestal', 'eicas', 'fms'];
@@ -39,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const [resp, threatsResp, governanceResp] = await Promise.all([
             fetch('data/copilot-instruments.json'),
             fetch('data/security-threats.json').catch(() => null),
-            fetch('data/tower-governance.json').catch(() => null)
+            fetch('data/governance-controls.json').catch(() => null)
         ]);
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         cockpitData = await resp.json();
@@ -401,6 +405,20 @@ function renderOverviewTab(instrument, zoneColor) {
                     <div class="gov-callout-text">Compliance mapping, rollout effort and org-level configuration guidance in the Tower Perspective.</div>
                 </div>
                 <div class="gov-callout-cta">Open Tower ▸</div>
+            </a>`;
+    }
+
+    // Tower model-catalog callout — shown when this instrument lets users pick
+    // or gate AI models. The Tower perspective has the full up-to-date catalog.
+    if (towerModelIndex.has(instrument.id)) {
+        html += `
+            <a class="detail-tower-callout" href="tower.html">
+                <div class="tower-callout-icon">✈</div>
+                <div class="tower-callout-body">
+                    <div class="tower-callout-title">Model Control Tower</div>
+                    <div class="tower-callout-text">Every model available in Copilot, grouped by provider with capability matrix, plan access, pricing weight and flight plans.</div>
+                </div>
+                <div class="tower-callout-cta">Open Tower ▸</div>
             </a>`;
     }
 
