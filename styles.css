@@ -2197,20 +2197,20 @@ body.light-theme .gov-callout-text {
 
 
 /* ============================================================
-   TOWER PERSPECTIVE — Model Control Tower
+   RUNWAY PERSPECTIVE — Model Fleet & Flight Plans
    ============================================================ */
 
-.tower-main {
+.runway-main {
     max-width: 1400px;
     margin: 0 auto;
     padding: 32px 24px 80px;
 }
 
-.tower-intro {
+.runway-intro {
     margin-bottom: 32px;
 }
 
-.tower-intro h2 {
+.runway-intro h2 {
     font-family: 'JetBrains Mono', monospace;
     font-size: 1.2rem;
     letter-spacing: 0.04em;
@@ -2218,7 +2218,7 @@ body.light-theme .gov-callout-text {
     margin: 0 0 10px;
 }
 
-.tower-intro p {
+.runway-intro p {
     color: rgba(255, 255, 255, 0.65);
     max-width: 800px;
     line-height: 1.55;
@@ -2245,7 +2245,7 @@ body.light-theme .gov-callout-text {
     color: #ffaa00;
 }
 
-.tower-section {
+.runway-section {
     margin-bottom: 42px;
     padding: 22px 24px;
     background: rgba(13, 17, 23, 0.4);
@@ -2253,7 +2253,7 @@ body.light-theme .gov-callout-text {
     border-radius: 3px;
 }
 
-.tower-section-title {
+.runway-section-title {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
     letter-spacing: 0.14em;
@@ -2264,12 +2264,220 @@ body.light-theme .gov-callout-text {
     border-bottom: 1px solid rgba(255, 170, 0, 0.15);
 }
 
-.tower-section-intro {
+.runway-section-intro {
     color: rgba(255, 255, 255, 0.55);
     font-size: 0.72rem;
     line-height: 1.55;
     margin: 0 0 18px;
     max-width: 880px;
+}
+
+/* ============================================================
+   TOWER PERSPECTIVE — Admin & Governance (thin stub)
+   ============================================================ */
+.verification-banner {
+    margin-top: 18px;
+    padding: 12px 16px;
+    background: rgba(255, 170, 0, 0.08);
+    border: 1px solid rgba(255, 170, 0, 0.35);
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(255, 170, 0, 0.9);
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+}
+.verification-banner strong { letter-spacing: 0.1em; }
+
+.framework-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.framework-chip {
+    display: block;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.framework-chip:hover {
+    background: rgba(255, 170, 0, 0.06);
+    border-color: rgba(255, 170, 0, 0.35);
+}
+.framework-chip-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--color-glareshield, #ffaa00);
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+}
+.framework-chip-note {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.4;
+}
+
+.control-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.control-row {
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid rgba(255, 170, 0, 0.4);
+    border-radius: 3px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.control-row:hover {
+    background: rgba(255, 170, 0, 0.04);
+}
+.control-row.highlight {
+    background: rgba(255, 170, 0, 0.1);
+    border-color: rgba(255, 170, 0, 0.8);
+    border-left-color: #ffaa00;
+    box-shadow: 0 0 0 1px rgba(255, 170, 0, 0.4);
+}
+
+.control-row-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+.control-row-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0;
+    letter-spacing: 0.02em;
+}
+.control-row-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.control-scope,
+.control-state,
+.control-effort,
+.control-category {
+    padding: 2px 8px;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.control-state-on { color: #00ff88; border-color: rgba(0, 255, 136, 0.3); }
+.control-state-off { color: #ff6666; border-color: rgba(255, 102, 102, 0.3); }
+.control-state-preview { color: #ffaa00; border-color: rgba(255, 170, 0, 0.3); }
+
+.control-effort-low { color: #00ff88; border-color: rgba(0, 255, 136, 0.3); }
+.control-effort-medium { color: #ffaa00; border-color: rgba(255, 170, 0, 0.3); }
+.control-effort-high { color: #ff6666; border-color: rgba(255, 102, 102, 0.3); }
+
+.control-row-note {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.55;
+    margin: 0 0 10px;
+}
+
+.control-row-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.control-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    color: rgba(0, 212, 255, 0.9);
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+}
+
+.tower-roadmap {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.tower-roadmap li {
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.5;
+}
+.tower-roadmap li::before {
+    content: "▸ ";
+    color: rgba(255, 170, 0, 0.6);
+    margin-right: 4px;
+}
+
+/* Light theme overrides for Tower admin */
+body.light-theme .verification-banner {
+    background: rgba(179, 107, 0, 0.08);
+    border-color: rgba(179, 107, 0, 0.4);
+    color: #b36b00;
+}
+body.light-theme .framework-chip {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .framework-chip:hover {
+    background: rgba(179, 107, 0, 0.06);
+    border-color: rgba(179, 107, 0, 0.3);
+}
+body.light-theme .framework-chip-name { color: #b36b00; }
+body.light-theme .framework-chip-note { color: rgba(0, 0, 0, 0.55); }
+body.light-theme .control-row {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+    border-left-color: rgba(179, 107, 0, 0.5);
+}
+body.light-theme .control-row:hover { background: rgba(179, 107, 0, 0.05); }
+body.light-theme .control-row.highlight {
+    background: rgba(179, 107, 0, 0.12);
+    border-color: rgba(179, 107, 0, 0.7);
+    border-left-color: #b36b00;
+}
+body.light-theme .control-row-title { color: rgba(0, 0, 0, 0.85); }
+body.light-theme .control-row-note { color: rgba(0, 0, 0, 0.6); }
+body.light-theme .control-scope,
+body.light-theme .control-state,
+body.light-theme .control-effort,
+body.light-theme .control-category {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.55);
+}
+body.light-theme .tower-roadmap li {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.65);
 }
 
 /* ============ DEPARTURE BOARD ============ */
@@ -2343,8 +2551,8 @@ body.light-theme .gov-callout-text {
 .departure-tagline { color: rgba(255, 255, 255, 0.55); font-size: 0.68rem; }
 
 
-/* ============ TOWER FILTER BAR ============ */
-.tower-filters {
+/* ============ RUNWAY FILTER BAR ============ */
+.runway-filters {
     display: flex;
     flex-wrap: wrap;
     gap: 24px;
@@ -3013,8 +3221,8 @@ body.light-theme .gov-callout-text {
     text-align: left;
 }
 
-/* ============ DETAIL TOWER CALLOUT (cockpit → tower) ============ */
-.detail-tower-callout {
+/* ============ DETAIL RUNWAY CALLOUT (cockpit → runway) ============ */
+.detail-runway-callout {
     display: flex;
     gap: 14px;
     align-items: center;
@@ -3029,17 +3237,17 @@ body.light-theme .gov-callout-text {
     transition: background 0.15s ease;
 }
 
-.detail-tower-callout:hover { background: rgba(66, 133, 244, 0.12); }
+.detail-runway-callout:hover { background: rgba(66, 133, 244, 0.12); }
 
-.tower-callout-icon {
+.runway-callout-icon {
     font-size: 1.4rem;
     color: #4285f4;
     flex: 0 0 auto;
 }
 
-.tower-callout-body { flex: 1 1 auto; }
+.runway-callout-body { flex: 1 1 auto; }
 
-.tower-callout-title {
+.runway-callout-title {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.72rem;
     font-weight: 600;
@@ -3047,14 +3255,14 @@ body.light-theme .gov-callout-text {
     letter-spacing: 0.04em;
 }
 
-.tower-callout-text {
+.runway-callout-text {
     font-size: 0.66rem;
     color: rgba(255, 255, 255, 0.7);
     margin-top: 2px;
     line-height: 1.5;
 }
 
-.tower-callout-cta {
+.runway-callout-cta {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.66rem;
     color: #4285f4;
@@ -3063,8 +3271,8 @@ body.light-theme .gov-callout-text {
 }
 
 /* ============ LIGHT THEME OVERRIDES ============ */
-body.light-theme .tower-intro h2 { color: #b36b00; }
-body.light-theme .tower-intro p { color: rgba(0, 0, 0, 0.65); }
+body.light-theme .runway-intro h2 { color: #b36b00; }
+body.light-theme .runway-intro p { color: rgba(0, 0, 0, 0.65); }
 body.light-theme .verification-banner {
     background: rgba(255, 170, 0, 0.12);
     border-color: rgba(179, 107, 0, 0.4);
@@ -3072,19 +3280,19 @@ body.light-theme .verification-banner {
 }
 body.light-theme .verification-banner strong { color: #7a4a00; }
 
-body.light-theme .tower-section {
+body.light-theme .runway-section {
     background: rgba(255, 255, 255, 0.7);
     border-color: rgba(0, 0, 0, 0.08);
 }
 
-body.light-theme .tower-section-title {
+body.light-theme .runway-section-title {
     color: #b36b00;
     border-bottom-color: rgba(179, 107, 0, 0.2);
 }
 
-body.light-theme .tower-section-intro { color: rgba(0, 0, 0, 0.55); }
+body.light-theme .runway-section-intro { color: rgba(0, 0, 0, 0.55); }
 
-body.light-theme .tower-filters {
+body.light-theme .runway-filters {
     background: rgba(255, 255, 255, 0.7);
     border-color: rgba(0, 0, 0, 0.08);
 }
@@ -3149,8 +3357,8 @@ body.light-theme .blade-tagline {
 }
 body.light-theme .blade-close { color: rgba(0, 0, 0, 0.6); border-color: rgba(0, 0, 0, 0.2); }
 
-body.light-theme .detail-tower-callout { background: rgba(66, 133, 244, 0.1); }
-body.light-theme .tower-callout-text { color: rgba(0, 0, 0, 0.7); }
+body.light-theme .detail-runway-callout { background: rgba(66, 133, 244, 0.1); }
+body.light-theme .runway-callout-text { color: rgba(0, 0, 0, 0.7); }
 
 /* prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {

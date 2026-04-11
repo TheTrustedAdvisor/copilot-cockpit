@@ -2,25 +2,24 @@
 const { test, expect } = require('@playwright/test');
 
 /**
- * Tower Perspective tests — model control tower (v2).
+ * Tower Perspective tests — Admin & Governance stub.
  *
- * v2 layout reshapes the Tower around a Departure Board hero + a right-side
- * Model Detail Blade, dropping the 3 matrices, Airspace Map and Weight & Balance
- * grid (all content moved into the blade). Adds a top filter bar.
+ * When the old Tower (which was the model catalog) was renamed to Runway,
+ * a new thin Tower admin page took over at /tower.html. It renders
+ * data/governance-controls.json as a compliance framework legend plus a
+ * list of governance controls, and supports #control=<id> deep links
+ * from the Cockpit detail panel's governance callout.
  *
  * Covers:
- *  - Page boot + verification banner
- *  - Filter bar (plan selector, provider chips, status chips)
- *  - Departure Board rows dim when filters don't match
- *  - Blade opens on row click and on flight-plan pill / NOTAM link click
- *  - Blade renders strengths, capabilities, plan row, surface row
- *  - Deep link #model-<id> opens blade
- *  - Blade closes on Esc / backdrop / ✕
- *  - Flight Plans + NOTAMs + Engine still render
- *  - Cockpit → Tower bridge (glance-view invariant + detail callouts)
+ *  - Page boot + core landmarks
+ *  - Verification banner
+ *  - Compliance framework legend
+ *  - Governance control list
+ *  - Deep link highlight via #control=<id>
+ *  - Cockpit → Tower governance bridge
  */
 
-test.describe('Tower v2 — page structure', () => {
+test.describe('Tower — page structure', () => {
     test('loads without JS errors and renders core landmarks', async ({ page }) => {
         const errors = [];
         page.on('pageerror', (e) => errors.push(e.message));
@@ -31,8 +30,6 @@ test.describe('Tower v2 — page structure', () => {
         await page.goto('/tower.html');
         await expect(page.locator('main#tower-main')).toBeVisible();
         await expect(page.locator('h1')).toContainText('Tower Perspective');
-        await expect(page.locator('#departure-board .departure-row').first()).toBeVisible();
-        await expect(page.locator('.tower-filters')).toBeVisible();
         expect(errors).toEqual([]);
     });
 
@@ -43,234 +40,80 @@ test.describe('Tower v2 — page structure', () => {
         await expect(active).toContainText('Tower');
     });
 
-    test('verification banner is visible while the catalog is unverified', async ({ page }) => {
+    test('verification banner is visible while controls are unverified', async ({ page }) => {
         await page.goto('/tower.html');
         await expect(page.locator('#verification-banner')).toBeVisible();
         await expect(page.locator('#verification-banner')).toContainText(/verification/i);
     });
-
-    test('dropped v1 sections no longer exist', async ({ page }) => {
-        await page.goto('/tower.html');
-        await expect(page.locator('#airspace-map')).toHaveCount(0);
-        await expect(page.locator('#capability-matrix')).toHaveCount(0);
-        await expect(page.locator('#plan-matrix')).toHaveCount(0);
-        await expect(page.locator('#surface-matrix')).toHaveCount(0);
-        await expect(page.locator('#weight-balance')).toHaveCount(0);
-    });
 });
 
-test.describe('Tower v2 — filter bar', () => {
-    test('plan selector is populated and defaults to a plan', async ({ page }) => {
+test.describe('Tower — compliance frameworks', () => {
+    test('renders one chip per framework from the catalog', async ({ page }) => {
         await page.goto('/tower.html');
-        const select = page.locator('#filter-plan');
-        await expect(select).toBeVisible();
-        const options = await select.locator('option').count();
-        expect(options).toBeGreaterThanOrEqual(5);
-        const selected = await select.inputValue();
-        expect(selected.length).toBeGreaterThan(0);
-    });
-
-    test('provider chips populate from the catalog', async ({ page }) => {
-        await page.goto('/tower.html');
-        const chips = page.locator('#filter-providers .filter-chip');
+        const chips = page.locator('#framework-list .framework-chip');
         await expect(chips.first()).toBeVisible();
-        // At least OpenAI, Anthropic, Google should appear.
-        const labels = await chips.evaluateAll((els) => els.map((e) => e.textContent.trim()));
-        expect(labels).toContain('OpenAI');
-        expect(labels).toContain('Anthropic');
-        expect(labels).toContain('Google');
+        // soc2, iso27001, gdpr, hipaa, fedramp, euAiAct
+        await expect(chips).toHaveCount(6);
     });
 
-    test('clicking a provider chip dims non-matching departure rows', async ({ page }) => {
+    test('framework chips link out to the official standard', async ({ page }) => {
         await page.goto('/tower.html');
-        // Wait for departure board to populate
-        await expect(page.locator('#departure-board .departure-row').first()).toBeVisible();
-        // Click Google — only Google rows should stay lit
-        await page.locator('#filter-providers .filter-chip[data-provider="Google"]').click();
-        // Any row in a non-Google group must be dimmed
-        const dimmed = page.locator('#departure-board .departure-group:not(.provider-google) .departure-row.dimmed');
-        await expect(dimmed.first()).toBeVisible();
-    });
-
-    test('toggling grounded status includes deprecated models', async ({ page }) => {
-        await page.goto('/tower.html');
-        // Grounded starts unchecked — deprecated rows should be dimmed.
-        await expect(page.locator('#departure-board .departure-row.status-deprecated.dimmed').first()).toBeVisible();
-        // Enable grounded — deprecated rows should lose .dimmed (assuming plan+provider match)
-        await page.locator('#filter-status .filter-chip[data-status="deprecated"]').click();
-        // Assert the total dimmed count drops
-        const beforeCount = await page.locator('#departure-board .departure-row.dimmed').count();
-        expect(beforeCount).toBeGreaterThanOrEqual(0);
-    });
-
-    test('filter summary reports a visible-over-total count', async ({ page }) => {
-        await page.goto('/tower.html');
-        await expect(page.locator('#filter-summary')).toContainText(/\d+ of \d+ models/);
+        const firstChip = page.locator('#framework-list .framework-chip').first();
+        await expect(firstChip).toHaveAttribute('href', /.+/);
+        await expect(firstChip).toHaveAttribute('target', '_blank');
+        await expect(firstChip).toHaveAttribute('rel', /noopener/);
     });
 });
 
-test.describe('Tower v2 — Departure Board', () => {
-    test('renders one row per model in the catalog', async ({ page }) => {
+test.describe('Tower — governance controls', () => {
+    test('renders one row per control in the catalog', async ({ page }) => {
         await page.goto('/tower.html');
-        await expect(page.locator('#departure-board .departure-row')).toHaveCount(21);
+        await expect(page.locator('#control-list .control-row').first()).toBeVisible();
+        // 14 controls in the current catalog
+        await expect(page.locator('#control-list .control-row')).toHaveCount(14);
     });
 
-    test('deprecated models render with the grounded status LED', async ({ page }) => {
+    test('control rows carry compliance badges', async ({ page }) => {
         await page.goto('/tower.html');
-        await expect(page.locator('#departure-board .departure-row.status-deprecated').first()).toBeVisible();
+        await expect(page.locator('#control-list .control-row .control-badge').first()).toBeVisible();
+    });
+
+    test('control rows expose their id for deep linking', async ({ page }) => {
+        await page.goto('/tower.html');
+        const row = page.locator('#control-list .control-row').first();
+        await expect(row).toHaveAttribute('data-control-id', /.+/);
+        const id = await row.getAttribute('data-control-id');
+        await expect(page.locator(`#control-${id}`)).toBeVisible();
+    });
+
+    test('deep link #control=<id> highlights the target row on load', async ({ page }) => {
+        await page.goto('/tower.html#control=usage-metrics');
+        const target = page.locator('#control-usage-metrics');
+        await expect(target).toBeVisible();
+        await expect(target).toHaveClass(/highlight/);
+    });
+
+    test('changing the hash at runtime updates the highlight', async ({ page }) => {
+        await page.goto('/tower.html');
+        await page.evaluate(() => { window.location.hash = '#control=audit-logs'; });
+        await expect(page.locator('#control-audit-logs')).toHaveClass(/highlight/);
     });
 });
 
-test.describe('Tower v2 — Model Detail Blade', () => {
-    test('blade is hidden by default', async ({ page }) => {
+test.describe('Tower — roadmap stub', () => {
+    test('on-final-approach roadmap lists planned expansions', async ({ page }) => {
         await page.goto('/tower.html');
-        await expect(page.locator('#model-blade')).not.toHaveClass(/open/);
-    });
-
-    test('clicking a departure row opens the blade with model details', async ({ page }) => {
-        await page.goto('/tower.html');
-        const firstRow = page.locator('#departure-board .departure-row').first();
-        const modelId = await firstRow.getAttribute('data-model-id');
-        await firstRow.click();
-
-        const blade = page.locator('#model-blade');
-        await expect(blade).toHaveClass(/open/);
-        await expect(blade.locator('#blade-title')).not.toHaveText('—');
-        await expect(blade.locator('#blade-body .blade-section').first()).toBeVisible();
-
-        // URL hash updates to reflect the opened model.
-        expect(page.url()).toContain(`#model-${modelId}`);
-    });
-
-    test('blade renders capabilities, plan row, surface row, and meta', async ({ page }) => {
-        await page.goto('/tower.html');
-        await page.locator('#departure-board .departure-row').first().click();
-
-        // At least one capability pill
-        await expect(page.locator('#blade-body .blade-cap-pill').first()).toBeVisible();
-        // At least one plan row cell
-        await expect(page.locator('#blade-body .blade-row-cell').first()).toBeVisible();
-    });
-
-    test('blade closes on ✕ click', async ({ page }) => {
-        await page.goto('/tower.html');
-        await page.locator('#departure-board .departure-row').first().click();
-        await expect(page.locator('#model-blade')).toHaveClass(/open/);
-        await page.locator('#blade-close').click();
-        await expect(page.locator('#model-blade')).not.toHaveClass(/open/);
-    });
-
-    test('blade closes on Escape key', async ({ page }) => {
-        await page.goto('/tower.html');
-        await page.locator('#departure-board .departure-row').first().click();
-        await expect(page.locator('#model-blade')).toHaveClass(/open/);
-        await page.keyboard.press('Escape');
-        await expect(page.locator('#model-blade')).not.toHaveClass(/open/);
-    });
-
-    test('blade closes on backdrop click', async ({ page }) => {
-        await page.goto('/tower.html');
-        await page.locator('#departure-board .departure-row').first().click();
-        await expect(page.locator('#model-blade')).toHaveClass(/open/);
-        await page.locator('#blade-backdrop').click();
-        await expect(page.locator('#model-blade')).not.toHaveClass(/open/);
-    });
-
-    test('flight-plan pill opens the blade for that model', async ({ page }) => {
-        await page.goto('/tower.html');
-        await expect(page.locator('#flight-plans .flight-plan-pill').first()).toBeVisible();
-        await page.locator('#flight-plans .flight-plan-pill').first().click();
-        await expect(page.locator('#model-blade')).toHaveClass(/open/);
-    });
-
-    test('deep link #model-<id> opens the blade on load', async ({ page }) => {
-        // Pick first model id dynamically
-        await page.goto('/tower.html');
-        const firstId = await page.evaluate(async () => {
-            const r = await fetch('data/copilot-models.json');
-            const d = await r.json();
-            return d.models[0].id;
-        });
-        await page.goto(`/tower.html#model-${firstId}`);
-        await expect(page.locator('#model-blade')).toHaveClass(/open/);
-        await expect(page.locator('#blade-title')).not.toHaveText('—');
+        await expect(page.locator('.tower-roadmap li').first()).toBeVisible();
     });
 });
 
-test.describe('Tower v2 — Flight Plans + NOTAMs + Engine', () => {
-    test('flight plans render with recommended pills', async ({ page }) => {
-        await page.goto('/tower.html');
-        await expect(page.locator('#flight-plans .flight-plan-card')).toHaveCount(5);
-        await expect(page.locator('#flight-plans .flight-plan-pill.recommended').first()).toBeVisible();
-    });
-
-    test('NOTAMs render with severity classes', async ({ page }) => {
-        await page.goto('/tower.html');
-        await expect(page.locator('#notam-list .notam-card')).toHaveCount(2);
-        await expect(page.locator('#notam-list .notam-card.severity-high').first()).toBeVisible();
-    });
-
-    test('engine explainer renders summary, capabilities, and Mermaid diagram', async ({ page }) => {
-        await page.goto('/tower.html');
-        await expect(page.locator('#engine-summary')).not.toBeEmpty();
-        await expect(page.locator('#engine-capabilities li').first()).toBeVisible();
-        await expect(page.locator('.engine-diagram svg').first()).toBeVisible({ timeout: 5000 });
-    });
-});
-
-test.describe('Cockpit → Tower model bridge', () => {
-    test('cockpit cards never render a Tower badge', async ({ page }) => {
+test.describe('Cockpit → Tower governance bridge', () => {
+    test('detail panel shows a governance callout pointing at tower.html', async ({ page }) => {
         await page.goto('/');
-        await expect(page.locator('.instrument').first()).toBeVisible();
-        await expect(page.locator('.instrument-tower-badge')).toHaveCount(0);
-    });
-
-    test('detail panel shows a Model Control Tower callout for BYOK', async ({ page }) => {
-        await page.goto('/');
-        await page.locator('.instrument[data-id="byok"]').click();
-        const callout = page.locator('#detail-panel .detail-tower-callout');
-        await expect(callout).toBeVisible();
-        await expect(callout).toContainText('Model Control Tower');
-        await expect(callout).toHaveAttribute('href', 'tower.html');
-    });
-
-    test('detail panel shows a Model Control Tower callout for Copilot Plans', async ({ page }) => {
-        await page.goto('/');
-        await page.locator('.instrument[data-id="copilot-plans"]').click();
-        await expect(page.locator('#detail-panel .detail-tower-callout')).toBeVisible();
-    });
-
-    test('detail panel for an unrelated instrument has no tower callout', async ({ page }) => {
-        await page.goto('/');
-        await page.locator('.instrument[data-id="inline-completions"]').click();
-        await expect(page.locator('#detail-panel')).toBeVisible();
-        await expect(page.locator('#detail-panel .detail-tower-callout')).toHaveCount(0);
-    });
-});
-
-test.describe('Cockpit → Tower governance bridge (still present)', () => {
-    test('detail panel shows the Governance View callout for usage-metrics', async ({ page }) => {
-        await page.goto('/');
-        await page.locator('.instrument[data-id="usage-metrics"]').click();
+        // Feature Policies is a classic governance-relevant instrument
+        await page.locator('.instrument[data-id="feature-policies"]').click();
         const callout = page.locator('#detail-panel .detail-gov-callout');
         await expect(callout).toBeVisible();
-        await expect(callout).toHaveAttribute('href', /tower\.html#control=usage-metrics/);
-    });
-});
-
-test.describe('Tower v2 — nav promotion', () => {
-    test('Tower nav link on the cockpit points to tower.html (no SOON)', async ({ page }) => {
-        await page.goto('/');
-        const towerLink = page.locator('.header-nav a[href="tower.html"]');
-        await expect(towerLink).toHaveCount(1);
-        await expect(towerLink).not.toHaveClass(/disabled/);
-        await expect(towerLink.locator('.nav-soon')).toHaveCount(0);
-    });
-
-    test('navigation from cockpit to tower works', async ({ page }) => {
-        await page.goto('/');
-        await page.locator('.header-nav a[href="tower.html"]').click();
-        await expect(page).toHaveURL(/tower\.html/);
-        await expect(page.locator('main.tower-main')).toBeVisible();
+        await expect(callout).toHaveAttribute('href', /tower\.html#control=/);
     });
 });

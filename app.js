@@ -11,10 +11,10 @@ let searchQuery = '';
 let mermaidReady = false;
 let scannerIndex = new Set(); // instrumentIds covered by the Security X-Ray Scanner
 let governanceIndex = new Set(); // instrumentIds present in the Tower governance registry
-// Instruments where the user would reasonably want the model catalog in the Tower.
+// Instruments where the user would reasonably want the model catalog on the Runway.
 // Hardcoded (not derived from copilot-models.json) because these instruments *choose*
 // or *gate* models — they don't map 1:1 to catalog entries.
-const towerModelIndex = new Set(['byok', 'copilot-plans']);
+const runwayModelIndex = new Set(['byok', 'copilot-plans']);
 
 // --- Zone rendering order (matches CSS grid areas) ---
 const ZONE_ORDER = ['overhead', 'glareshield', 'pfd', 'nd', 'side', 'pedestal', 'eicas', 'fms'];
@@ -408,17 +408,17 @@ function renderOverviewTab(instrument, zoneColor) {
             </a>`;
     }
 
-    // Tower model-catalog callout — shown when this instrument lets users pick
-    // or gate AI models. The Tower perspective has the full up-to-date catalog.
-    if (towerModelIndex.has(instrument.id)) {
+    // Runway model-catalog callout — shown when this instrument lets users pick
+    // or gate AI models. The Runway perspective has the full up-to-date fleet.
+    if (runwayModelIndex.has(instrument.id)) {
         html += `
-            <a class="detail-tower-callout" href="tower.html">
-                <div class="tower-callout-icon">✈</div>
-                <div class="tower-callout-body">
-                    <div class="tower-callout-title">Model Control Tower</div>
-                    <div class="tower-callout-text">Every model available in Copilot, grouped by provider with capability matrix, plan access, pricing weight and flight plans.</div>
+            <a class="detail-runway-callout" href="runway.html">
+                <div class="runway-callout-icon">🛫</div>
+                <div class="runway-callout-body">
+                    <div class="runway-callout-title">Model Runway</div>
+                    <div class="runway-callout-text">Every model available in Copilot, grouped by provider with capability matrix, plan access, pricing weight and flight plans.</div>
                 </div>
-                <div class="tower-callout-cta">Open Tower ▸</div>
+                <div class="runway-callout-cta">Open Runway ▸</div>
             </a>`;
     }
 

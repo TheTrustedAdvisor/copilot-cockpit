@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tower — Copilot Cockpit</title>
-    <meta name="description" content="Tower perspective for GitHub Copilot: every model Copilot can dispatch, filtered by your plan, with a per-model detail blade, flight plans, NOTAMs and an engine explainer.">
+    <meta name="description" content="Tower perspective for GitHub Copilot: admin and governance controls — policies, seats, audit, usage metrics, compliance mappings. A thin surface today, expanding as GitHub ships more enterprise controls.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,19 +13,16 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
-
-    <!-- Mermaid (lazy, only used by the Copilot Engine explainer) -->
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 </head>
 <body>
 
     <!-- ==================== HEADER ==================== -->
     <header class="cockpit-header">
         <div class="cockpit-title">
-            <span class="icon">✈</span>
+            <span class="icon">🗼</span>
             <div>
                 <h1>Tower Perspective</h1>
-                <div class="subtitle">Airfield Control — every model, one tower</div>
+                <div class="subtitle">Air Traffic Control — admin &amp; governance</div>
             </div>
         </div>
         <div class="header-right">
@@ -33,7 +30,9 @@
                 <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Terminal<span class="nav-soon">SOON</span></a>
                 <a href="security.html" class="nav-link">Security</a>
                 <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Jet Bridge<span class="nav-soon">SOON</span></a>
+                <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Ramp<span class="nav-soon">SOON</span></a>
                 <a href="index.html" class="nav-link">Cockpit</a>
+                <a href="runway.html" class="nav-link">Runway</a>
                 <a href="tower.html" class="nav-link active">Tower</a>
                 <span class="nav-separator">·</span>
                 <a href="flight-log.html" class="nav-link">Flight Log</a>
@@ -43,128 +42,62 @@
     </header>
 
     <!-- ==================== TOWER CONTENT ==================== -->
-    <main class="tower-main" id="tower-main">
-        <section class="tower-intro">
+    <main class="runway-main" id="tower-main">
+        <section class="runway-intro">
             <h2>🗼 Air Traffic Control Briefing</h2>
-            <p>The Tower doesn't fly the plane — it controls the airfield. This view aggregates every AI model
-            GitHub Copilot can dispatch. Pick your plan, scan the board and click any model for the full briefing.</p>
+            <p>The Tower governs who flies, when and under which rules. Org-level policies,
+            seat management, audit telemetry and compliance mappings live here. GitHub ships
+            new Copilot admin controls regularly — this surface grows with them.</p>
             <div id="verification-banner" class="verification-banner" hidden>
                 <strong>⚠ VERIFICATION REQUIRED</strong>
                 <span id="verification-banner-text"></span>
             </div>
         </section>
 
-        <!-- ============ FILTER BAR ============ -->
-        <section class="tower-filters" aria-label="Tower filters">
-            <div class="filter-group">
-                <label class="filter-label" for="filter-plan">Plan ticket</label>
-                <select id="filter-plan" class="filter-select">
-                    <!-- Populated by JS -->
-                </select>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label">Provider</span>
-                <div class="filter-chips" id="filter-providers">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label">Status</span>
-                <div class="filter-chips" id="filter-status">
-                    <button type="button" class="filter-chip active" data-status="ga">GA</button>
-                    <button type="button" class="filter-chip active" data-status="preview">Preview</button>
-                    <button type="button" class="filter-chip" data-status="deprecated">Grounded</button>
-                </div>
-            </div>
-            <div class="filter-summary" id="filter-summary" aria-live="polite"></div>
-        </section>
-
-        <!-- ============ DEPARTURE BOARD — HERO ============ -->
-        <section class="tower-section" aria-label="Departure Board">
-            <h3 class="tower-section-title">◉ Departure Board</h3>
-            <p class="tower-section-intro">Every model cleared for takeoff. Rows filtered out by your plan or provider selection appear dimmed. Click any row for the full briefing.</p>
-            <div class="departure-board" id="departure-board" role="list">
+        <!-- ============ COMPLIANCE FRAMEWORKS LEGEND ============ -->
+        <section class="runway-section" aria-label="Compliance frameworks">
+            <h3 class="runway-section-title">⌬ Compliance Frameworks</h3>
+            <p class="runway-section-intro">The frameworks Copilot governance controls map to. Framework IDs inside each control reference entries here.</p>
+            <div class="framework-list" id="framework-list">
                 <!-- Populated by JS -->
             </div>
         </section>
 
-        <!-- ============ FLIGHT PLANS ============ -->
-        <section class="tower-section" aria-label="Flight Plans">
-            <h3 class="tower-section-title">📋 Flight Plans</h3>
-            <p class="tower-section-intro">Suggested model picks per task profile. Opinionated, cross-verified against the model's tagline and capability profile.</p>
-            <div class="flight-plans" id="flight-plans">
+        <!-- ============ GOVERNANCE CONTROLS ============ -->
+        <section class="runway-section" aria-label="Governance controls">
+            <h3 class="runway-section-title">◉ Governance Controls</h3>
+            <p class="runway-section-intro">Every admin and governance control GitHub exposes for Copilot. Click a row — or deep link via <code>#control=&lt;id&gt;</code> — to highlight one. Links from the Cockpit detail panel land here.</p>
+            <div class="control-list" id="control-list" role="list">
                 <!-- Populated by JS -->
             </div>
         </section>
 
-        <!-- ============ NOTAMs ============ -->
-        <section class="tower-section" aria-label="NOTAMs">
-            <h3 class="tower-section-title">⚠ NOTAMs</h3>
-            <p class="tower-section-intro">Notices to Air Missions — deprecations, preview status caveats, regional availability, anything that changes routing decisions.</p>
-            <div class="notam-list" id="notam-list">
-                <!-- Populated by JS -->
-            </div>
-        </section>
-
-        <!-- ============ COPILOT ENGINE EXPLAINER ============ -->
-        <section class="tower-section" aria-label="Copilot Engine">
-            <h3 class="tower-section-title">🛠 Copilot Engine</h3>
-            <p class="tower-section-intro" id="engine-summary">
-                <!-- Populated by JS -->
-            </p>
-            <ul class="engine-capabilities" id="engine-capabilities">
-                <!-- Populated by JS -->
+        <!-- ============ COMING SOON ============ -->
+        <section class="runway-section" aria-label="Roadmap">
+            <h3 class="runway-section-title">✈ On Final Approach</h3>
+            <p class="runway-section-intro">Planned Tower expansions as GitHub ships them and as we catch up on their rollout:</p>
+            <ul class="tower-roadmap">
+                <li>Fine-grained content exclusion UI (per-path, per-repo glob patterns)</li>
+                <li>Org-level model allowlists &amp; deny-lists (which models your seats can reach)</li>
+                <li>Usage analytics dashboards (acceptance rate, active seats, feature adoption)</li>
+                <li>Seat lifecycle automation (onboarding/offboarding hooks)</li>
+                <li>SOC 2 / ISO 27001 / GDPR evidence pack generation</li>
+                <li>Audit log retention + SIEM export configuration</li>
             </ul>
-            <div class="engine-diagram">
-                <pre class="mermaid">
-flowchart LR
-    U[You - IDE / CLI / GitHub.com] --> E[Copilot Engine]
-    E --> R[Router]
-    R --> P[Policy Gate]
-    P --> X[Context Assembler]
-    X --> M{Model Pool}
-    M --> O[OpenAI]
-    M --> A[Anthropic]
-    M --> G[Google]
-    M --> I[xAI]
-    M --> F[GitHub fine-tunes]
-    M --> RES[Response]
-    RES --> AUD[Audit Log]
-    AUD --> U
-                </pre>
-            </div>
         </section>
     </main>
 
-    <!-- ==================== MODEL DETAIL BLADE ==================== -->
-    <aside class="model-blade" id="model-blade" aria-hidden="true" role="dialog" aria-labelledby="blade-title">
-        <div class="blade-header">
-            <div class="blade-header-left">
-                <span class="departure-led" id="blade-led"></span>
-                <div>
-                    <h2 class="blade-title" id="blade-title">—</h2>
-                    <div class="blade-subtitle" id="blade-subtitle">—</div>
-                </div>
-            </div>
-            <button class="blade-close" id="blade-close" aria-label="Close detail blade">✕</button>
-        </div>
-        <div class="blade-body" id="blade-body">
-            <!-- Populated by JS when a model is selected -->
-        </div>
-    </aside>
-    <div class="blade-backdrop" id="blade-backdrop" hidden></div>
-
     <script>
     // ============================================================
-    // TOWER PERSPECTIVE — Model Control Tower (v2)
+    // TOWER PERSPECTIVE — Admin & Governance (stub)
+    //
+    // Renders data/governance-controls.json as a simple legend +
+    // control list. The departure board / model catalog lives on
+    // the Runway now; this page is intentionally thin and will
+    // grow as GitHub ships more Copilot admin surfaces.
     // ============================================================
 
-    let modelsData = null;
-    const filterState = {
-        planId: 'pro',
-        providers: new Set(),      // empty = all providers
-        statuses: new Set(['ga', 'preview'])
-    };
+    let governanceData = null;
 
     // --- Theme (shared pattern with cockpit) ---
     function initTheme() {
@@ -184,9 +117,9 @@ flowchart LR
     // --- Load data ---
     async function loadAllData() {
         try {
-            const resp = await fetch('data/copilot-models.json');
+            const resp = await fetch('data/governance-controls.json');
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-            modelsData = await resp.json();
+            governanceData = await resp.json();
             init();
         } catch (err) {
             document.getElementById('tower-main').innerHTML =
@@ -196,500 +129,88 @@ flowchart LR
 
     function init() {
         renderVerificationBanner();
-        renderFilters();
-        renderDepartureBoard();
-        renderFlightPlans();
-        renderNotams();
-        renderEngine();
-        applyFilter();
+        renderFrameworks();
+        renderControls();
         handleDeepLink();
-        initMermaid();
+        window.addEventListener('hashchange', handleDeepLink);
     }
 
-    function escapeHtml(s) {
-        if (s == null) return '';
-        return String(s)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[c]);
     }
 
-    // --- Verification banner ---
+    function titleize(slug) {
+        return slug
+            .split('-')
+            .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+            .join(' ');
+    }
+
     function renderVerificationBanner() {
-        if (!modelsData.verificationRequired) return;
+        if (!governanceData.verificationRequired) return;
         const banner = document.getElementById('verification-banner');
-        const text = document.getElementById('verification-banner-text');
-        text.textContent = modelsData.verificationNotes ||
-            'This catalog has not yet been verified by the freshness pipeline.';
         banner.hidden = false;
+        document.getElementById('verification-banner-text').textContent =
+            'Compliance framework control IDs and URLs were authored from model training knowledge. ' +
+            'Verify against the official standards before treating them as authoritative.';
     }
 
-    function providerClass(provider) {
-        if (!provider) return '';
-        return 'provider-' + provider.toLowerCase().replace(/[^a-z]/g, '');
-    }
-
-    function statusLabel(s) {
-        return { ga: 'GA', preview: 'Preview', deprecated: 'Grounded' }[s] || s;
-    }
-
-    // --- Filters ---
-    function renderFilters() {
-        const planSelect = document.getElementById('filter-plan');
-        planSelect.innerHTML = (modelsData.plans || []).map(p =>
-            `<option value="${escapeHtml(p.id)}" ${p.id === filterState.planId ? 'selected' : ''}>${escapeHtml(p.label)}</option>`
-        ).join('');
-        planSelect.addEventListener('change', (e) => {
-            filterState.planId = e.target.value;
-            applyFilter();
-        });
-
-        const providers = [...new Set(modelsData.models.map(m => m.provider).filter(Boolean))];
-        const providerChips = document.getElementById('filter-providers');
-        providerChips.innerHTML = providers.map(p =>
-            `<button type="button" class="filter-chip ${providerClass(p)}" data-provider="${escapeHtml(p)}">${escapeHtml(p)}</button>`
-        ).join('');
-        providerChips.querySelectorAll('.filter-chip').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const p = btn.dataset.provider;
-                if (filterState.providers.has(p)) {
-                    filterState.providers.delete(p);
-                    btn.classList.remove('active');
-                } else {
-                    filterState.providers.add(p);
-                    btn.classList.add('active');
-                }
-                applyFilter();
-            });
-        });
-
-        const statusChips = document.getElementById('filter-status');
-        statusChips.querySelectorAll('.filter-chip').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const s = btn.dataset.status;
-                if (filterState.statuses.has(s)) {
-                    filterState.statuses.delete(s);
-                    btn.classList.remove('active');
-                } else {
-                    filterState.statuses.add(s);
-                    btn.classList.add('active');
-                }
-                applyFilter();
-            });
-        });
-    }
-
-    function modelMatchesFilter(m) {
-        // Plan: model is available (true or 'limited') on the selected plan
-        const planVal = (m.planAvailability || {})[filterState.planId];
-        const planOk = planVal === true || planVal === 'limited' || planVal == null;
-        // Provider: if any selected, must match; empty set = all providers
-        const providerOk = filterState.providers.size === 0 || filterState.providers.has(m.provider);
-        // Status
-        const statusOk = filterState.statuses.has(m.status);
-        return { planOk, providerOk, statusOk, all: planOk && providerOk && statusOk };
-    }
-
-    function applyFilter() {
-        let visible = 0;
-        let dimmed = 0;
-        document.querySelectorAll('#departure-board .departure-row').forEach(row => {
-            const id = row.dataset.modelId;
-            const m = modelsData.models.find(x => x.id === id);
-            if (!m) return;
-            const r = modelMatchesFilter(m);
-            row.classList.toggle('dimmed', !r.all);
-            row.classList.toggle('plan-locked', !r.planOk);
-            if (r.all) visible++; else dimmed++;
-        });
-        const summary = document.getElementById('filter-summary');
-        summary.textContent = `${visible} of ${visible + dimmed} models cleared for ${labelForPlan(filterState.planId)}`;
-    }
-
-    function labelForPlan(id) {
-        const p = (modelsData.plans || []).find(x => x.id === id);
-        return p ? p.label : id;
-    }
-
-    // --- Departure Board ---
-    function renderDepartureBoard() {
-        const board = document.getElementById('departure-board');
-        const grouped = {};
-        modelsData.models.forEach(m => {
-            const p = m.provider || 'Other';
-            if (!grouped[p]) grouped[p] = [];
-            grouped[p].push(m);
-        });
-
-        const providerOrder = ['OpenAI', 'Anthropic', 'Google', 'xAI', 'GitHub'];
-        const ordered = [...providerOrder, ...Object.keys(grouped).filter(p => !providerOrder.includes(p))];
-
-        board.innerHTML = ordered.filter(p => grouped[p]).map(provider => `
-            <div class="departure-group ${providerClass(provider)}">
-                <div class="departure-group-label">${escapeHtml(provider)}</div>
-                ${grouped[provider].map(m => `
-                    <button type="button" class="departure-row status-${m.status}" data-model-id="${escapeHtml(m.id)}" role="listitem">
-                        <span class="departure-led status-${m.status}" title="${escapeHtml(m.status)}"></span>
-                        <span class="departure-name">${escapeHtml(m.displayName)}</span>
-                        <span class="departure-family">${escapeHtml(m.family || '')}</span>
-                        <span class="departure-status">${escapeHtml(statusLabel(m.status))}</span>
-                        <span class="departure-tagline">${escapeHtml(m.tagline || '')}</span>
-                    </button>
-                `).join('')}
-            </div>
+    function renderFrameworks() {
+        const list = document.getElementById('framework-list');
+        const sources = governanceData.sources || {};
+        const html = Object.entries(sources).map(([key, src]) => `
+            <a class="framework-chip" href="${escapeHtml(src.url)}" target="_blank" rel="noopener noreferrer" data-framework="${escapeHtml(key)}">
+                <div class="framework-chip-name">${escapeHtml(src.name)}</div>
+                <div class="framework-chip-note">${escapeHtml(src.note || '')}</div>
+            </a>
         `).join('');
-
-        // Wire up blade opening
-        board.querySelectorAll('.departure-row').forEach(row => {
-            row.addEventListener('click', () => openBlade(row.dataset.modelId));
-        });
+        list.innerHTML = html;
     }
 
-    // --- Flight Plans ---
-    function renderFlightPlans() {
-        const el = document.getElementById('flight-plans');
-        const modelById = Object.fromEntries(modelsData.models.map(m => [m.id, m]));
-        el.innerHTML = modelsData.flightPlans.map(fp => `
-            <div class="flight-plan-card" id="plan-${escapeHtml(fp.id)}">
-                <div class="flight-plan-title">${escapeHtml(fp.title)}</div>
-                <div class="flight-plan-context">${escapeHtml(fp.context)}</div>
-                <div class="flight-plan-row">
-                    <span class="flight-plan-row-label">✓ Recommended</span>
-                    <div class="flight-plan-pills">
-                        ${(fp.recommendedModels || []).map(id => {
-                            const m = modelById[id];
-                            if (!m) return '';
-                            return `<button type="button" class="flight-plan-pill recommended" data-model-id="${escapeHtml(id)}">${escapeHtml(m.displayName)}</button>`;
-                        }).join('')}
-                    </div>
-                </div>
-                <div class="flight-plan-rationale">${escapeHtml(fp.rationale || '')}</div>
-                ${(fp.avoidModels && fp.avoidModels.length) ? `
-                <div class="flight-plan-row">
-                    <span class="flight-plan-row-label warn">✗ Avoid</span>
-                    <div class="flight-plan-pills">
-                        ${fp.avoidModels.map(id => {
-                            const m = modelById[id];
-                            if (!m) return '';
-                            return `<button type="button" class="flight-plan-pill avoid" data-model-id="${escapeHtml(id)}">${escapeHtml(m.displayName)}</button>`;
-                        }).join('')}
-                    </div>
-                </div>
-                <div class="flight-plan-rationale warn">${escapeHtml(fp.avoidRationale || '')}</div>
-                ` : ''}
-            </div>
-        `).join('');
-        // Flight-plan pills also open the blade
-        el.querySelectorAll('.flight-plan-pill[data-model-id]').forEach(btn => {
-            btn.addEventListener('click', () => openBlade(btn.dataset.modelId));
-        });
+    function renderControls() {
+        const list = document.getElementById('control-list');
+        const controls = governanceData.controls || [];
+        const html = controls.map((c) => {
+            const badges = (c.complianceRelevance || [])
+                .map((ref) => `<span class="control-badge">${escapeHtml(ref)}</span>`)
+                .join('');
+            const effort = c.rolloutEffort ? `<span class="control-effort control-effort-${escapeHtml(c.rolloutEffort)}">${escapeHtml(c.rolloutEffort)} effort</span>` : '';
+            const scope = c.scope ? `<span class="control-scope">${escapeHtml(c.scope)}</span>` : '';
+            const state = c.defaultState ? `<span class="control-state control-state-${escapeHtml(c.defaultState)}">default: ${escapeHtml(c.defaultState)}</span>` : '';
+            return `
+                <article class="control-row" id="control-${escapeHtml(c.id)}" data-control-id="${escapeHtml(c.id)}" role="listitem">
+                    <header class="control-row-header">
+                        <h4 class="control-row-title">${escapeHtml(titleize(c.id))}</h4>
+                        <div class="control-row-meta">
+                            ${scope}
+                            ${state}
+                            ${effort}
+                            <span class="control-category">${escapeHtml(c.category || 'uncategorized')}</span>
+                        </div>
+                    </header>
+                    <p class="control-row-note">${escapeHtml(c.governanceNote || '')}</p>
+                    ${badges ? `<div class="control-row-badges">${badges}</div>` : ''}
+                </article>
+            `;
+        }).join('');
+        list.innerHTML = html;
     }
 
-    // --- NOTAMs ---
-    function renderNotams() {
-        const el = document.getElementById('notam-list');
-        el.innerHTML = (modelsData.notams || []).map(n => `
-            <div class="notam-card severity-${n.severity}">
-                <div class="notam-head">
-                    <span class="notam-severity">${escapeHtml(n.severity)}</span>
-                    <span class="notam-date">${escapeHtml(n.effectiveDate || '')}</span>
-                    <span class="notam-title">${escapeHtml(n.title)}</span>
-                </div>
-                <div class="notam-body">${escapeHtml(n.body)}</div>
-                ${(n.affectedModels || []).length ? `
-                <div class="notam-affected">Affects: ${n.affectedModels.map(id => `<button type="button" class="notam-model-link" data-model-id="${escapeHtml(id)}">${escapeHtml(id)}</button>`).join(' · ')}</div>
-                ` : ''}
-            </div>
-        `).join('');
-        el.querySelectorAll('.notam-model-link').forEach(btn => {
-            btn.addEventListener('click', () => openBlade(btn.dataset.modelId));
-        });
-    }
-
-    // --- Engine explainer ---
-    function renderEngine() {
-        const eng = modelsData.copilotEngine || {};
-        document.getElementById('engine-summary').textContent = eng.summary || '';
-        document.getElementById('engine-capabilities').innerHTML =
-            (eng.capabilities || []).map(c => `<li>${escapeHtml(c)}</li>`).join('');
-    }
-
-    // --- Model Detail Blade ---
-    function openBlade(modelId) {
-        const m = modelsData.models.find(x => x.id === modelId);
-        if (!m) return;
-
-        document.getElementById('blade-title').textContent = m.displayName;
-        document.getElementById('blade-subtitle').textContent =
-            `${m.provider || ''}${m.family ? ' · ' + m.family : ''} · ${statusLabel(m.status)}`;
-        const led = document.getElementById('blade-led');
-        led.className = 'departure-led status-' + m.status;
-
-        const bladeBody = document.getElementById('blade-body');
-        bladeBody.innerHTML = renderBladeBody(m);
-        bladeBody.querySelectorAll('.blade-alt-link[data-model-id]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                openBlade(btn.dataset.modelId);
-            });
-        });
-
-        const blade = document.getElementById('model-blade');
-        blade.classList.add('open');
-        blade.setAttribute('aria-hidden', 'false');
-        document.getElementById('blade-backdrop').hidden = false;
-
-        // Update URL hash without scrolling
-        history.replaceState({ modelId }, '', `#model-${modelId}`);
-    }
-
-    function closeBlade() {
-        const blade = document.getElementById('model-blade');
-        blade.classList.remove('open');
-        blade.setAttribute('aria-hidden', 'true');
-        document.getElementById('blade-backdrop').hidden = true;
-        if (window.location.hash.startsWith('#model-')) {
-            history.replaceState(null, '', window.location.pathname);
-        }
-    }
-
-    document.getElementById('blade-close').addEventListener('click', closeBlade);
-    document.getElementById('blade-backdrop').addEventListener('click', closeBlade);
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeBlade();
-    });
-
-    function renderBladeBody(m) {
-        const sections = [];
-
-        // Tagline
-        if (m.tagline) {
-            sections.push(`<div class="blade-tagline">${escapeHtml(m.tagline)}</div>`);
-        }
-
-        // Task area badge + excels-at (docs.github.com model-comparison)
-        if (m.taskArea || m.excelsAt) {
-            const badge = m.taskArea ? `<span class="blade-task-badge">${escapeHtml(m.taskArea)}</span>` : '';
-            const excels = m.excelsAt ? `<div class="blade-excels">${escapeHtml(m.excelsAt)}</div>` : '';
-            sections.push(`<div class="blade-task-block">${badge}${excels}</div>`);
-        }
-
-        // Strengths & Limitations
-        if ((m.strengths || []).length || (m.limitations || []).length) {
-            sections.push(`
-                <div class="blade-section">
-                    ${(m.strengths || []).length ? `
-                    <div class="blade-subsection">
-                        <div class="blade-subsection-title">✓ Strengths</div>
-                        <ul class="blade-list strong">${m.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
-                    </div>` : ''}
-                    ${(m.limitations || []).length ? `
-                    <div class="blade-subsection">
-                        <div class="blade-subsection-title">⚠ Limitations</div>
-                        <ul class="blade-list warn">${m.limitations.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
-                    </div>` : ''}
-                </div>
-            `);
-        }
-
-        // Capabilities pill row
-        const caps = m.capabilities || {};
-        const capEntries = (modelsData.capabilities || []).map(c => ({
-            label: c.label,
-            value: caps[c.id] || 'unknown'
-        }));
-        if (capEntries.length) {
-            sections.push(`
-                <div class="blade-section">
-                    <div class="blade-section-title">Capabilities</div>
-                    <div class="blade-cap-grid">
-                        ${capEntries.map(c => `
-                            <div class="blade-cap-pill value-${c.value}">
-                                <span class="blade-cap-label">${escapeHtml(c.label)}</span>
-                                <span class="blade-cap-value">${escapeHtml(c.value)}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `);
-        }
-
-        // Best-fit prose per task category (github-docs-model-comparison)
-        const fit = m.taskFit;
-        if (fit && typeof fit === 'object' && Object.keys(fit).length) {
-            const TASK_LABELS = {
-                'general-purpose': 'General-purpose coding',
-                'fast-help': 'Fast help',
-                'deep-reasoning': 'Deep reasoning',
-                'visuals': 'Working with visuals',
-                'agentic': 'Agentic development',
-                'general-purpose-agent': 'Agent tasks'
-            };
-            const items = Object.entries(fit).map(([k, prose]) => `
-                <div class="blade-fit-item">
-                    <div class="blade-fit-label">${escapeHtml(TASK_LABELS[k] || k)}</div>
-                    <div class="blade-fit-prose">${escapeHtml(prose)}</div>
-                </div>
-            `).join('');
-            sections.push(`
-                <div class="blade-section">
-                    <div class="blade-section-title">Best fit</div>
-                    <div class="blade-fit-grid">${items}</div>
-                </div>
-            `);
-        }
-
-        // Modalities (input / output)
-        const inMods = m.inputModalities || [];
-        const outMods = m.outputModalities || [];
-        if (inMods.length || outMods.length) {
-            sections.push(`
-                <div class="blade-section">
-                    <div class="blade-section-title">Modalities</div>
-                    <div class="blade-mod-grid">
-                        ${inMods.length ? `<div class="blade-mod-row"><span class="blade-mod-label">In</span>${inMods.map(m => `<span class="blade-mod-pill">${escapeHtml(m)}</span>`).join('')}</div>` : ''}
-                        ${outMods.length ? `<div class="blade-mod-row"><span class="blade-mod-label">Out</span>${outMods.map(m => `<span class="blade-mod-pill">${escapeHtml(m)}</span>`).join('')}</div>` : ''}
-                    </div>
-                </div>
-            `);
-        }
-
-        // Reasoning controls (Anthropic/Google extended thinking)
-        const thinking = m.thinkingTypes || [];
-        const efforts = m.effortLevels || [];
-        if (thinking.length || efforts.length) {
-            const parts = [];
-            if (thinking.length) parts.push(`<div class="blade-mod-row"><span class="blade-mod-label">Thinking</span>${thinking.map(t => `<span class="blade-mod-pill reason">${escapeHtml(t)}</span>`).join('')}</div>`);
-            if (efforts.length) parts.push(`<div class="blade-mod-row"><span class="blade-mod-label">Effort</span>${efforts.map(e => `<span class="blade-mod-pill reason">${escapeHtml(e)}</span>`).join('')}</div>`);
-            sections.push(`
-                <div class="blade-section">
-                    <div class="blade-section-title">Reasoning controls</div>
-                    <div class="blade-mod-grid">${parts.join('')}</div>
-                </div>
-            `);
-        }
-
-        // Plan access row
-        const planAvail = m.planAvailability || {};
-        sections.push(`
-            <div class="blade-section">
-                <div class="blade-section-title">Plan access</div>
-                <div class="blade-row-grid">
-                    ${(modelsData.plans || []).map(p => {
-                        const v = planAvail[p.id];
-                        const cls = v === true ? 'yes' : v === 'limited' ? 'limited' : v === false ? 'no' : 'unknown';
-                        const mark = v === true ? '●' : v === 'limited' ? '◐' : v === false ? '○' : '?';
-                        return `<div class="blade-row-cell ${cls}"><span class="blade-row-mark">${mark}</span>${escapeHtml(p.label)}</div>`;
-                    }).join('')}
-                </div>
-            </div>
-        `);
-
-        // Surface availability row
-        const surfAvail = m.surfaceAvailability || {};
-        sections.push(`
-            <div class="blade-section">
-                <div class="blade-section-title">Surfaces</div>
-                <div class="blade-row-grid">
-                    ${(modelsData.surfaces || []).map(s => {
-                        const v = surfAvail[s.id];
-                        const cls = v === true ? 'yes' : v === false ? 'no' : 'unknown';
-                        const mark = v === true ? '●' : v === false ? '○' : '?';
-                        return `<div class="blade-row-cell ${cls}"><span class="blade-row-mark">${mark}</span>${escapeHtml(s.label)}</div>`;
-                    }).join('')}
-                </div>
-            </div>
-        `);
-
-        // IDE support row
-        const ideAvail = m.ideAvailability;
-        if (ideAvail && typeof ideAvail === 'object') {
-            const IDE_LABELS = {
-                'github-com': 'GitHub.com',
-                'copilot-cli': 'CLI',
-                'vscode': 'VS Code',
-                'visual-studio': 'Visual Studio',
-                'eclipse': 'Eclipse',
-                'xcode': 'Xcode',
-                'jetbrains': 'JetBrains'
-            };
-            sections.push(`
-                <div class="blade-section">
-                    <div class="blade-section-title">IDE support</div>
-                    <div class="blade-row-grid">
-                        ${Object.entries(IDE_LABELS).map(([id, label]) => {
-                            const v = ideAvail[id];
-                            const cls = v === true ? 'yes' : v === false ? 'no' : 'unknown';
-                            const mark = v === true ? '●' : v === false ? '○' : '?';
-                            return `<div class="blade-row-cell ${cls}"><span class="blade-row-mark">${mark}</span>${escapeHtml(label)}</div>`;
-                        }).join('')}
-                    </div>
-                </div>
-            `);
-        }
-
-        // Weight & capacity
-        const meta = [];
-        if (m.contextWindow != null) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Context window</span><span class="blade-meta-value">${m.contextWindow.toLocaleString()} tokens</span></div>`);
-        if (m.maxOutputTokens != null) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Max output</span><span class="blade-meta-value">${m.maxOutputTokens.toLocaleString()} tokens</span></div>`);
-        if (m.pricingMultiplier != null) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Premium multiplier</span><span class="blade-meta-value">×${m.pricingMultiplier}</span></div>`);
-        if (m.releasedAt) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Released</span><span class="blade-meta-value">${escapeHtml(m.releasedAt)}</span></div>`);
-        if (m.knowledgeCutoff) meta.push(`<div class="blade-meta-item"><span class="blade-meta-label">Knowledge cutoff</span><span class="blade-meta-value">${escapeHtml(m.knowledgeCutoff)}</span></div>`);
-        if (m.deprecatedAt) {
-            const alt = m.suggestedAlternative ? ` <span class="blade-meta-alt">→ use <button type="button" class="blade-alt-link" data-model-id="${escapeHtml(m.suggestedAlternative)}">${escapeHtml(m.suggestedAlternative)}</button></span>` : '';
-            meta.push(`<div class="blade-meta-item warn"><span class="blade-meta-label">Grounded</span><span class="blade-meta-value">${escapeHtml(m.deprecatedAt)}${alt}</span></div>`);
-        }
-        if (meta.length) {
-            sections.push(`<div class="blade-section"><div class="blade-section-title">Weight &amp; capacity</div><div class="blade-meta-grid">${meta.join('')}</div></div>`);
-        }
-
-        // Source links (plain strings or {url,label} objects) + model card
-        const srcs = [...(m.sourceLinks || [])];
-        if (m.modelCardUrl) srcs.push({ url: m.modelCardUrl, label: 'Provider model card' });
-        if (srcs.length) {
-            const items = srcs.map(l => {
-                const url = typeof l === 'string' ? l : l.url;
-                const label = typeof l === 'string' ? l : (l.label || l.url);
-                return `<li><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a></li>`;
-            }).join('');
-            sections.push(`
-                <div class="blade-section">
-                    <div class="blade-section-title">Sources</div>
-                    <ul class="blade-sources">${items}</ul>
-                </div>
-            `);
-        }
-
-        return sections.join('');
-    }
-
-    // --- Deep link ---
     function handleDeepLink() {
-        const m = window.location.hash.match(/#model-([\w.-]+)/);
-        if (m) openBlade(m[1]);
-    }
-    window.addEventListener('hashchange', handleDeepLink);
-
-    // --- Mermaid ---
-    function initMermaid() {
-        if (typeof mermaid === 'undefined') return;
-        const isLight = document.body.classList.contains('light-theme');
-        mermaid.initialize({
-            startOnLoad: true,
-            theme: isLight ? 'default' : 'dark',
-            themeVariables: {
-                primaryColor: '#1a2233',
-                primaryTextColor: '#c0c8d8',
-                lineColor: '#5a6a7a',
-                background: '#07080c'
-            },
-            securityLevel: 'loose'
-        });
+        const hash = window.location.hash;
+        if (!hash || !hash.startsWith('#control=')) return;
+        const id = hash.slice('#control='.length);
+        // Clear any previous highlight
+        document.querySelectorAll('.control-row.highlight').forEach((el) => el.classList.remove('highlight'));
+        const target = document.getElementById(`control-${id}`);
+        if (target) {
+            target.classList.add('highlight');
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     }
 
-    // --- Init ---
     initTheme();
     loadAllData();
     </script>
