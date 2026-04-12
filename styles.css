@@ -2480,6 +2480,251 @@ body.light-theme .tower-roadmap li {
     color: rgba(0, 0, 0, 0.65);
 }
 
+/* ============================================================
+   RAMP PERSPECTIVE — Agents & Ground Handling
+   ============================================================ */
+.ramp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.ramp-card {
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid var(--accent, #888);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+.ramp-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
+}
+.ramp-card:focus-visible {
+    outline: 2px solid var(--accent, #888);
+    outline-offset: 2px;
+}
+
+.ramp-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+.ramp-card-symbol {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+}
+.ramp-card-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.45);
+    text-transform: uppercase;
+}
+.ramp-card.status-ga .ramp-card-status { color: #00ff88; }
+.ramp-card.status-preview .ramp-card-status { color: #ffaa00; }
+.ramp-card.status-deprecated .ramp-card-status { color: #ff6666; }
+
+.ramp-card-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 6px;
+}
+.ramp-card-desc {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.5;
+    margin: 0 0 10px;
+}
+.ramp-card-caps {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.ramp-card-cap {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Ramp detail blade */
+.ramp-blade {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 460px;
+    max-width: 90vw;
+    height: 100vh;
+    background: #0d1117;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.ramp-blade.open { transform: translateX(0); }
+
+.ramp-blade-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.ramp-blade-header h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    letter-spacing: 0.04em;
+}
+
+.ramp-blade-body {
+    padding: 20px 24px;
+    flex: 1;
+}
+.ramp-blade-body .blade-section {
+    margin-bottom: 20px;
+}
+.ramp-blade-body .blade-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 8px;
+}
+.ramp-blade-body .blade-caps-grid {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.ramp-blade-desc,
+.ramp-blade-tip {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.55;
+    margin: 0;
+}
+.ramp-blade-tip {
+    color: rgba(0, 255, 136, 0.8);
+    padding: 10px 12px;
+    background: rgba(0, 255, 136, 0.05);
+    border: 1px solid rgba(0, 255, 136, 0.15);
+    border-radius: 3px;
+}
+.ramp-blade-status,
+.ramp-blade-zone {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    margin-right: 12px;
+}
+.ramp-blade-squawk {
+    font-size: 0.72rem;
+    color: rgba(255, 170, 0, 0.85);
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background: rgba(255, 170, 0, 0.05);
+    border-left: 2px solid rgba(255, 170, 0, 0.4);
+}
+.ramp-blade-squawk-desc {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.68rem;
+}
+.ramp-blade-links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.ramp-blade-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: #00d4ff;
+    text-decoration: none;
+    padding: 4px 8px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 2px;
+    transition: background 0.15s ease;
+}
+.ramp-blade-link:hover { background: rgba(0, 212, 255, 0.08); }
+.ramp-blade-related-list {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.ramp-blade-related {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    padding: 3px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+}
+.ramp-blade-related:hover { color: #00d4ff; border-color: rgba(0, 212, 255, 0.3); }
+
+/* Ramp metaphor key */
+.ramp-metaphor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.ramp-metaphor-item {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    font-size: 0.72rem;
+    line-height: 1.5;
+}
+.ramp-metaphor-term {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--color-glareshield, #ffaa00);
+    white-space: nowrap;
+    min-width: 140px;
+}
+.ramp-metaphor-arrow {
+    color: rgba(255, 255, 255, 0.3);
+}
+.ramp-metaphor-meaning {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Light theme — Ramp */
+body.light-theme .ramp-card {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .ramp-card:hover { background: rgba(0, 0, 0, 0.05); }
+body.light-theme .ramp-card-name { color: rgba(0, 0, 0, 0.85); }
+body.light-theme .ramp-card-desc { color: rgba(0, 0, 0, 0.55); }
+body.light-theme .ramp-card-cap { background: rgba(0, 0, 0, 0.04); border-color: rgba(0, 0, 0, 0.1); color: rgba(0, 0, 0, 0.5); }
+body.light-theme .ramp-blade { background: #fff; border-left-color: rgba(0, 0, 0, 0.1); }
+body.light-theme .ramp-blade-header { border-bottom-color: rgba(0, 0, 0, 0.1); }
+body.light-theme .ramp-blade-header h3 { color: rgba(0, 0, 0, 0.85); }
+body.light-theme .ramp-blade-desc { color: rgba(0, 0, 0, 0.65); }
+body.light-theme .ramp-blade-tip { color: #1a7a3a; background: rgba(26, 122, 58, 0.06); border-color: rgba(26, 122, 58, 0.2); }
+body.light-theme .ramp-metaphor-item { background: rgba(0, 0, 0, 0.02); border-color: rgba(0, 0, 0, 0.06); }
+body.light-theme .ramp-metaphor-term { color: #b36b00; }
+body.light-theme .ramp-metaphor-meaning { color: rgba(0, 0, 0, 0.6); }
+
 /* ============ DEPARTURE BOARD ============ */
 .departure-board {
     display: flex;
@@ -2850,6 +3095,10 @@ body.light-theme .tower-roadmap li {
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
+    display: none;
+}
+.blade-backdrop.open {
+    display: block;
 }
 
 .blade-header {

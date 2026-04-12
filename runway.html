@@ -33,7 +33,7 @@
                 <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Terminal<span class="nav-soon">SOON</span></a>
                 <a href="security.html" class="nav-link">Security</a>
                 <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Jet Bridge<span class="nav-soon">SOON</span></a>
-                <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Ramp<span class="nav-soon">SOON</span></a>
+                <a href="ramp.html" class="nav-link">Ramp</a>
                 <a href="index.html" class="nav-link">Cockpit</a>
                 <a href="runway.html" class="nav-link active">Runway</a>
                 <a href="tower.html" class="nav-link">Tower</a>
@@ -154,7 +154,7 @@ flowchart LR
             <!-- Populated by JS when a model is selected -->
         </div>
     </aside>
-    <div class="blade-backdrop" id="blade-backdrop" hidden></div>
+    <div class="blade-backdrop" id="blade-backdrop"></div>
 
     <script>
     // ============================================================
@@ -441,7 +441,7 @@ flowchart LR
         const blade = document.getElementById('model-blade');
         blade.classList.add('open');
         blade.setAttribute('aria-hidden', 'false');
-        document.getElementById('blade-backdrop').hidden = false;
+        document.getElementById('blade-backdrop').classList.add('open');
 
         // Update URL hash without scrolling
         history.replaceState({ modelId }, '', `#model-${modelId}`);
@@ -451,7 +451,7 @@ flowchart LR
         const blade = document.getElementById('model-blade');
         blade.classList.remove('open');
         blade.setAttribute('aria-hidden', 'true');
-        document.getElementById('blade-backdrop').hidden = true;
+        document.getElementById('blade-backdrop').classList.remove('open');
         if (window.location.hash.startsWith('#model-')) {
             history.replaceState(null, '', window.location.pathname);
         }

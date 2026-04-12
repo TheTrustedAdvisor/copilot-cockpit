@@ -522,7 +522,8 @@
       "zone": "side",
       "perspectives": [
         "cockpit",
-        "jet-bridge"
+        "jet-bridge",
+        "ramp"
       ],
       "status": "ga",
       "statusHistory": [
@@ -959,7 +960,8 @@
       "name": "Coding Agent",
       "zone": "pfd",
       "perspectives": [
-        "cockpit"
+        "cockpit",
+        "ramp"
       ],
       "status": "preview",
       "shortDescription": "Cloud-based headless agent that works on issues autonomously via GitHub",
@@ -1667,7 +1669,8 @@
       "name": "Agent Self-Review",
       "zone": "glareshield",
       "perspectives": [
-        "cockpit"
+        "cockpit",
+        "ramp"
       ],
       "status": "preview",
       "shortDescription": "Agent Mode reviews its own changes before presenting to the user",
@@ -3087,7 +3090,8 @@
       "name": "Copilot Extensions",
       "zone": "side",
       "perspectives": [
-        "cockpit"
+        "cockpit",
+        "ramp"
       ],
       "status": "deprecated",
       "shortDescription": "Third-party integrations that extend Copilot with specialized tools and knowledge",
