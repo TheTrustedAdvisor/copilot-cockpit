@@ -40,10 +40,9 @@ test.describe('Tower — page structure', () => {
         await expect(active).toContainText('Tower');
     });
 
-    test('verification banner is visible while controls are unverified', async ({ page }) => {
+    test('verification banner is hidden now that controls are verified', async ({ page }) => {
         await page.goto('/tower.html');
-        await expect(page.locator('#verification-banner')).toBeVisible();
-        await expect(page.locator('#verification-banner')).toContainText(/verification/i);
+        await expect(page.locator('#verification-banner')).toBeHidden();
     });
 });
 
@@ -69,8 +68,8 @@ test.describe('Tower — governance controls', () => {
     test('renders one row per control in the catalog', async ({ page }) => {
         await page.goto('/tower.html');
         await expect(page.locator('#control-list .control-row').first()).toBeVisible();
-        // 14 controls in the current catalog
-        await expect(page.locator('#control-list .control-row')).toHaveCount(14);
+        // 19 controls in the verified catalog
+        await expect(page.locator('#control-list .control-row')).toHaveCount(19);
     });
 
     test('control rows carry compliance badges', async ({ page }) => {

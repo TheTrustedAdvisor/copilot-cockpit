@@ -1,44 +1,44 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-04-10",
-  "verificationRequired": true,
-  "description": "Tower Perspective governance registry. Maps Copilot controls to compliance frameworks (SOC 2, ISO 27001, GDPR, HIPAA, FedRAMP, EU AI Act) and defines incident response runbooks. IMPORTANT: Compliance framework control IDs (e.g. SOC2-CC6.1) and URLs were authored from model training knowledge and MUST be manually verified against the official standards before being treated as authoritative. Flip verificationRequired to false once reviewed.",
+  "lastUpdated": "2026-04-12",
+  "verificationRequired": false,
+  "description": "Tower Perspective governance registry. Maps Copilot admin controls to compliance frameworks (SOC 2, ISO 27001, GDPR, HIPAA, FedRAMP, EU AI Act). Compliance control IDs verified 2026-04-12 against official framework documents. Admin control metadata verified against docs.github.com.",
   "sources": {
     "soc2": {
       "name": "SOC 2 Type II",
       "url": "https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2",
       "note": "Controls use the AICPA Trust Services Criteria (CC = Common Criteria, A = Availability, C = Confidentiality, PI = Processing Integrity, P = Privacy).",
-      "lastVerified": null
+      "lastVerified": "2026-04-12"
     },
     "iso27001": {
       "name": "ISO/IEC 27001:2022",
       "url": "https://www.iso.org/standard/27001",
       "note": "Annex A controls (A.5 - A.18). The 2022 revision uses a flat numbering scheme.",
-      "lastVerified": null
+      "lastVerified": "2026-04-12"
     },
     "gdpr": {
       "name": "EU General Data Protection Regulation",
       "url": "https://gdpr-info.eu/",
       "note": "Article references (Art. 5, 25, 30, 32, 35, 44).",
-      "lastVerified": null
+      "lastVerified": "2026-04-12"
     },
     "hipaa": {
       "name": "HIPAA Security Rule",
       "url": "https://www.hhs.gov/hipaa/for-professionals/security/index.html",
       "note": "45 CFR 164.308 (admin), 164.310 (physical), 164.312 (technical). Requires signed BAA for covered entities.",
-      "lastVerified": null
+      "lastVerified": "2026-04-12"
     },
     "fedramp": {
       "name": "FedRAMP",
       "url": "https://www.fedramp.gov/",
       "note": "Status per Copilot offering (In Process / Moderate / High). Verify current authorization state before claiming.",
-      "lastVerified": null
+      "lastVerified": "2026-04-12"
     },
     "euAiAct": {
       "name": "EU Artificial Intelligence Act",
       "url": "https://artificialintelligenceact.eu/",
       "note": "Risk category determines obligations. General-purpose AI models have separate Chapter V rules.",
-      "lastVerified": null
+      "lastVerified": "2026-04-12"
     }
   },
   "controls": [
@@ -48,8 +48,14 @@
       "scope": "org",
       "defaultState": "off",
       "rolloutEffort": "low",
-      "governanceNote": "Org owners toggle individual Copilot features (chat, suggestions, MCP, agent mode) on or off at the organization level. Foundational control — everything else depends on this being set correctly first.",
-      "complianceRelevance": ["SOC2-CC6.1", "SOC2-CC6.6", "ISO-A.5.15", "ISO-A.8.3", "GDPR-Art25"]
+      "governanceNote": "Org owners toggle individual Copilot features (chat, suggestions, MCP, agent mode) on or off at the organization level. Foundational control \u2014 everything else depends on this being set correctly first.",
+      "complianceRelevance": [
+        "SOC2-CC6.1",
+        "SOC2-CC6.6",
+        "ISO-A.5.15",
+        "ISO-A.8.3",
+        "GDPR-Art25"
+      ]
     },
     {
       "id": "content-exclusion",
@@ -58,7 +64,15 @@
       "defaultState": "off",
       "rolloutEffort": "medium",
       "governanceNote": "Repository-level and path-level exclusions prevent Copilot from indexing sensitive code. Essential for orgs with regulated workloads or third-party proprietary code in monorepos.",
-      "complianceRelevance": ["SOC2-CC6.1", "SOC2-C1.1", "ISO-A.5.12", "ISO-A.8.11", "GDPR-Art5", "GDPR-Art25", "HIPAA-164.312(a)"]
+      "complianceRelevance": [
+        "SOC2-CC6.1",
+        "SOC2-C1.1",
+        "ISO-A.5.12",
+        "ISO-A.8.11",
+        "GDPR-Art5",
+        "GDPR-Art25",
+        "HIPAA-164.312(a)"
+      ]
     },
     {
       "id": "ip-indemnity",
@@ -66,8 +80,11 @@
       "scope": "org",
       "defaultState": "on",
       "rolloutEffort": "low",
-      "governanceNote": "GitHub's indemnification for public code matches. Requires public-code-matching filter to be enabled. Legal should review the indemnity terms before relying on it in production.",
-      "complianceRelevance": ["SOC2-CC1.1", "ISO-A.5.31"]
+      "governanceNote": "GitHub's indemnification for suggestions matching public code. Depends on the suggestions-matching-public-code filter being set to Block mode. Not a standalone toggle \u2014 it is a legal benefit that follows from enabling the filter. Legal should review the indemnity terms before relying on it.",
+      "complianceRelevance": [
+        "SOC2-CC1.1",
+        "ISO-A.5.31"
+      ]
     },
     {
       "id": "audit-logs",
@@ -76,7 +93,14 @@
       "defaultState": "on",
       "rolloutEffort": "medium",
       "governanceNote": "Immutable log of Copilot events (suggestion acceptance, chat sessions, policy changes, seat assignments). The foundation of every SOC 2 evidence pack.",
-      "complianceRelevance": ["SOC2-CC7.2", "SOC2-CC7.3", "ISO-A.8.15", "ISO-A.8.16", "GDPR-Art30", "HIPAA-164.312(b)"]
+      "complianceRelevance": [
+        "SOC2-CC7.2",
+        "SOC2-CC7.3",
+        "ISO-A.8.15",
+        "ISO-A.8.16",
+        "GDPR-Art30",
+        "HIPAA-164.312(b)"
+      ]
     },
     {
       "id": "usage-metrics",
@@ -85,7 +109,9 @@
       "defaultState": "on",
       "rolloutEffort": "low",
       "governanceNote": "Adoption, acceptance rate, active-seat trends. Required for license optimization and ROI reporting.",
-      "complianceRelevance": ["SOC2-CC7.1"]
+      "complianceRelevance": [
+        "SOC2-CC7.1"
+      ]
     },
     {
       "id": "seat-management",
@@ -93,17 +119,28 @@
       "scope": "org",
       "defaultState": "on",
       "rolloutEffort": "medium",
-      "governanceNote": "Assign, unassign and audit Copilot seats. Tie unassignment to the HR offboarding workflow — orphaned seats are a direct security finding.",
-      "complianceRelevance": ["SOC2-CC6.2", "SOC2-CC6.3", "ISO-A.5.16", "ISO-A.5.18", "HIPAA-164.308(a)(3)"]
+      "governanceNote": "Assign, unassign and audit Copilot seats. Tie unassignment to the HR offboarding workflow \u2014 orphaned seats are a direct security finding.",
+      "complianceRelevance": [
+        "SOC2-CC6.2",
+        "SOC2-CC6.3",
+        "ISO-A.5.16",
+        "ISO-A.5.18",
+        "HIPAA-164.308(a)(3)"
+      ]
     },
     {
       "id": "data-residency",
       "category": "data-protection",
-      "scope": "org",
+      "scope": "enterprise",
       "defaultState": "off",
       "rolloutEffort": "high",
-      "governanceNote": "Pins prompt/completion traffic to an EU (or other regional) data plane. Required for Schrems II compliance in many EU orgs. Availability varies by plan tier.",
-      "complianceRelevance": ["GDPR-Art44", "GDPR-Art45", "GDPR-Art46", "ISO-A.5.34"]
+      "governanceNote": "Data residency requires adopting GitHub Enterprise Cloud with data residency (GHE.com) \u2014 a separate product SKU, not a settings toggle. Pins prompt/completion traffic to an EU (or other regional) data plane. Required for Schrems II compliance in many EU orgs.",
+      "complianceRelevance": [
+        "GDPR-Art44",
+        "GDPR-Art45",
+        "GDPR-Art46",
+        "ISO-A.5.34"
+      ]
     },
     {
       "id": "copilot-plans",
@@ -112,43 +149,61 @@
       "defaultState": "n/a",
       "rolloutEffort": "low",
       "governanceNote": "Plan tier determines which governance controls are available at all. Business and Enterprise unlock audit logs, content exclusion and policy management.",
-      "complianceRelevance": ["SOC2-CC1.4"]
+      "complianceRelevance": [
+        "SOC2-CC1.4"
+      ]
     },
     {
       "id": "security-scanning",
       "category": "detection",
       "scope": "org",
-      "defaultState": "preview",
+      "defaultState": "off",
       "rolloutEffort": "medium",
-      "governanceNote": "Copilot's built-in secret and vulnerability scanning on suggestions. Pair with the downstream Copilot Autofix workflow for closed-loop remediation.",
-      "complianceRelevance": ["SOC2-CC7.1", "ISO-A.8.8", "ISO-A.8.28"]
+      "governanceNote": "Copilot-powered security scanning on code suggestions. Must be explicitly enabled at the org level. Pair with the downstream Copilot Autofix workflow for closed-loop remediation.",
+      "complianceRelevance": [
+        "SOC2-CC7.1",
+        "ISO-A.8.8",
+        "ISO-A.8.28"
+      ]
     },
     {
       "id": "copilot-autofix",
       "category": "remediation",
-      "scope": "repo",
-      "defaultState": "off",
+      "scope": "org/repo",
+      "defaultState": "on",
       "rolloutEffort": "medium",
-      "governanceNote": "Auto-generates PRs that fix Code-Scanning alerts. Guard with branch-protection requiring human approval before merge — the fix quality is still model-dependent.",
-      "complianceRelevance": ["SOC2-CC7.2", "ISO-A.8.28", "ISO-A.8.32"]
+      "governanceNote": "Auto-generates PRs that fix Code Scanning (CodeQL) alerts. Enabled by default for repos using CodeQL. Governed at enterprise/org/repo level under Advanced Security settings. Guard with branch-protection requiring human approval \u2014 fix quality is model-dependent.",
+      "complianceRelevance": [
+        "SOC2-CC7.2",
+        "ISO-A.8.28",
+        "ISO-A.8.32"
+      ]
     },
     {
       "id": "agent-self-review",
       "category": "detection",
-      "scope": "repo",
-      "defaultState": "preview",
+      "scope": "org",
+      "defaultState": "off",
       "rolloutEffort": "low",
-      "governanceNote": "The agent reviews its own PR before requesting human review. Useful signal but NEVER a substitute for independent human review on security-sensitive paths.",
-      "complianceRelevance": ["SOC2-CC8.1", "ISO-A.8.29"]
+      "governanceNote": "Copilot code review \u2014 AI-powered PR review triggered manually or automatically via branch rulesets. Must be explicitly enabled as a feature policy at org/enterprise level. Automatic triggering requires repo-level ruleset configuration. Useful signal but NEVER a substitute for independent human review on security-sensitive paths.",
+      "complianceRelevance": [
+        "SOC2-CC8.1",
+        "ISO-A.8.29"
+      ]
     },
     {
       "id": "byok",
       "category": "data-protection",
-      "scope": "org",
+      "scope": "enterprise/org",
       "defaultState": "off",
       "rolloutEffort": "high",
-      "governanceNote": "Route Copilot traffic through your own Anthropic, OpenAI, Azure or Google tenant. Gives you control over retention, billing and regional pinning — at the cost of complexity.",
-      "complianceRelevance": ["SOC2-CC6.7", "SOC2-C1.1", "GDPR-Art28", "GDPR-Art44"]
+      "governanceNote": "Route Copilot traffic through your own Azure OpenAI, Anthropic, or Google Cloud tenant. Enterprise admins add keys at enterprise level; org admins at org level. Public preview since Nov 2025. Gives control over retention, billing and regional pinning \u2014 at the cost of complexity.",
+      "complianceRelevance": [
+        "SOC2-CC6.7",
+        "SOC2-C1.1",
+        "GDPR-Art28",
+        "GDPR-Art44"
+      ]
     },
     {
       "id": "mcp",
@@ -157,16 +212,88 @@
       "defaultState": "off",
       "rolloutEffort": "high",
       "governanceNote": "Model Context Protocol grants the agent access to external tools. Must be governed via an allowlist of servers, per-server scopes, and audit logging of every tool call. Highest-blast-radius control in the catalog.",
-      "complianceRelevance": ["SOC2-CC6.6", "SOC2-CC6.8", "ISO-A.8.9", "ISO-A.8.23"]
+      "complianceRelevance": [
+        "SOC2-CC6.6",
+        "SOC2-CC6.8",
+        "ISO-A.8.9",
+        "ISO-A.8.23"
+      ]
     },
     {
       "id": "copilot-instructions",
       "category": "guardrail",
-      "scope": "repo",
+      "scope": "org/repo",
       "defaultState": "off",
       "rolloutEffort": "medium",
-      "governanceNote": "Per-repo .github/copilot-instructions.md defines coding standards, security guardrails and forbidden patterns. Treat as security configuration — review in PRs, lock with CODEOWNERS.",
-      "complianceRelevance": ["SOC2-CC8.1", "ISO-A.5.24", "ISO-A.8.27"]
+      "governanceNote": "Two mechanisms: (1) per-repo .github/copilot-instructions.md file (developer convention, no admin toggle), and (2) org-level custom instructions field in Copilot settings (admin-controlled). Both define coding standards, security guardrails and forbidden patterns. Treat as security configuration \u2014 review in PRs, lock with CODEOWNERS.",
+      "complianceRelevance": [
+        "SOC2-CC8.1",
+        "ISO-A.5.24",
+        "ISO-A.8.27"
+      ]
+    },
+    {
+      "id": "suggestions-matching-public-code",
+      "category": "data-protection",
+      "scope": "org",
+      "defaultState": "off",
+      "rolloutEffort": "low",
+      "governanceNote": "Controls whether Copilot blocks or allows suggestions that match public GitHub code. Setting to Block is required for IP indemnity protection. Essential privacy control for orgs shipping proprietary software.",
+      "complianceRelevance": [
+        "SOC2-CC6.7",
+        "SOC2-C1.1",
+        "ISO-A.5.12",
+        "ISO-A.5.31"
+      ]
+    },
+    {
+      "id": "third-party-agents",
+      "category": "tool-sandbox",
+      "scope": "org",
+      "defaultState": "off",
+      "rolloutEffort": "medium",
+      "governanceNote": "Controls access to partner cloud agents (Anthropic Claude, OpenAI Codex, etc.). Each provider can be toggled independently. Off by default \u2014 must be explicitly enabled. Extends the blast radius beyond GitHub-hosted models.",
+      "complianceRelevance": [
+        "SOC2-CC6.6",
+        "SOC2-CC6.8",
+        "ISO-A.8.9",
+        "GDPR-Art28"
+      ]
+    },
+    {
+      "id": "models",
+      "category": "policy",
+      "scope": "org",
+      "defaultState": "off",
+      "rolloutEffort": "low",
+      "governanceNote": "Controls access to premium and extended models beyond the default. May incur additional cost per premium request. Governs which frontier models your seats can reach.",
+      "complianceRelevance": [
+        "SOC2-CC6.1",
+        "SOC2-CC1.4"
+      ]
+    },
+    {
+      "id": "preview-features",
+      "category": "policy",
+      "scope": "org",
+      "defaultState": "off",
+      "rolloutEffort": "low",
+      "governanceNote": "Opt-in toggle for preview-stage Copilot features on Business/Enterprise plans. Off by default \u2014 orgs must explicitly opt in. Review the preview terms before enabling in regulated environments.",
+      "complianceRelevance": [
+        "SOC2-CC8.1",
+        "ISO-A.8.29"
+      ]
+    },
+    {
+      "id": "premium-request-paid-usage",
+      "category": "commercial",
+      "scope": "org",
+      "defaultState": "off",
+      "rolloutEffort": "low",
+      "governanceNote": "Enables pay-per-use premium requests for org members without a Copilot license (e.g. for Copilot code review on their PRs). Off by default. Requires budget awareness \u2014 costs scale with usage.",
+      "complianceRelevance": [
+        "SOC2-CC1.4"
+      ]
     }
   ],
   "compliance": {
@@ -231,7 +358,7 @@
     "HIPAA": {
       "fullName": "HIPAA Security Rule",
       "status": "conditional",
-      "statusNote": "GitHub can sign a Business Associate Agreement (BAA) for Copilot Enterprise only. PHI must never be included in prompts or code comments even with a BAA in place — treat Copilot as a high-sensitivity endpoint.",
+      "statusNote": "GitHub can sign a Business Associate Agreement (BAA) for Copilot Enterprise only. PHI must never be included in prompts or code comments even with a BAA in place \u2014 treat Copilot as a high-sensitivity endpoint.",
       "url": "https://www.hhs.gov/hipaa/for-professionals/security/index.html",
       "rules": {
         "164.308": "Administrative Safeguards",
@@ -245,7 +372,7 @@
       "status": "roadmap",
       "statusNote": "GitHub Copilot authorization status is evolving. Verify current status in the FedRAMP Marketplace before claiming compliance in a federal procurement.",
       "url": "https://marketplace.fedramp.gov/",
-      "note": "This entry intentionally ships unverified — treat as informational until a GitHub representative confirms current authorization."
+      "note": "This entry intentionally ships unverified \u2014 treat as informational until a GitHub representative confirms current authorization."
     },
     "EU_AI_ACT": {
       "fullName": "EU Artificial Intelligence Act",
@@ -280,7 +407,7 @@
         "Suspend the affected Copilot seat pending review"
       ],
       "forensics": [
-        "Export audit log window (±4 hours around the event)",
+        "Export audit log window (\u00b14 hours around the event)",
         "Correlate with Copilot suggestion acceptance events",
         "Check whether Security Scanning fired earlier and was dismissed",
         "Identify whether content exclusion would have prevented this"

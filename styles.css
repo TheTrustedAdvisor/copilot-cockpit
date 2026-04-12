@@ -2288,6 +2288,7 @@ body.light-theme .gov-callout-text {
     gap: 12px;
     align-items: baseline;
 }
+.verification-banner[hidden] { display: none; }
 .verification-banner strong { letter-spacing: 0.1em; }
 
 .framework-list {
