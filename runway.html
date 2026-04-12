@@ -90,6 +90,86 @@
             </div>
         </section>
 
+        <!-- ============ HANDOVER TOPOLOGY ============ -->
+        <section class="runway-section topology-section" aria-label="Handover Topology">
+            <h3 class="runway-section-title">⬡ Handover Topology</h3>
+            <p class="runway-section-intro">Where Copilot runs and how requests flow between your machine and the cloud. Every completion, chat message, and agent action crosses at least one of these boundaries.</p>
+
+            <div class="topology-container" id="topology-container">
+                <div class="topology-diagram" id="topology-diagram">
+                    <!-- Mermaid diagram rendered by JS -->
+                </div>
+                <div class="topology-legend" id="topology-legend">
+                    <div class="topology-quadrant" data-quadrant="local-runtime">
+                        <div class="topology-quadrant-header">
+                            <span class="topology-quadrant-icon">💻</span>
+                            <span class="topology-quadrant-title">Local Runtime</span>
+                        </div>
+                        <p class="topology-quadrant-desc">Your IDE extension host — VS Code, JetBrains, Neovim, CLI. Gathers context (open files, repo index, terminal), sends requests, renders results. All prompt construction happens here.</p>
+                        <div class="topology-quadrant-examples" id="topo-local-runtime-examples"></div>
+                    </div>
+                    <div class="topology-quadrant" data-quadrant="cloud-model">
+                        <div class="topology-quadrant-header">
+                            <span class="topology-quadrant-icon">☁️</span>
+                            <span class="topology-quadrant-title">Cloud Models</span>
+                        </div>
+                        <p class="topology-quadrant-desc">Frontier models hosted by GitHub (proxied to OpenAI, Anthropic, Google, xAI). Your prompts leave the IDE, hit GitHub's API, get routed to the provider, and the completion streams back.</p>
+                        <div class="topology-quadrant-examples" id="topo-cloud-model-examples"></div>
+                    </div>
+                    <div class="topology-quadrant" data-quadrant="cloud-runtime">
+                        <div class="topology-quadrant-header">
+                            <span class="topology-quadrant-icon">🏗️</span>
+                            <span class="topology-quadrant-title">Cloud Runtime</span>
+                        </div>
+                        <p class="topology-quadrant-desc">GitHub-hosted headless agents — Coding Agent, Copilot Workspace. No local IDE involved: the entire loop (read repo → plan → code → test → PR) runs on GitHub infrastructure.</p>
+                        <div class="topology-quadrant-examples" id="topo-cloud-runtime-examples"></div>
+                    </div>
+                    <div class="topology-quadrant" data-quadrant="byok">
+                        <div class="topology-quadrant-header">
+                            <span class="topology-quadrant-icon">🔑</span>
+                            <span class="topology-quadrant-title">BYOK / Customer Endpoint</span>
+                        </div>
+                        <p class="topology-quadrant-desc">Bring Your Own Key routes traffic through your Azure OpenAI, Anthropic, or Google Cloud tenant instead of GitHub's proxy. You control retention, billing, and regional pinning — at the cost of setup complexity.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topology-flows" id="topology-flows">
+                <h4 class="topology-flows-title">Data Flows</h4>
+                <div class="topology-flow-list">
+                    <div class="topology-flow">
+                        <span class="topology-flow-label">Completions &amp; Chat</span>
+                        <span class="topology-flow-path">IDE → GitHub API → Cloud Model → IDE</span>
+                        <span class="topology-flow-note">Every keystroke-triggered suggestion and chat message. ~200-800ms round trip.</span>
+                    </div>
+                    <div class="topology-flow">
+                        <span class="topology-flow-label">Agent Mode</span>
+                        <span class="topology-flow-path">IDE → GitHub API → Cloud Model → IDE (loop)</span>
+                        <span class="topology-flow-note">Multi-turn local loop. The IDE orchestrates tool calls (terminal, file edits) between model responses.</span>
+                    </div>
+                    <div class="topology-flow">
+                        <span class="topology-flow-label">Coding Agent</span>
+                        <span class="topology-flow-path">GitHub Issue → Cloud Runtime → Cloud Model → PR</span>
+                        <span class="topology-flow-note">Fully headless. No local runtime. GitHub clones, plans, codes, tests, and opens a PR autonomously.</span>
+                    </div>
+                    <div class="topology-flow">
+                        <span class="topology-flow-label">MCP Tool Calls</span>
+                        <span class="topology-flow-path">Cloud Model → IDE → MCP Server → IDE → Cloud Model</span>
+                        <span class="topology-flow-note">Model requests a tool call, IDE routes to the local MCP server, result feeds back into context. External data never hits GitHub's API directly.</span>
+                    </div>
+                    <div class="topology-flow">
+                        <span class="topology-flow-label">BYOK</span>
+                        <span class="topology-flow-path">IDE → Customer Endpoint → Customer Model → IDE</span>
+                        <span class="topology-flow-note">Bypasses GitHub's model proxy entirely. Prompts and completions stay within the customer's cloud tenant.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topology-model-matrix" id="topology-model-matrix">
+                <!-- Populated by JS: which models serve which surfaces -->
+            </div>
+        </section>
+
         <!-- ============ FLIGHT PLANS ============ -->
         <section class="runway-section" aria-label="Flight Plans">
             <h3 class="runway-section-title">📋 Flight Plans</h3>
@@ -200,6 +280,7 @@ flowchart LR
         renderVerificationBanner();
         renderFilters();
         renderDepartureBoard();
+        renderTopology();
         renderFlightPlans();
         renderNotams();
         renderEngine();
@@ -346,6 +427,148 @@ flowchart LR
         // Wire up blade opening
         board.querySelectorAll('.departure-row').forEach(row => {
             row.addEventListener('click', () => openBlade(row.dataset.modelId));
+        });
+    }
+
+    // --- Handover Topology ---
+    function renderTopology() {
+        const models = modelsData.models || [];
+
+        // Mermaid diagram
+        const diagramEl = document.getElementById('topology-diagram');
+        diagramEl.innerHTML = `<pre class="mermaid">
+graph LR
+    subgraph LOCAL["🖥️ LOCAL"]
+        direction TB
+        IDE["IDE Extension<br/>VS Code · JetBrains<br/>Neovim · CLI"]
+        CTX["Context Sources<br/>Open files · Repo index<br/>Terminal · MCP servers"]
+        IDE --- CTX
+    end
+
+    subgraph GITHUB["☁️ GITHUB API"]
+        direction TB
+        API["Copilot API<br/>Authentication<br/>Routing · Logging"]
+    end
+
+    subgraph CLOUD_MODELS["🧠 CLOUD MODELS"]
+        direction TB
+        OAI["OpenAI<br/>GPT-5.x · Codex"]
+        ANT["Anthropic<br/>Claude 4.x"]
+        GOO["Google<br/>Gemini 3.x"]
+        XAI["xAI<br/>Grok"]
+        GH["GitHub<br/>Raptor · Goldeneye"]
+    end
+
+    subgraph CLOUD_RUNTIME["🏗️ CLOUD RUNTIME"]
+        direction TB
+        CDA["Coding Agent<br/>Headless · Issue→PR"]
+        CWS["Copilot Workspace<br/>AI-driven prep"]
+    end
+
+    subgraph BYOK_ZONE["🔑 BYOK"]
+        direction TB
+        CUST["Customer Endpoint<br/>Azure OpenAI<br/>Anthropic · Google"]
+    end
+
+    IDE -->|"prompts"| API
+    API -->|"route"| OAI
+    API -->|"route"| ANT
+    API -->|"route"| GOO
+    API -->|"route"| XAI
+    API -->|"route"| GH
+    API -.->|"BYOK bypass"| CUST
+    OAI -->|"completions"| API
+    ANT -->|"completions"| API
+    GOO -->|"completions"| API
+    XAI -->|"completions"| API
+    GH -->|"completions"| API
+    CUST -.->|"completions"| API
+    API -->|"stream"| IDE
+    CDA -->|"autonomous"| API
+    CWS -->|"prep"| API
+
+    classDef local fill:#0d2818,stroke:#00ff88,color:#00ff88
+    classDef github fill:#1a1a2e,stroke:#00d4ff,color:#00d4ff
+    classDef cloud fill:#1a0d2e,stroke:#aa88ff,color:#aa88ff
+    classDef runtime fill:#2e1a0d,stroke:#ffaa00,color:#ffaa00
+    classDef byok fill:#2e0d1a,stroke:#ff88cc,color:#ff88cc
+
+    class IDE,CTX local
+    class API github
+    class OAI,ANT,GOO,XAI,GH cloud
+    class CDA,CWS runtime
+    class CUST byok
+</pre>`;
+
+        // Populate quadrant examples from model data
+        const localRuntimeSurfaces = ['chat', 'inline', 'edits', 'agent'];
+        const cloudRuntimeSurfaces = ['coding-agent'];
+
+        const localModels = models.filter(m =>
+            m.status !== 'deprecated' &&
+            localRuntimeSurfaces.some(s => m.surfaceAvailability && m.surfaceAvailability[s])
+        );
+        const cloudModels = models.filter(m =>
+            m.status !== 'deprecated' &&
+            cloudRuntimeSurfaces.some(s => m.surfaceAvailability && m.surfaceAvailability[s])
+        );
+
+        document.getElementById('topo-local-runtime-examples').innerHTML =
+            `<span class="topology-example-count">${localModels.length} models serve IDE surfaces</span>`;
+        document.getElementById('topo-cloud-model-examples').innerHTML =
+            `<span class="topology-example-count">${models.filter(m => m.status !== 'deprecated').length} models in fleet</span>`;
+        document.getElementById('topo-cloud-runtime-examples').innerHTML =
+            `<span class="topology-example-count">${cloudModels.length} models support headless execution</span>`;
+
+        // Render model-surface matrix
+        const matrixEl = document.getElementById('topology-model-matrix');
+        const surfaces = ['inline', 'chat', 'edits', 'agent', 'coding-agent'];
+        const surfaceLabels = {
+            'inline': 'Completions',
+            'chat': 'Chat',
+            'edits': 'Edits',
+            'agent': 'Agent Mode',
+            'coding-agent': 'Coding Agent'
+        };
+        const runtimeLabels = {
+            'inline': 'Local',
+            'chat': 'Local',
+            'edits': 'Local',
+            'agent': 'Local',
+            'coding-agent': 'Cloud'
+        };
+
+        const activeModels = models.filter(m => m.status !== 'deprecated');
+        matrixEl.innerHTML = `
+            <h4 class="topology-matrix-title">Model × Surface Matrix</h4>
+            <p class="topology-matrix-intro">Which models serve which surfaces — and whether the request runs locally or in the cloud.</p>
+            <div class="topology-matrix-scroll">
+                <table class="topology-matrix">
+                    <thead>
+                        <tr>
+                            <th class="topology-matrix-model-col">Model</th>
+                            ${surfaces.map(s => `<th><div class="topology-matrix-surface">${escapeHtml(surfaceLabels[s])}</div><div class="topology-matrix-runtime">${escapeHtml(runtimeLabels[s])}</div></th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${activeModels.map(m => `
+                            <tr class="topology-matrix-row" data-model-id="${escapeHtml(m.id)}">
+                                <td class="topology-matrix-model">${escapeHtml(m.displayName || m.id)}</td>
+                                ${surfaces.map(s => {
+                                    const avail = m.surfaceAvailability && m.surfaceAvailability[s];
+                                    return `<td class="topology-matrix-cell ${avail ? 'available' : 'unavailable'}">${avail ? '●' : '—'}</td>`;
+                                }).join('')}
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        // Click matrix row to open blade
+        matrixEl.querySelectorAll('.topology-matrix-row').forEach(row => {
+            row.addEventListener('click', () => openBlade(row.dataset.modelId));
+            row.style.cursor = 'pointer';
         });
     }
 

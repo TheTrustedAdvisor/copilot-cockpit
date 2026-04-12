@@ -198,6 +198,40 @@ test.describe('Runway v2 — Model Detail Blade', () => {
     });
 });
 
+test.describe('Runway v2 — Handover Topology', () => {
+    test('topology section renders with diagram and legend', async ({ page }) => {
+        await page.goto('/runway.html');
+        await expect(page.locator('.topology-section')).toBeVisible();
+        await expect(page.locator('#topology-diagram')).toBeVisible();
+        await expect(page.locator('#topology-legend .topology-quadrant')).toHaveCount(4);
+    });
+
+    test('topology Mermaid diagram renders as SVG', async ({ page }) => {
+        await page.goto('/runway.html');
+        await expect(page.locator('#topology-diagram svg').first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('topology data flows section renders all five flows', async ({ page }) => {
+        await page.goto('/runway.html');
+        await expect(page.locator('#topology-flows .topology-flow')).toHaveCount(5);
+        await expect(page.locator('#topology-flows .topology-flow-label').first()).not.toBeEmpty();
+    });
+
+    test('model-surface matrix renders with available/unavailable cells', async ({ page }) => {
+        await page.goto('/runway.html');
+        await expect(page.locator('#topology-model-matrix .topology-matrix')).toBeVisible();
+        await expect(page.locator('#topology-model-matrix .topology-matrix-cell.available').first()).toBeVisible();
+        await expect(page.locator('#topology-model-matrix .topology-matrix-cell.unavailable').first()).toBeVisible();
+    });
+
+    test('matrix rows are clickable and open the model blade', async ({ page }) => {
+        await page.goto('/runway.html');
+        const firstRow = page.locator('#topology-model-matrix .topology-matrix-row').first();
+        await firstRow.click();
+        await expect(page.locator('#model-blade')).toHaveClass(/open/);
+    });
+});
+
 test.describe('Runway v2 — Flight Plans + NOTAMs + Engine', () => {
     test('flight plans render with recommended pills', async ({ page }) => {
         await page.goto('/runway.html');
