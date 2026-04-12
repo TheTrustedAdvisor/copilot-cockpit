@@ -177,13 +177,6 @@ test.describe('Runway v2 — Model Detail Blade', () => {
         await expect(page.locator('#model-blade')).not.toHaveClass(/open/);
     });
 
-    test('flight-plan pill opens the blade for that model', async ({ page }) => {
-        await page.goto('/runway.html');
-        await expect(page.locator('#flight-plans .flight-plan-pill').first()).toBeVisible();
-        await page.locator('#flight-plans .flight-plan-pill').first().click();
-        await expect(page.locator('#model-blade')).toHaveClass(/open/);
-    });
-
     test('deep link #model-<id> opens the blade on load', async ({ page }) => {
         // Pick first model id dynamically
         await page.goto('/runway.html');
@@ -232,13 +225,7 @@ test.describe('Runway v2 — Handover Topology', () => {
     });
 });
 
-test.describe('Runway v2 — Flight Plans + NOTAMs + Engine', () => {
-    test('flight plans render with recommended pills', async ({ page }) => {
-        await page.goto('/runway.html');
-        await expect(page.locator('#flight-plans .flight-plan-card')).toHaveCount(5);
-        await expect(page.locator('#flight-plans .flight-plan-pill.recommended').first()).toBeVisible();
-    });
-
+test.describe('Runway v2 — NOTAMs + Engine', () => {
     test('NOTAMs render with severity classes', async ({ page }) => {
         await page.goto('/runway.html');
         await expect(page.locator('#notam-list .notam-card')).toHaveCount(2);

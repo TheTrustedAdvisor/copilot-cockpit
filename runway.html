@@ -47,50 +47,18 @@
     <!-- ==================== RUNWAY CONTENT ==================== -->
     <main class="runway-main" id="runway-main">
         <section class="runway-intro">
-            <h2>🛫 Flight Operations Briefing</h2>
-            <p>The Runway is where ground operations become flight. This view aggregates every AI model
-            GitHub Copilot can dispatch — cloud, hybrid and (soon) local. Pick your plan, scan the board and click any model for the full briefing.</p>
+            <h2>🛫 The Local–Cloud Boundary</h2>
+            <p>Copilot is not one thing running in one place. Every completion, chat reply, and
+            agent action crosses a boundary between <strong>your machine</strong> and <strong>GitHub's
+            cloud</strong>. The Runway maps that boundary: where context is gathered, where inference
+            happens, where results land — and the five distinct data flows that connect them.</p>
             <div id="verification-banner" class="verification-banner" hidden>
                 <strong>⚠ VERIFICATION REQUIRED</strong>
                 <span id="verification-banner-text"></span>
             </div>
         </section>
 
-        <!-- ============ FILTER BAR ============ -->
-        <section class="runway-filters" aria-label="Runway filters">
-            <div class="filter-group">
-                <label class="filter-label" for="filter-plan">Plan ticket</label>
-                <select id="filter-plan" class="filter-select">
-                    <!-- Populated by JS -->
-                </select>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label">Provider</span>
-                <div class="filter-chips" id="filter-providers">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label">Status</span>
-                <div class="filter-chips" id="filter-status">
-                    <button type="button" class="filter-chip active" data-status="ga">GA</button>
-                    <button type="button" class="filter-chip active" data-status="preview">Preview</button>
-                    <button type="button" class="filter-chip" data-status="deprecated">Grounded</button>
-                </div>
-            </div>
-            <div class="filter-summary" id="filter-summary" aria-live="polite"></div>
-        </section>
-
-        <!-- ============ DEPARTURE BOARD — HERO ============ -->
-        <section class="runway-section" aria-label="Departure Board">
-            <h3 class="runway-section-title">◉ Departure Board</h3>
-            <p class="runway-section-intro">Every model cleared for takeoff. Rows filtered out by your plan or provider selection appear dimmed. Click any row for the full briefing.</p>
-            <div class="departure-board" id="departure-board" role="list">
-                <!-- Populated by JS -->
-            </div>
-        </section>
-
-        <!-- ============ HANDOVER TOPOLOGY ============ -->
+        <!-- ============ HANDOVER TOPOLOGY — HERO ============ -->
         <section class="runway-section topology-section" aria-label="Handover Topology">
             <h3 class="runway-section-title">⬡ Handover Topology</h3>
             <p class="runway-section-intro">Where Copilot runs and how requests flow between your machine and the cloud. Every completion, chat message, and agent action crosses at least one of these boundaries.</p>
@@ -170,15 +138,6 @@
             </div>
         </section>
 
-        <!-- ============ FLIGHT PLANS ============ -->
-        <section class="runway-section" aria-label="Flight Plans">
-            <h3 class="runway-section-title">📋 Flight Plans</h3>
-            <p class="runway-section-intro">Suggested model picks per task profile. Opinionated, cross-verified against the model's tagline and capability profile.</p>
-            <div class="flight-plans" id="flight-plans">
-                <!-- Populated by JS -->
-            </div>
-        </section>
-
         <!-- ============ NOTAMs ============ -->
         <section class="runway-section" aria-label="NOTAMs">
             <h3 class="runway-section-title">⚠ NOTAMs</h3>
@@ -214,6 +173,40 @@ flowchart LR
     RES --> AUD[Audit Log]
     AUD --> U
                 </pre>
+            </div>
+        </section>
+
+        <!-- ============ MODEL REFERENCE — DEPARTURE BOARD ============ -->
+        <section class="runway-section" aria-label="Departure Board">
+            <h3 class="runway-section-title">◉ Departure Board</h3>
+            <p class="runway-section-intro">Full model reference. Filter by plan, provider, or status — click any row for the complete briefing.</p>
+
+            <div class="runway-filters" aria-label="Runway filters">
+                <div class="filter-group">
+                    <label class="filter-label" for="filter-plan">Plan ticket</label>
+                    <select id="filter-plan" class="filter-select">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Provider</span>
+                    <div class="filter-chips" id="filter-providers">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Status</span>
+                    <div class="filter-chips" id="filter-status">
+                        <button type="button" class="filter-chip active" data-status="ga">GA</button>
+                        <button type="button" class="filter-chip active" data-status="preview">Preview</button>
+                        <button type="button" class="filter-chip" data-status="deprecated">Grounded</button>
+                    </div>
+                </div>
+                <div class="filter-summary" id="filter-summary" aria-live="polite"></div>
+            </div>
+
+            <div class="departure-board" id="departure-board" role="list">
+                <!-- Populated by JS -->
             </div>
         </section>
     </main>
@@ -281,7 +274,6 @@ flowchart LR
         renderFilters();
         renderDepartureBoard();
         renderTopology();
-        renderFlightPlans();
         renderNotams();
         renderEngine();
         applyFilter();
@@ -572,46 +564,6 @@ graph LR
         });
     }
 
-    // --- Flight Plans ---
-    function renderFlightPlans() {
-        const el = document.getElementById('flight-plans');
-        const modelById = Object.fromEntries(modelsData.models.map(m => [m.id, m]));
-        el.innerHTML = modelsData.flightPlans.map(fp => `
-            <div class="flight-plan-card" id="plan-${escapeHtml(fp.id)}">
-                <div class="flight-plan-title">${escapeHtml(fp.title)}</div>
-                <div class="flight-plan-context">${escapeHtml(fp.context)}</div>
-                <div class="flight-plan-row">
-                    <span class="flight-plan-row-label">✓ Recommended</span>
-                    <div class="flight-plan-pills">
-                        ${(fp.recommendedModels || []).map(id => {
-                            const m = modelById[id];
-                            if (!m) return '';
-                            return `<button type="button" class="flight-plan-pill recommended" data-model-id="${escapeHtml(id)}">${escapeHtml(m.displayName)}</button>`;
-                        }).join('')}
-                    </div>
-                </div>
-                <div class="flight-plan-rationale">${escapeHtml(fp.rationale || '')}</div>
-                ${(fp.avoidModels && fp.avoidModels.length) ? `
-                <div class="flight-plan-row">
-                    <span class="flight-plan-row-label warn">✗ Avoid</span>
-                    <div class="flight-plan-pills">
-                        ${fp.avoidModels.map(id => {
-                            const m = modelById[id];
-                            if (!m) return '';
-                            return `<button type="button" class="flight-plan-pill avoid" data-model-id="${escapeHtml(id)}">${escapeHtml(m.displayName)}</button>`;
-                        }).join('')}
-                    </div>
-                </div>
-                <div class="flight-plan-rationale warn">${escapeHtml(fp.avoidRationale || '')}</div>
-                ` : ''}
-            </div>
-        `).join('');
-        // Flight-plan pills also open the blade
-        el.querySelectorAll('.flight-plan-pill[data-model-id]').forEach(btn => {
-            btn.addEventListener('click', () => openBlade(btn.dataset.modelId));
-        });
-    }
-
     // --- NOTAMs ---
     function renderNotams() {
         const el = document.getElementById('notam-list');
@@ -898,11 +850,11 @@ graph LR
     window.addEventListener('hashchange', handleDeepLink);
 
     // --- Mermaid ---
-    function initMermaid() {
+    async function initMermaid() {
         if (typeof mermaid === 'undefined') return;
         const isLight = document.body.classList.contains('light-theme');
         mermaid.initialize({
-            startOnLoad: true,
+            startOnLoad: false,
             theme: isLight ? 'default' : 'dark',
             themeVariables: {
                 primaryColor: '#1a2233',
@@ -912,6 +864,9 @@ graph LR
             },
             securityLevel: 'loose'
         });
+        // Render all .mermaid elements — including the topology diagram
+        // injected dynamically by renderTopology().
+        await mermaid.run({ querySelector: '.mermaid' });
     }
 
     // --- Init ---

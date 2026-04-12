@@ -99,6 +99,22 @@ test.describe('Tower — governance controls', () => {
     });
 });
 
+test.describe('Tower — flight plans', () => {
+    test('flight plans render with recommended pills', async ({ page }) => {
+        await page.goto('/tower.html');
+        await expect(page.locator('#flight-plans .flight-plan-card')).toHaveCount(5);
+        await expect(page.locator('#flight-plans .flight-plan-pill.recommended').first()).toBeVisible();
+    });
+
+    test('flight plan cards show task context and rationale', async ({ page }) => {
+        await page.goto('/tower.html');
+        const firstCard = page.locator('#flight-plans .flight-plan-card').first();
+        await expect(firstCard.locator('.flight-plan-title')).not.toBeEmpty();
+        await expect(firstCard.locator('.flight-plan-context')).not.toBeEmpty();
+        await expect(firstCard.locator('.flight-plan-rationale').first()).not.toBeEmpty();
+    });
+});
+
 test.describe('Tower — roadmap stub', () => {
     test('on-final-approach roadmap lists planned expansions', async ({ page }) => {
         await page.goto('/tower.html');

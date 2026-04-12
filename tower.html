@@ -72,6 +72,15 @@
             </div>
         </section>
 
+        <!-- ============ FLIGHT PLANS ============ -->
+        <section class="runway-section" aria-label="Flight Plans">
+            <h3 class="runway-section-title">✈ Flight Plans</h3>
+            <p class="runway-section-intro">Model routing recommendations by task type. Which model to dispatch for a given job — and which to avoid. Flight plans are governance decisions: the Tower decides routing.</p>
+            <div class="flight-plan-list" id="flight-plans">
+                <!-- Populated by JS from copilot-models.json -->
+            </div>
+        </section>
+
         <!-- ============ COMING SOON ============ -->
         <section class="runway-section" aria-label="Roadmap">
             <h3 class="runway-section-title">✈ On Final Approach</h3>
@@ -98,6 +107,7 @@
     // ============================================================
 
     let governanceData = null;
+    let modelsData = null;
 
     // --- Theme (shared pattern with cockpit) ---
     function initTheme() {
@@ -117,9 +127,14 @@
     // --- Load data ---
     async function loadAllData() {
         try {
-            const resp = await fetch('data/governance-controls.json');
-            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-            governanceData = await resp.json();
+            const [govResp, modResp] = await Promise.all([
+                fetch('data/governance-controls.json'),
+                fetch('data/copilot-models.json')
+            ]);
+            if (!govResp.ok) throw new Error(`governance HTTP ${govResp.status}`);
+            if (!modResp.ok) throw new Error(`models HTTP ${modResp.status}`);
+            governanceData = await govResp.json();
+            modelsData = await modResp.json();
             init();
         } catch (err) {
             document.getElementById('tower-main').innerHTML =
@@ -131,6 +146,7 @@
         renderVerificationBanner();
         renderFrameworks();
         renderControls();
+        renderFlightPlans();
         handleDeepLink();
         window.addEventListener('hashchange', handleDeepLink);
     }
@@ -196,6 +212,42 @@
             `;
         }).join('');
         list.innerHTML = html;
+    }
+
+    function renderFlightPlans() {
+        const el = document.getElementById('flight-plans');
+        if (!modelsData || !modelsData.flightPlans) { el.innerHTML = ''; return; }
+        const modelById = Object.fromEntries(modelsData.models.map(m => [m.id, m]));
+        el.innerHTML = modelsData.flightPlans.map(fp => `
+            <div class="flight-plan-card" id="plan-${escapeHtml(fp.id)}">
+                <div class="flight-plan-title">${escapeHtml(fp.title)}</div>
+                <div class="flight-plan-context">${escapeHtml(fp.context)}</div>
+                <div class="flight-plan-row">
+                    <span class="flight-plan-row-label">✓ Recommended</span>
+                    <div class="flight-plan-pills">
+                        ${(fp.recommendedModels || []).map(id => {
+                            const m = modelById[id];
+                            if (!m) return '';
+                            return `<span class="flight-plan-pill recommended">${escapeHtml(m.displayName)}</span>`;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="flight-plan-rationale">${escapeHtml(fp.rationale || '')}</div>
+                ${(fp.avoidModels && fp.avoidModels.length) ? `
+                <div class="flight-plan-row">
+                    <span class="flight-plan-row-label warn">✗ Avoid</span>
+                    <div class="flight-plan-pills">
+                        ${fp.avoidModels.map(id => {
+                            const m = modelById[id];
+                            if (!m) return '';
+                            return `<span class="flight-plan-pill avoid">${escapeHtml(m.displayName)}</span>`;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="flight-plan-rationale warn">${escapeHtml(fp.avoidRationale || '')}</div>
+                ` : ''}
+            </div>
+        `).join('');
     }
 
     function handleDeepLink() {
