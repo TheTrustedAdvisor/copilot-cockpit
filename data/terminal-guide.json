@@ -1,0 +1,161 @@
+{
+    "version": "1.0.0",
+    "lastUpdated": "2026-04-13",
+    "description": "Terminal perspective — Getting Started guide for GitHub Copilot. Plan selection, IDE setup, first flight.",
+
+    "checkIn": {
+        "title": "Check-In — Choose Your Plan",
+        "intro": "Every journey starts at the check-in desk. GitHub Copilot offers five plan tiers — from a free starter to enterprise-grade with governance controls. Your plan determines which models you can access, how many premium requests you get, and what admin controls are available.",
+        "plans": [
+            {
+                "id": "free",
+                "name": "Free",
+                "price": "$0/month",
+                "audience": "Students, open-source contributors, individual exploration",
+                "highlights": ["2,000 code completions/month", "50 chat messages/month", "GPT-4.1 + Claude Haiku", "VS Code + JetBrains + CLI"],
+                "limitations": ["No Agent Mode", "No premium models", "No org-level controls"],
+                "cta": "Good for trying Copilot before committing"
+            },
+            {
+                "id": "pro",
+                "name": "Pro",
+                "price": "$10/month",
+                "audience": "Individual developers who use Copilot daily",
+                "highlights": ["Unlimited code completions", "Unlimited chat", "All GA models (GPT-5.x, Claude, Gemini, Grok)", "Agent Mode", "1,000 premium requests/month"],
+                "limitations": ["No org-level governance", "No BYOK at org level", "No seat management"],
+                "cta": "The sweet spot for individual productivity"
+            },
+            {
+                "id": "pro-plus",
+                "name": "Pro+",
+                "price": "$39/month",
+                "audience": "Power users who need frontier reasoning models constantly",
+                "highlights": ["Everything in Pro", "3,000 premium requests/month", "Priority access to preview models", "Claude Opus 4.6 fast mode"],
+                "limitations": ["Still no org-level governance", "No seat management"],
+                "cta": "For developers who hit Pro's premium request cap regularly"
+            },
+            {
+                "id": "business",
+                "name": "Business",
+                "price": "$19/seat/month",
+                "audience": "Teams and organizations that need admin controls",
+                "highlights": ["Everything in Pro per seat", "Org-level policy controls", "Content exclusion", "IP indemnity", "BYOK at org level (preview)", "Seat management + audit logs"],
+                "limitations": ["No enterprise-level governance", "No GHE.com data residency"],
+                "cta": "The standard choice for engineering teams"
+            },
+            {
+                "id": "enterprise",
+                "name": "Enterprise",
+                "price": "$39/seat/month",
+                "audience": "Large organizations with compliance and governance requirements",
+                "highlights": ["Everything in Business", "Enterprise-level policies", "BYOK at enterprise level", "GHE.com data residency option", "SAML/SCIM integration", "Audit log streaming"],
+                "limitations": ["Requires GitHub Enterprise Cloud"],
+                "cta": "For regulated industries and large-scale deployments"
+            }
+        ]
+    },
+
+    "boardingPass": {
+        "title": "Boarding Pass — IDE Setup",
+        "intro": "Copilot runs inside your editor — it's an extension, not a separate tool. Pick your IDE, install the extension, sign in with your GitHub account, and you're ready for departure.",
+        "ides": [
+            {
+                "id": "vscode",
+                "name": "VS Code",
+                "icon": "vscode",
+                "status": "Full support",
+                "surfaces": ["Inline completions", "Chat", "Edits", "Agent Mode"],
+                "setupSteps": ["Open VS Code → Extensions (Ctrl+Shift+X)", "Search 'GitHub Copilot'", "Install the GitHub Copilot extension", "Sign in with your GitHub account"],
+                "note": "Primary IDE. All Copilot features land here first."
+            },
+            {
+                "id": "jetbrains",
+                "name": "JetBrains IDEs",
+                "icon": "jetbrains",
+                "status": "Full support",
+                "surfaces": ["Inline completions", "Chat", "Agent Mode"],
+                "setupSteps": ["Open Settings → Plugins → Marketplace", "Search 'GitHub Copilot'", "Install and restart the IDE", "Sign in with your GitHub account"],
+                "note": "IntelliJ, PyCharm, WebStorm, Rider, GoLand, etc. All supported."
+            },
+            {
+                "id": "neovim",
+                "name": "Neovim",
+                "icon": "neovim",
+                "status": "Completions + Chat",
+                "surfaces": ["Inline completions", "Chat (via copilot.lua)"],
+                "setupSteps": ["Install github/copilot.vim or copilot.lua", "Run :Copilot setup in Neovim", "Authenticate with GitHub"],
+                "note": "Terminal-native experience. Agent Mode not yet supported."
+            },
+            {
+                "id": "cli",
+                "name": "GitHub CLI",
+                "icon": "cli",
+                "status": "Chat in terminal",
+                "surfaces": ["Chat", "Explain", "Suggest"],
+                "setupSteps": ["Install GitHub CLI: brew install gh", "Install extension: gh extension install github/gh-copilot", "Authenticate: gh auth login"],
+                "note": "Ask Copilot questions from any terminal. Great for shell workflows."
+            },
+            {
+                "id": "xcode",
+                "name": "Xcode",
+                "icon": "xcode",
+                "status": "Completions",
+                "surfaces": ["Inline completions"],
+                "setupSteps": ["Download 'GitHub Copilot for Xcode' from the Mac App Store", "Enable in System Settings → Extensions → Xcode Source Editor", "Sign in with your GitHub account"],
+                "note": "Completions only. Chat and Agent Mode not supported in Xcode."
+            },
+            {
+                "id": "visual-studio",
+                "name": "Visual Studio",
+                "icon": "vs",
+                "status": "Full support",
+                "surfaces": ["Inline completions", "Chat"],
+                "setupSteps": ["Open Extensions → Manage Extensions", "Search 'GitHub Copilot'", "Install and restart Visual Studio", "Sign in with your GitHub account"],
+                "note": "Visual Studio 2022 17.8+. Chat available in latest versions."
+            }
+        ]
+    },
+
+    "firstFlight": {
+        "title": "First Flight — Your First Copilot Interaction",
+        "intro": "Extension installed? Signed in? Time for your first flight. Try these three interactions — they take 60 seconds total and demonstrate the core Copilot surfaces.",
+        "exercises": [
+            {
+                "id": "inline",
+                "title": "1. Inline Completion",
+                "surface": "Completions",
+                "instruction": "Open any code file and start typing a function. Copilot suggests the rest in ghost text. Press Tab to accept.",
+                "example": "// Calculate the factorial of n\nfunction factorial(n) {",
+                "exampleNote": "After typing the function signature, pause. Copilot will suggest the body."
+            },
+            {
+                "id": "chat",
+                "title": "2. Chat",
+                "surface": "Chat",
+                "instruction": "Open Copilot Chat (Ctrl+Shift+I in VS Code) and ask a question about your codebase.",
+                "example": "@workspace What are the main entry points in this project?",
+                "exampleNote": "The @workspace participant gives Copilot context about your entire project."
+            },
+            {
+                "id": "agent",
+                "title": "3. Agent Mode",
+                "surface": "Agent Mode",
+                "instruction": "In Chat, switch to Agent mode and ask Copilot to make a change. It will plan, edit files, and run terminal commands.",
+                "example": "Add input validation to the login form — check email format and password length",
+                "exampleNote": "Agent mode can edit multiple files and run tests. Review its plan before approving."
+            }
+        ]
+    },
+
+    "departures": {
+        "title": "Departure Board — Where to Go Next",
+        "intro": "You're through the terminal. Pick your next destination based on what you need:",
+        "destinations": [
+            { "perspective": "Cockpit", "page": "index.html", "reason": "See all 48 Copilot instruments at a glance — the daily operations dashboard" },
+            { "perspective": "Security", "page": "security.html", "reason": "X-Ray scanner for threat models, hardening steps, and compliance mapping" },
+            { "perspective": "Ramp", "page": "ramp.html", "reason": "Deep dive into Agent Mode, Coding Agent, MCP, and autonomous workflows" },
+            { "perspective": "Runway", "page": "runway.html", "reason": "Which AI models power Copilot and how local↔cloud routing works" },
+            { "perspective": "Tower", "page": "tower.html", "reason": "Admin controls, governance, sovereign cloud, and compliance frameworks" }
+        ]
+    }
+}

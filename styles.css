@@ -954,6 +954,307 @@ body.light-theme .nav-link.active { color: var(--color-pfd); border-color: var(-
 body.light-theme .nav-link.disabled { color: rgba(0, 0, 0, 0.18); border-color: rgba(0, 0, 0, 0.06); }
 body.light-theme .nav-separator { color: rgba(0, 0, 0, 0.15); }
 
+/* ============================================================
+   TERMINAL PERSPECTIVE — Getting Started
+   ============================================================ */
+
+.terminal-plans {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+}
+
+.terminal-plan-card {
+    padding: 18px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid rgba(0, 255, 136, 0.4);
+    border-radius: 3px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.terminal-plan-card:hover {
+    background: rgba(0, 255, 136, 0.04);
+    border-color: rgba(0, 255, 136, 0.25);
+}
+
+.terminal-plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+.terminal-plan-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #00ff88;
+    letter-spacing: 0.04em;
+}
+.terminal-plan-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+.terminal-plan-audience {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0 12px;
+    line-height: 1.45;
+}
+
+.terminal-plan-highlights {
+    margin-bottom: 8px;
+}
+.terminal-highlight {
+    font-size: 0.68rem;
+    color: rgba(0, 255, 136, 0.8);
+    padding: 2px 0;
+    line-height: 1.5;
+}
+
+.terminal-plan-limitations {
+    margin-bottom: 8px;
+}
+.terminal-limitation {
+    font-size: 0.68rem;
+    color: rgba(255, 102, 102, 0.65);
+    padding: 2px 0;
+    line-height: 1.5;
+}
+
+.terminal-plan-cta {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+    margin: 10px 0 0;
+    line-height: 1.45;
+}
+
+/* --- Boarding Pass (IDE Setup) --- */
+.terminal-ides {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.terminal-ide-card {
+    padding: 18px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid rgba(66, 133, 244, 0.5);
+    border-radius: 3px;
+    transition: background 0.15s ease;
+}
+.terminal-ide-card:hover {
+    background: rgba(66, 133, 244, 0.04);
+}
+
+.terminal-ide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+.terminal-ide-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #4285f4;
+    letter-spacing: 0.04em;
+}
+.terminal-ide-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.terminal-ide-surfaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.terminal-surface-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    padding: 3px 8px;
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.25);
+    border-radius: 2px;
+    color: rgba(66, 133, 244, 0.85);
+    letter-spacing: 0.03em;
+}
+
+.terminal-ide-steps {
+    margin: 0 0 10px;
+    padding-left: 18px;
+    list-style: decimal;
+}
+.terminal-ide-steps li {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.65;
+    padding: 1px 0;
+}
+
+.terminal-ide-note {
+    font-size: 0.66rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* --- First Flight (Exercises) --- */
+.terminal-exercises {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.terminal-exercise {
+    padding: 18px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid rgba(255, 170, 0, 0.4);
+    border-radius: 3px;
+}
+
+.terminal-exercise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+.terminal-exercise-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-glareshield, #ffaa00);
+    letter-spacing: 0.04em;
+}
+.terminal-exercise-surface {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(255, 170, 0, 0.6);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.terminal-exercise-instruction {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.55;
+    margin: 0 0 12px;
+}
+
+.terminal-exercise-code {
+    margin: 0 0 8px;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow-x: auto;
+}
+.terminal-exercise-code pre {
+    margin: 0;
+}
+.terminal-exercise-code code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(0, 255, 136, 0.85);
+    line-height: 1.55;
+}
+.terminal-exercise-note {
+    font-size: 0.66rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* --- Departures --- */
+.terminal-departures {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+}
+.terminal-departure-card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 3px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.terminal-departure-card:hover {
+    background: rgba(255, 170, 0, 0.05);
+    border-color: rgba(255, 170, 0, 0.3);
+}
+.terminal-departure-perspective {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-glareshield, #ffaa00);
+    letter-spacing: 0.04em;
+}
+.terminal-departure-reason {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.45;
+}
+
+/* --- Terminal light theme --- */
+body.light-theme .terminal-plan-card,
+body.light-theme .terminal-ide-card,
+body.light-theme .terminal-exercise,
+body.light-theme .terminal-departure-card {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .terminal-plan-name { color: #009944; }
+body.light-theme .terminal-plan-card { border-left-color: rgba(0, 153, 68, 0.5); }
+body.light-theme .terminal-plan-price { color: rgba(0, 0, 0, 0.65); }
+body.light-theme .terminal-plan-audience { color: rgba(0, 0, 0, 0.55); }
+body.light-theme .terminal-highlight { color: rgba(0, 130, 60, 0.85); }
+body.light-theme .terminal-limitation { color: rgba(200, 50, 50, 0.7); }
+body.light-theme .terminal-plan-cta { color: rgba(0, 0, 0, 0.4); }
+
+body.light-theme .terminal-ide-name { color: #2a6bc8; }
+body.light-theme .terminal-ide-card { border-left-color: rgba(42, 107, 200, 0.5); }
+body.light-theme .terminal-ide-status { color: rgba(0, 0, 0, 0.45); }
+body.light-theme .terminal-surface-pill {
+    background: rgba(42, 107, 200, 0.08);
+    border-color: rgba(42, 107, 200, 0.2);
+    color: rgba(42, 107, 200, 0.85);
+}
+body.light-theme .terminal-ide-steps li { color: rgba(0, 0, 0, 0.65); }
+body.light-theme .terminal-ide-note { color: rgba(0, 0, 0, 0.4); }
+
+body.light-theme .terminal-exercise-title { color: #b36b00; }
+body.light-theme .terminal-exercise { border-left-color: rgba(179, 107, 0, 0.4); }
+body.light-theme .terminal-exercise-surface { color: rgba(179, 107, 0, 0.55); }
+body.light-theme .terminal-exercise-instruction { color: rgba(0, 0, 0, 0.65); }
+body.light-theme .terminal-exercise-code {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .terminal-exercise-code code { color: #009944; }
+body.light-theme .terminal-exercise-note { color: rgba(0, 0, 0, 0.4); }
+
+body.light-theme .terminal-departure-perspective { color: #b36b00; }
+body.light-theme .terminal-departure-reason { color: rgba(0, 0, 0, 0.55); }
+body.light-theme .terminal-departure-card:hover {
+    background: rgba(179, 107, 0, 0.06);
+    border-color: rgba(179, 107, 0, 0.25);
+}
+
 /* --- Security Perspective --- */
 .security-main {
     max-width: 1200px;

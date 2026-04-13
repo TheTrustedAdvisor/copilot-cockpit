@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal — Copilot Cockpit</title>
+    <meta name="description" content="Terminal perspective for GitHub Copilot: getting started — plan selection, IDE setup, and your first Copilot interaction. The airport entry point.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="cockpit-header">
+        <div class="cockpit-title">
+            <span class="icon">🛬</span>
+            <div>
+                <h1>Terminal Perspective</h1>
+                <div class="subtitle">Arrivals &amp; Check-In — getting started with Copilot</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <nav class="header-nav" aria-label="Perspectives">
+                <a href="terminal.html" class="nav-link active">Terminal</a>
+                <a href="security.html" class="nav-link">Security</a>
+                <a href="#" class="nav-link disabled" aria-disabled="true" title="Coming soon">Jet Bridge<span class="nav-soon">SOON</span></a>
+                <a href="ramp.html" class="nav-link">Ramp</a>
+                <a href="index.html" class="nav-link">Cockpit</a>
+                <a href="runway.html" class="nav-link">Runway</a>
+                <a href="tower.html" class="nav-link">Tower</a>
+                <span class="nav-separator">·</span>
+                <a href="flight-log.html" class="nav-link">Flight Log</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">DAY</button>
+        </div>
+    </header>
+
+    <!-- ==================== TERMINAL CONTENT ==================== -->
+    <main class="runway-main" id="terminal-main">
+        <section class="runway-intro">
+            <h2>🛬 Welcome to the Terminal</h2>
+            <p>Every Copilot journey starts here. Choose your plan at the check-in desk,
+            pick up your boarding pass (IDE extension), and take your first flight — a
+            60-second hands-on exercise that demonstrates inline completions, chat, and
+            agent mode.</p>
+        </section>
+
+        <!-- ============ CHECK-IN — PLAN SELECTION ============ -->
+        <section class="runway-section" aria-label="Plan selection" id="checkin-section">
+            <h3 class="runway-section-title">◉ Check-In Desk</h3>
+            <p class="runway-section-intro" id="checkin-intro"></p>
+            <div class="terminal-plans" id="terminal-plans">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ BOARDING PASS — IDE SETUP ============ -->
+        <section class="runway-section" aria-label="IDE setup" id="boarding-section">
+            <h3 class="runway-section-title">🎫 Boarding Pass — IDE Setup</h3>
+            <p class="runway-section-intro" id="boarding-intro"></p>
+            <div class="terminal-ides" id="terminal-ides">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ FIRST FLIGHT ============ -->
+        <section class="runway-section" aria-label="First flight" id="first-flight-section">
+            <h3 class="runway-section-title">✈ First Flight</h3>
+            <p class="runway-section-intro" id="first-flight-intro"></p>
+            <div class="terminal-exercises" id="terminal-exercises">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ DEPARTURE BOARD ============ -->
+        <section class="runway-section" aria-label="Where to go next" id="departures-section">
+            <h3 class="runway-section-title">🛫 Departure Board — Where to Go Next</h3>
+            <p class="runway-section-intro" id="departures-intro"></p>
+            <div class="terminal-departures" id="terminal-departures">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+    // ============================================================
+    // TERMINAL PERSPECTIVE — Getting Started
+    // ============================================================
+
+    let guideData = null;
+
+    // --- Theme ---
+    function initTheme() {
+        const saved = localStorage.getItem('cockpit-theme');
+        if (saved === 'light') {
+            document.body.classList.add('light-theme');
+            document.getElementById('theme-toggle').textContent = 'NIGHT';
+        }
+    }
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('cockpit-theme', isLight ? 'light' : 'dark');
+        document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
+    });
+
+    // --- Load data ---
+    async function loadAllData() {
+        try {
+            const resp = await fetch('data/terminal-guide.json');
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            guideData = await resp.json();
+            init();
+        } catch (err) {
+            document.getElementById('terminal-main').innerHTML =
+                `<p style="color:#ff4444;padding:40px;">DATA LINK LOST — ${escapeHtml(err.message)}</p>`;
+        }
+    }
+
+    function init() {
+        renderCheckIn();
+        renderBoardingPass();
+        renderFirstFlight();
+        renderDepartures();
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[c]);
+    }
+
+    // --- Check-In (Plan Selection) ---
+    function renderCheckIn() {
+        const ci = guideData.checkIn;
+        document.getElementById('checkin-intro').textContent = ci.intro;
+        const el = document.getElementById('terminal-plans');
+        el.innerHTML = ci.plans.map(p => `
+            <article class="terminal-plan-card" data-plan-id="${escapeHtml(p.id)}">
+                <div class="terminal-plan-header">
+                    <span class="terminal-plan-name">${escapeHtml(p.name)}</span>
+                    <span class="terminal-plan-price">${escapeHtml(p.price)}</span>
+                </div>
+                <p class="terminal-plan-audience">${escapeHtml(p.audience)}</p>
+                <div class="terminal-plan-highlights">
+                    ${p.highlights.map(h => `<div class="terminal-highlight">✓ ${escapeHtml(h)}</div>`).join('')}
+                </div>
+                ${p.limitations.length ? `
+                <div class="terminal-plan-limitations">
+                    ${p.limitations.map(l => `<div class="terminal-limitation">✗ ${escapeHtml(l)}</div>`).join('')}
+                </div>` : ''}
+                <p class="terminal-plan-cta">${escapeHtml(p.cta)}</p>
+            </article>
+        `).join('');
+    }
+
+    // --- Boarding Pass (IDE Setup) ---
+    function renderBoardingPass() {
+        const bp = guideData.boardingPass;
+        document.getElementById('boarding-intro').textContent = bp.intro;
+        const el = document.getElementById('terminal-ides');
+        el.innerHTML = bp.ides.map(ide => `
+            <article class="terminal-ide-card" data-ide-id="${escapeHtml(ide.id)}">
+                <div class="terminal-ide-header">
+                    <span class="terminal-ide-name">${escapeHtml(ide.name)}</span>
+                    <span class="terminal-ide-status">${escapeHtml(ide.status)}</span>
+                </div>
+                <div class="terminal-ide-surfaces">
+                    ${ide.surfaces.map(s => `<span class="terminal-surface-pill">${escapeHtml(s)}</span>`).join('')}
+                </div>
+                <ol class="terminal-ide-steps">
+                    ${ide.setupSteps.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
+                </ol>
+                <p class="terminal-ide-note">${escapeHtml(ide.note)}</p>
+            </article>
+        `).join('');
+    }
+
+    // --- First Flight ---
+    function renderFirstFlight() {
+        const ff = guideData.firstFlight;
+        document.getElementById('first-flight-intro').textContent = ff.intro;
+        const el = document.getElementById('terminal-exercises');
+        el.innerHTML = ff.exercises.map(ex => `
+            <article class="terminal-exercise" data-exercise-id="${escapeHtml(ex.id)}">
+                <div class="terminal-exercise-header">
+                    <span class="terminal-exercise-title">${escapeHtml(ex.title)}</span>
+                    <span class="terminal-exercise-surface">${escapeHtml(ex.surface)}</span>
+                </div>
+                <p class="terminal-exercise-instruction">${escapeHtml(ex.instruction)}</p>
+                <div class="terminal-exercise-code">
+                    <pre><code>${escapeHtml(ex.example)}</code></pre>
+                </div>
+                <p class="terminal-exercise-note">${escapeHtml(ex.exampleNote)}</p>
+            </article>
+        `).join('');
+    }
+
+    // --- Departures ---
+    function renderDepartures() {
+        const dep = guideData.departures;
+        document.getElementById('departures-intro').textContent = dep.intro;
+        const el = document.getElementById('terminal-departures');
+        el.innerHTML = dep.destinations.map(d => `
+            <a href="${escapeHtml(d.page)}" class="terminal-departure-card">
+                <span class="terminal-departure-perspective">${escapeHtml(d.perspective)}</span>
+                <span class="terminal-departure-reason">${escapeHtml(d.reason)}</span>
+            </a>
+        `).join('');
+    }
+
+    // --- Init ---
+    initTheme();
+    loadAllData();
+    </script>
+</body>
+</html>
