@@ -134,7 +134,7 @@
       "scope": "enterprise",
       "defaultState": "off",
       "rolloutEffort": "high",
-      "governanceNote": "Data residency requires adopting GitHub Enterprise Cloud with data residency (GHE.com) \u2014 a separate product SKU, not a settings toggle. Pins prompt/completion traffic to an EU (or other regional) data plane. Required for Schrems II compliance in many EU orgs.",
+      "governanceNote": "Data residency requires adopting GitHub Enterprise Cloud with data residency (GHE.com) \u2014 a separate product SKU, not a settings toggle. Pins repo data to an EU data plane but does NOT cover Copilot prompt/completion traffic. Required for Schrems II compliance in many EU orgs. See tower.html#sovereign=ghe-data-residency for the full deployment options matrix.",
       "complianceRelevance": [
         "GDPR-Art44",
         "GDPR-Art45",
@@ -197,7 +197,7 @@
       "scope": "enterprise/org",
       "defaultState": "off",
       "rolloutEffort": "high",
-      "governanceNote": "Route Copilot traffic through your own Azure OpenAI, Anthropic, or Google Cloud tenant. Enterprise admins add keys at enterprise level; org admins at org level. Public preview since Nov 2025. Gives control over retention, billing and regional pinning \u2014 at the cost of complexity.",
+      "governanceNote": "Route Copilot traffic through your own Azure OpenAI, Anthropic, or Google Cloud tenant. Enterprise admins add keys at enterprise level; org admins at org level. Public preview since Nov 2025. Gives control over retention, billing and regional pinning \u2014 at the cost of complexity. See tower.html#sovereign=byok-enterprise for EU deployment strategies per provider.",
       "complianceRelevance": [
         "SOC2-CC6.7",
         "SOC2-C1.1",
