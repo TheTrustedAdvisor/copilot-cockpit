@@ -13,6 +13,9 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Mermaid (sovereign cloud data flow diagram) -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 </head>
 <body>
 
@@ -72,6 +75,33 @@
             </div>
         </section>
 
+        <!-- ============ SOVEREIGN CLOUD & DATA RESIDENCY ============ -->
+        <section class="runway-section" aria-label="Sovereign Cloud and Data Residency" id="sovereign-cloud-section">
+            <h3 class="runway-section-title">🛡 Sovereign Cloud & Data Residency</h3>
+            <p class="runway-section-intro">Where Copilot data lives, how it's encrypted, and what you actually control. Enterprise evaluators: the gap between what you expect and what GitHub delivers is larger than most assume.</p>
+
+            <h4 class="sovereign-subsection-title">Sovereignty Pillars</h4>
+            <div class="sovereign-pillars" id="sovereign-pillars"></div>
+
+            <h4 class="sovereign-subsection-title">Data Flow Architecture</h4>
+            <div class="sovereign-diagram-wrapper" id="sovereign-diagram-wrapper">
+                <p class="sovereign-narrative">Every Copilot request — completions, chat, agent actions — passes through <strong>GitHub's API proxy</strong> for intent detection and telemetry collection. This hop occurs on GitHub infrastructure regardless of your data residency or BYOK configuration. The proxy then forwards to either GitHub-managed model providers (standard path) or your own endpoint (BYOK path). Only VS Code user-level BYOK bypasses the proxy entirely.</p>
+                <div class="sovereign-diagram" id="sovereign-diagram"></div>
+            </div>
+
+            <h4 class="sovereign-subsection-title">Deployment Options</h4>
+            <div class="sovereign-options" id="sovereign-options"></div>
+
+            <h4 class="sovereign-subsection-title">Data Flow Matrix</h4>
+            <div class="sovereign-matrix-wrapper" id="sovereign-matrix-wrapper"></div>
+
+            <h4 class="sovereign-subsection-title">Provider EU Strategies</h4>
+            <div class="sovereign-providers" id="sovereign-providers"></div>
+
+            <h4 class="sovereign-subsection-title">Residual Risks</h4>
+            <div class="sovereign-risks" id="sovereign-risks"></div>
+        </section>
+
         <!-- ============ FLIGHT PLANS ============ -->
         <section class="runway-section" aria-label="Flight Plans">
             <h3 class="runway-section-title">✈ Flight Plans</h3>
@@ -108,6 +138,7 @@
 
     let governanceData = null;
     let modelsData = null;
+    let sovereignData = null;
 
     // --- Theme (shared pattern with cockpit) ---
     function initTheme() {
@@ -127,14 +158,17 @@
     // --- Load data ---
     async function loadAllData() {
         try {
-            const [govResp, modResp] = await Promise.all([
+            const [govResp, modResp, sovResp] = await Promise.all([
                 fetch('data/governance-controls.json'),
-                fetch('data/copilot-models.json')
+                fetch('data/copilot-models.json'),
+                fetch('data/sovereign-cloud.json')
             ]);
             if (!govResp.ok) throw new Error(`governance HTTP ${govResp.status}`);
             if (!modResp.ok) throw new Error(`models HTTP ${modResp.status}`);
+            if (!sovResp.ok) throw new Error(`sovereign HTTP ${sovResp.status}`);
             governanceData = await govResp.json();
             modelsData = await modResp.json();
+            sovereignData = await sovResp.json();
             init();
         } catch (err) {
             document.getElementById('tower-main').innerHTML =
@@ -146,9 +180,16 @@
         renderVerificationBanner();
         renderFrameworks();
         renderControls();
+        renderSovereignPillars();
+        renderSovereignDiagram();
+        renderSovereignOptions();
+        renderSovereignMatrix();
+        renderSovereignProviders();
+        renderSovereignRisks();
         renderFlightPlans();
         handleDeepLink();
         window.addEventListener('hashchange', handleDeepLink);
+        initMermaid();
     }
 
     function escapeHtml(str) {
@@ -214,6 +255,193 @@
         list.innerHTML = html;
     }
 
+    // --- Sovereign Cloud ---
+    const PILLAR_ICONS = { location: '📍', lock: '🔐', shield: '🛡️' };
+
+    function renderSovereignPillars() {
+        const el = document.getElementById('sovereign-pillars');
+        if (!sovereignData || !sovereignData.sovereignPillars) return;
+        el.innerHTML = sovereignData.sovereignPillars.map(p => `
+            <div class="sovereign-pillar">
+                <div class="sovereign-pillar-header">
+                    <span class="sovereign-pillar-icon">${PILLAR_ICONS[p.icon] || '◆'}</span>
+                    <span class="sovereign-pillar-title">${escapeHtml(p.title)}</span>
+                </div>
+                <p class="sovereign-pillar-desc">${escapeHtml(p.description)}</p>
+                <p class="sovereign-pillar-relevance">${escapeHtml(p.copilotRelevance)}</p>
+            </div>
+        `).join('');
+    }
+
+    function renderSovereignDiagram() {
+        const el = document.getElementById('sovereign-diagram');
+        if (!sovereignData || !sovereignData.dataFlowDiagram) return;
+        el.innerHTML = `<pre class="mermaid">${escapeHtml(sovereignData.dataFlowDiagram)}</pre>`;
+    }
+
+    function flowDotClass(eu) {
+        if (eu === true) return 'sovereign-flow-eu';
+        if (eu === false) return 'sovereign-flow-non-eu';
+        return 'sovereign-flow-partial';
+    }
+    function flowLabel(eu) {
+        if (eu === true) return 'EU';
+        if (eu === false) return 'Non-EU';
+        return 'Partial';
+    }
+    function euBadgeClass(val) {
+        if (val === true) return 'sovereign-badge-eu-true';
+        if (val === false) return 'sovereign-badge-eu-false';
+        return 'sovereign-badge-eu-conditional';
+    }
+    function euBadgeLabel(val) {
+        if (val === true) return 'EU compliant';
+        if (val === false) return 'Not EU';
+        return 'Conditional';
+    }
+
+    function renderSovereignOptions() {
+        const el = document.getElementById('sovereign-options');
+        if (!sovereignData || !sovereignData.deploymentOptions) return;
+        el.innerHTML = sovereignData.deploymentOptions.map(opt => {
+            const df = opt.dataFlows || {};
+            const flows = ['inMotion', 'inUse', 'atRest'];
+            const flowLabelsMap = { inMotion: 'In Motion', inUse: 'In Use', atRest: 'At Rest' };
+
+            const flowIndicators = flows.map(f => {
+                const d = df[f] || {};
+                return `
+                    <div class="sovereign-flow-indicator">
+                        <span class="sovereign-flow-dot ${flowDotClass(d.eu)}"></span>
+                        <span class="sovereign-flow-label">${flowLabelsMap[f]}: ${flowLabel(d.eu)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            const flowNotes = flows.map(f => {
+                const d = df[f] || {};
+                return d.note ? `<div class="sovereign-flow-note">${flowLabelsMap[f]}: ${escapeHtml(d.note)}</div>` : '';
+            }).join('');
+
+            const insight = opt.criticalInsight
+                ? `<div class="sovereign-insight">⚠ ${escapeHtml(opt.criticalInsight)}</div>`
+                : '';
+
+            const pros = (opt.pros || []).map(p => `<div class="sovereign-pro-item">${escapeHtml(p)}</div>`).join('');
+            const cons = (opt.cons || []).map(c => `<div class="sovereign-con-item">${escapeHtml(c)}</div>`).join('');
+
+            return `
+                <article class="sovereign-option" id="sovereign-${escapeHtml(opt.id)}" data-sovereign-id="${escapeHtml(opt.id)}">
+                    <div class="sovereign-option-header">
+                        <span class="sovereign-option-title">${escapeHtml(opt.title)}</span>
+                        <span class="sovereign-badge sovereign-badge-scope">${escapeHtml(opt.scope)}</span>
+                        <span class="sovereign-badge sovereign-badge-effort sovereign-badge-effort-${escapeHtml(opt.effort)}">${escapeHtml(opt.effort)} effort</span>
+                        <span class="sovereign-badge sovereign-badge-eu ${euBadgeClass(opt.euCompliant)}">${euBadgeLabel(opt.euCompliant)}</span>
+                    </div>
+                    <p class="sovereign-option-desc">${escapeHtml(opt.description)}</p>
+                    ${insight}
+                    <div class="sovereign-flow-status">${flowIndicators}</div>
+                    ${flowNotes}
+                    <div class="sovereign-pros-cons">
+                        ${pros ? `<div class="sovereign-pro-list">${pros}</div>` : ''}
+                        ${cons ? `<div class="sovereign-con-list">${cons}</div>` : ''}
+                    </div>
+                </article>
+            `;
+        }).join('');
+    }
+
+    function renderSovereignMatrix() {
+        const el = document.getElementById('sovereign-matrix-wrapper');
+        if (!sovereignData || !sovereignData.deploymentOptions) return;
+        const flows = ['inMotion', 'inUse', 'atRest'];
+        const colLabels = { inMotion: 'Data in Motion', inUse: 'Data in Use', atRest: 'Data at Rest' };
+
+        const rows = sovereignData.deploymentOptions.map(opt => {
+            const df = opt.dataFlows || {};
+            const cells = flows.map(f => {
+                const d = df[f] || {};
+                const cls = d.eu === true ? 'sovereign-matrix-eu' : d.eu === false ? 'sovereign-matrix-non-eu' : 'sovereign-matrix-partial';
+                const mark = d.eu === true ? '●' : d.eu === false ? '○' : '◐';
+                return `<td class="${cls}">${mark} ${escapeHtml(d.note || '')}</td>`;
+            }).join('');
+            return `<tr><td class="sovereign-matrix-option">${escapeHtml(opt.shortTitle)}</td>${cells}</tr>`;
+        }).join('');
+
+        el.innerHTML = `
+            <table class="sovereign-matrix">
+                <thead><tr>
+                    <th>Option</th>
+                    ${flows.map(f => `<th>${colLabels[f]}</th>`).join('')}
+                </tr></thead>
+                <tbody>${rows}</tbody>
+            </table>
+        `;
+    }
+
+    function renderSovereignProviders() {
+        const el = document.getElementById('sovereign-providers');
+        if (!sovereignData || !sovereignData.providerStrategies) return;
+        el.innerHTML = sovereignData.providerStrategies.map(ps => {
+            const provClass = 'sovereign-provider-' + ps.id;
+            const regionPills = (ps.regions || []).map(r =>
+                `<span class="sovereign-provider-pill available">${escapeHtml(r)}</span>`
+            ).join('');
+            const noPills = !ps.regions || ps.regions.length === 0
+                ? '<span class="sovereign-provider-pill unavailable">No EU regions</span>' : '';
+            const retentionPill = ps.zeroRetention
+                ? '<span class="sovereign-provider-pill available">Zero retention</span>'
+                : '<span class="sovereign-provider-pill unavailable">Retention possible</span>';
+            const ccPill = ps.confidentialComputing
+                ? '<span class="sovereign-provider-pill available">Confidential Computing</span>'
+                : '';
+
+            return `
+                <div class="sovereign-provider ${provClass}">
+                    <div class="sovereign-provider-title">${escapeHtml(ps.provider)}</div>
+                    <p class="sovereign-provider-strategy">${escapeHtml(ps.euStrategy)}</p>
+                    <div class="sovereign-provider-meta">
+                        ${regionPills}${noPills}${retentionPill}${ccPill}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderSovereignRisks() {
+        const el = document.getElementById('sovereign-risks');
+        if (!sovereignData || !sovereignData.residualRisks) return;
+        el.innerHTML = sovereignData.residualRisks.map(r => `
+            <article class="sovereign-risk severity-${escapeHtml(r.severity)}">
+                <div class="sovereign-risk-header">
+                    <span class="sovereign-risk-severity severity-${escapeHtml(r.severity)}">${escapeHtml(r.severity)}</span>
+                    <span class="sovereign-risk-title">${escapeHtml(r.title)}</span>
+                </div>
+                <p class="sovereign-risk-desc">${escapeHtml(r.description)}</p>
+                <p class="sovereign-risk-mitigation">${escapeHtml(r.mitigation)}</p>
+            </article>
+        `).join('');
+    }
+
+    // --- Mermaid ---
+    async function initMermaid() {
+        if (typeof mermaid === 'undefined') return;
+        const isLight = document.body.classList.contains('light-theme');
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: isLight ? 'default' : 'dark',
+            themeVariables: {
+                primaryColor: '#1a2233',
+                primaryTextColor: '#c0c8d8',
+                lineColor: '#5a6a7a',
+                background: '#07080c'
+            },
+            securityLevel: 'loose'
+        });
+        await mermaid.run({ querySelector: '.mermaid' });
+    }
+
+    // --- Flight Plans ---
     function renderFlightPlans() {
         const el = document.getElementById('flight-plans');
         if (!modelsData || !modelsData.flightPlans) { el.innerHTML = ''; return; }
@@ -252,14 +480,25 @@
 
     function handleDeepLink() {
         const hash = window.location.hash;
-        if (!hash || !hash.startsWith('#control=')) return;
-        const id = hash.slice('#control='.length);
-        // Clear any previous highlight
+        if (!hash) return;
+        // Clear previous highlights
         document.querySelectorAll('.control-row.highlight').forEach((el) => el.classList.remove('highlight'));
-        const target = document.getElementById(`control-${id}`);
-        if (target) {
-            target.classList.add('highlight');
-            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.querySelectorAll('.sovereign-option.highlight').forEach((el) => el.classList.remove('highlight'));
+
+        if (hash.startsWith('#control=')) {
+            const id = hash.slice('#control='.length);
+            const target = document.getElementById(`control-${id}`);
+            if (target) {
+                target.classList.add('highlight');
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        } else if (hash.startsWith('#sovereign=')) {
+            const id = hash.slice('#sovereign='.length);
+            const target = document.getElementById(`sovereign-${id}`);
+            if (target) {
+                target.classList.add('highlight');
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
     }
 

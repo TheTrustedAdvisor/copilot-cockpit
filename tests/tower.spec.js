@@ -99,6 +99,64 @@ test.describe('Tower — governance controls', () => {
     });
 });
 
+test.describe('Tower — sovereign cloud', () => {
+    test('sovereign cloud section renders with heading', async ({ page }) => {
+        await page.goto('/tower.html');
+        await expect(page.locator('#sovereign-cloud-section')).toBeVisible();
+        await expect(page.locator('#sovereign-cloud-section .runway-section-title')).toContainText('Sovereign Cloud');
+    });
+
+    test('three sovereignty pillars render', async ({ page }) => {
+        await page.goto('/tower.html');
+        await expect(page.locator('#sovereign-pillars .sovereign-pillar')).toHaveCount(3);
+        await expect(page.locator('#sovereign-pillars .sovereign-pillar-title').first()).not.toBeEmpty();
+    });
+
+    test('data flow Mermaid diagram renders as SVG', async ({ page }) => {
+        await page.goto('/tower.html');
+        await expect(page.locator('#sovereign-diagram svg').first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('five deployment options render with badges', async ({ page }) => {
+        await page.goto('/tower.html');
+        await expect(page.locator('#sovereign-options .sovereign-option')).toHaveCount(5);
+        await expect(page.locator('#sovereign-options .sovereign-badge').first()).toBeVisible();
+    });
+
+    test('GHE.com option shows critical insight callout', async ({ page }) => {
+        await page.goto('/tower.html');
+        await expect(page.locator('#sovereign-ghe-data-residency .sovereign-insight')).toBeVisible();
+        await expect(page.locator('#sovereign-ghe-data-residency .sovereign-insight')).toContainText(/NOT cover/i);
+    });
+
+    test('deployment options show data flow indicators', async ({ page }) => {
+        await page.goto('/tower.html');
+        await expect(page.locator('#sovereign-options .sovereign-flow-dot').first()).toBeVisible();
+    });
+
+    test('data flow matrix renders with five rows', async ({ page }) => {
+        await page.goto('/tower.html');
+        await expect(page.locator('.sovereign-matrix tbody tr')).toHaveCount(5);
+    });
+
+    test('four provider strategy cards render', async ({ page }) => {
+        await page.goto('/tower.html');
+        await expect(page.locator('#sovereign-providers .sovereign-provider')).toHaveCount(4);
+        await expect(page.locator('#sovereign-providers .sovereign-provider-title').first()).not.toBeEmpty();
+    });
+
+    test('three residual risk cards render with severity', async ({ page }) => {
+        await page.goto('/tower.html');
+        await expect(page.locator('#sovereign-risks .sovereign-risk')).toHaveCount(3);
+        await expect(page.locator('#sovereign-risks .sovereign-risk-severity').first()).toBeVisible();
+    });
+
+    test('deep link #sovereign=byok-enterprise highlights the option', async ({ page }) => {
+        await page.goto('/tower.html#sovereign=byok-enterprise');
+        await expect(page.locator('#sovereign-byok-enterprise')).toHaveClass(/highlight/);
+    });
+});
+
 test.describe('Tower — flight plans', () => {
     test('flight plans render with recommended pills', async ({ page }) => {
         await page.goto('/tower.html');

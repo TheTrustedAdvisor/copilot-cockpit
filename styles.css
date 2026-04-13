@@ -2482,6 +2482,425 @@ body.light-theme .tower-roadmap li {
 }
 
 /* ============================================================
+   TOWER — SOVEREIGN CLOUD & DATA RESIDENCY
+   ============================================================ */
+.sovereign-pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+}
+.sovereign-pillar {
+    padding: 16px 18px;
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    background: rgba(0, 212, 255, 0.03);
+    border-radius: 3px;
+    border-left: 3px solid rgba(0, 212, 255, 0.5);
+    transition: border-color 0.15s, background 0.15s;
+}
+.sovereign-pillar:hover {
+    border-color: rgba(0, 212, 255, 0.35);
+    background: rgba(0, 212, 255, 0.06);
+}
+.sovereign-pillar-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.sovereign-pillar-icon {
+    font-size: 1.1rem;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: rgba(0, 212, 255, 0.08);
+    color: #00d4ff;
+}
+.sovereign-pillar-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+}
+.sovereign-pillar-desc {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.55;
+    margin-bottom: 8px;
+}
+.sovereign-pillar-relevance {
+    font-size: 0.66rem;
+    color: rgba(0, 212, 255, 0.7);
+    line-height: 1.5;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(0, 212, 255, 0.12);
+}
+
+/* Data flow diagram */
+.sovereign-diagram-wrapper {
+    margin: 24px 0;
+}
+.sovereign-narrative {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    max-width: 700px;
+}
+.sovereign-narrative strong {
+    color: #ffaa00;
+}
+.sovereign-diagram {
+    background: rgba(7, 8, 12, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    padding: 20px;
+    overflow-x: auto;
+}
+
+/* Deployment options */
+.sovereign-options {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 28px;
+}
+.sovereign-option {
+    padding: 18px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(7, 8, 12, 0.5);
+    border-radius: 3px;
+    border-left: 3px solid rgba(0, 212, 255, 0.4);
+    transition: border-color 0.15s, background 0.15s;
+}
+.sovereign-option:hover {
+    border-color: rgba(0, 212, 255, 0.5);
+    background: rgba(7, 8, 12, 0.7);
+}
+.sovereign-option-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.sovereign-option-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+    margin-right: auto;
+}
+.sovereign-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    padding: 2px 7px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+.sovereign-badge-scope {
+    background: rgba(0, 212, 255, 0.1);
+    color: rgba(0, 212, 255, 0.8);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+}
+.sovereign-badge-effort {
+    border: 1px solid;
+}
+.sovereign-badge-effort-low { color: #00ff88; border-color: rgba(0, 255, 136, 0.3); background: rgba(0, 255, 136, 0.06); }
+.sovereign-badge-effort-medium { color: #ffaa00; border-color: rgba(255, 170, 0, 0.3); background: rgba(255, 170, 0, 0.06); }
+.sovereign-badge-effort-high { color: #ff6666; border-color: rgba(255, 102, 102, 0.3); background: rgba(255, 102, 102, 0.06); }
+.sovereign-badge-effort-very-high { color: #ff4444; border-color: rgba(255, 68, 68, 0.3); background: rgba(255, 68, 68, 0.06); }
+.sovereign-badge-eu {
+    border: 1px solid;
+}
+.sovereign-badge-eu-true { color: #00ff88; border-color: rgba(0, 255, 136, 0.3); background: rgba(0, 255, 136, 0.08); }
+.sovereign-badge-eu-false { color: #ff6666; border-color: rgba(255, 102, 102, 0.3); background: rgba(255, 102, 102, 0.08); }
+.sovereign-badge-eu-conditional { color: #ffaa00; border-color: rgba(255, 170, 0, 0.3); background: rgba(255, 170, 0, 0.08); }
+
+.sovereign-option-desc {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.55;
+    margin-bottom: 10px;
+}
+
+/* Data flow indicators */
+.sovereign-flow-status {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+.sovereign-flow-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+}
+.sovereign-flow-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.sovereign-flow-eu { background: #00ff88; box-shadow: 0 0 4px rgba(0, 255, 136, 0.4); }
+.sovereign-flow-non-eu { background: #ff6666; box-shadow: 0 0 4px rgba(255, 102, 102, 0.4); }
+.sovereign-flow-partial { background: #ffaa00; box-shadow: 0 0 4px rgba(255, 170, 0, 0.4); }
+.sovereign-flow-label {
+    color: rgba(255, 255, 255, 0.5);
+}
+.sovereign-flow-note {
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.35);
+    margin-left: 13px;
+}
+
+/* Critical insight callout */
+.sovereign-insight {
+    margin: 10px 0;
+    padding: 10px 14px;
+    background: rgba(255, 68, 68, 0.06);
+    border: 1px solid rgba(255, 68, 68, 0.25);
+    border-left: 3px solid #ff4444;
+    border-radius: 3px;
+    font-size: 0.68rem;
+    color: rgba(255, 102, 102, 0.9);
+    line-height: 1.5;
+}
+
+/* Pros & Cons */
+.sovereign-pros-cons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.sovereign-pro-list, .sovereign-con-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    min-width: 200px;
+}
+.sovereign-pro-item, .sovereign-con-item {
+    font-size: 0.64rem;
+    line-height: 1.45;
+    padding: 3px 0;
+}
+.sovereign-pro-item { color: rgba(0, 255, 136, 0.7); }
+.sovereign-pro-item::before { content: "✓ "; }
+.sovereign-con-item { color: rgba(255, 102, 102, 0.7); }
+.sovereign-con-item::before { content: "✗ "; }
+
+/* Data flow matrix */
+.sovereign-matrix-wrapper {
+    margin: 24px 0;
+    overflow-x: auto;
+}
+.sovereign-matrix {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+}
+.sovereign-matrix th {
+    padding: 8px 12px;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: 500;
+    white-space: nowrap;
+}
+.sovereign-matrix td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.65);
+    vertical-align: top;
+}
+.sovereign-matrix tr:hover td {
+    background: rgba(0, 212, 255, 0.03);
+}
+.sovereign-matrix-option {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    white-space: nowrap;
+}
+.sovereign-matrix-eu { color: #00ff88; }
+.sovereign-matrix-non-eu { color: #ff6666; }
+.sovereign-matrix-partial { color: #ffaa00; }
+
+/* Provider strategy cards */
+.sovereign-providers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+}
+.sovereign-provider {
+    padding: 16px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(7, 8, 12, 0.5);
+    border-radius: 3px;
+    border-left: 3px solid rgba(255, 255, 255, 0.2);
+}
+.sovereign-provider-openai { border-left-color: #10a37f; }
+.sovereign-provider-anthropic { border-left-color: #d97757; }
+.sovereign-provider-google { border-left-color: #4285f4; }
+.sovereign-provider-xai { border-left-color: #888888; }
+.sovereign-provider-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+    margin-bottom: 8px;
+}
+.sovereign-provider-strategy {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.55;
+    margin-bottom: 10px;
+}
+.sovereign-provider-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.sovereign-provider-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    padding: 2px 7px;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+}
+.sovereign-provider-pill.available { color: #00ff88; border-color: rgba(0, 255, 136, 0.25); }
+.sovereign-provider-pill.unavailable { color: #ff6666; border-color: rgba(255, 102, 102, 0.25); }
+
+/* Residual risks */
+.sovereign-risks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.sovereign-risk {
+    padding: 14px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(7, 8, 12, 0.5);
+    border-radius: 3px;
+    border-left: 3px solid #ffaa00;
+}
+.sovereign-risk.severity-high { border-left-color: #ff4444; }
+.sovereign-risk.severity-medium { border-left-color: #ffaa00; }
+.sovereign-risk-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+.sovereign-risk-severity {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    padding: 2px 7px;
+    border-radius: 2px;
+    text-transform: uppercase;
+}
+.sovereign-risk-severity.severity-high { color: #ff4444; background: rgba(255, 68, 68, 0.1); border: 1px solid rgba(255, 68, 68, 0.25); }
+.sovereign-risk-severity.severity-medium { color: #ffaa00; background: rgba(255, 170, 0, 0.1); border: 1px solid rgba(255, 170, 0, 0.25); }
+.sovereign-risk-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+}
+.sovereign-risk-desc {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.55;
+    margin-bottom: 8px;
+}
+.sovereign-risk-mitigation {
+    font-size: 0.64rem;
+    color: rgba(0, 212, 255, 0.6);
+    line-height: 1.5;
+    padding-top: 6px;
+    border-top: 1px dashed rgba(0, 212, 255, 0.1);
+}
+.sovereign-risk-mitigation::before {
+    content: "Mitigation: ";
+    font-weight: 600;
+    color: rgba(0, 212, 255, 0.8);
+}
+
+/* Sovereign section heading */
+.sovereign-subsection-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 24px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+}
+
+/* Deep link highlight */
+.sovereign-option.highlight {
+    border-color: rgba(0, 212, 255, 0.5);
+    background: rgba(0, 212, 255, 0.06);
+    animation: sovereign-glow 1.5s ease-out;
+}
+@keyframes sovereign-glow {
+    from { box-shadow: 0 0 12px rgba(0, 212, 255, 0.3); }
+    to { box-shadow: none; }
+}
+
+/* Light theme overrides for Sovereign Cloud */
+body.light-theme .sovereign-pillar {
+    background: rgba(0, 120, 180, 0.04);
+    border-color: rgba(0, 120, 180, 0.15);
+}
+body.light-theme .sovereign-pillar-title,
+body.light-theme .sovereign-option-title,
+body.light-theme .sovereign-provider-title,
+body.light-theme .sovereign-risk-title {
+    color: rgba(0, 0, 0, 0.85);
+}
+body.light-theme .sovereign-pillar-desc,
+body.light-theme .sovereign-option-desc,
+body.light-theme .sovereign-provider-strategy,
+body.light-theme .sovereign-risk-desc {
+    color: rgba(0, 0, 0, 0.55);
+}
+body.light-theme .sovereign-pillar-relevance {
+    color: rgba(0, 100, 150, 0.7);
+    border-top-color: rgba(0, 100, 150, 0.15);
+}
+body.light-theme .sovereign-option {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+    border-left-color: rgba(0, 120, 180, 0.4);
+}
+body.light-theme .sovereign-insight {
+    background: rgba(200, 0, 0, 0.04);
+    border-color: rgba(200, 0, 0, 0.2);
+    color: #cc0000;
+}
+body.light-theme .sovereign-narrative { color: rgba(0, 0, 0, 0.55); }
+body.light-theme .sovereign-narrative strong { color: #b36b00; }
+body.light-theme .sovereign-diagram { background: rgba(0, 0, 0, 0.02); border-color: rgba(0, 0, 0, 0.08); }
+body.light-theme .sovereign-matrix th { color: rgba(0, 0, 0, 0.5); border-bottom-color: rgba(0, 0, 0, 0.1); }
+body.light-theme .sovereign-matrix td { color: rgba(0, 0, 0, 0.6); border-bottom-color: rgba(0, 0, 0, 0.05); }
+body.light-theme .sovereign-matrix tr:hover td { background: rgba(0, 120, 180, 0.04); }
+body.light-theme .sovereign-provider { background: rgba(0, 0, 0, 0.02); border-color: rgba(0, 0, 0, 0.08); }
+body.light-theme .sovereign-risk { background: rgba(0, 0, 0, 0.02); border-color: rgba(0, 0, 0, 0.08); }
+body.light-theme .sovereign-risk-mitigation { color: rgba(0, 100, 150, 0.7); border-top-color: rgba(0, 100, 150, 0.12); }
+body.light-theme .sovereign-pro-item { color: rgba(0, 140, 70, 0.8); }
+body.light-theme .sovereign-con-item { color: rgba(180, 0, 0, 0.7); }
+body.light-theme .sovereign-flow-label { color: rgba(0, 0, 0, 0.45); }
+
+/* ============================================================
    RAMP PERSPECTIVE — Agents & Ground Handling
    ============================================================ */
 .ramp-grid {
