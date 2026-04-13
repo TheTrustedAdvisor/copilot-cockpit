@@ -285,15 +285,12 @@ test.describe('Perspective Navigation Bar', () => {
         await expect(active).toContainText('Flight Log');
     });
 
-    test('disabled perspectives have SOON badge and are not clickable', async ({ page }) => {
+    test('all perspectives are live — no disabled nav links', async ({ page }) => {
         await page.goto('/');
         const disabled = page.locator('.nav-link.disabled');
-        // Jet Bridge — Terminal/Cockpit/Security/Ramp/Runway/Tower are all live.
-        await expect(disabled).toHaveCount(1);
-
+        await expect(disabled).toHaveCount(0);
         const soonBadges = page.locator('.nav-soon');
-        await expect(soonBadges).toHaveCount(1);
-        await expect(soonBadges.first()).toContainText('SOON');
+        await expect(soonBadges).toHaveCount(0);
     });
 
     test('navigation from cockpit to security works', async ({ page }) => {

@@ -1255,6 +1255,326 @@ body.light-theme .terminal-departure-card:hover {
     border-color: rgba(179, 107, 0, 0.25);
 }
 
+/* ============================================================
+   JET BRIDGE PERSPECTIVE — Tutorials & Patterns
+   ============================================================ */
+
+/* --- Prompt Craft (before/after comparisons) --- */
+.jb-techniques {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.jb-technique {
+    padding: 18px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid rgba(138, 43, 226, 0.5);
+    border-radius: 3px;
+}
+.jb-technique-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #a855f7;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+}
+.jb-technique-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+@media (max-width: 640px) {
+    .jb-technique-compare { grid-template-columns: 1fr; }
+}
+.jb-compare-bad, .jb-compare-good {
+    padding: 10px 12px;
+    border-radius: 3px;
+    overflow-x: auto;
+}
+.jb-compare-bad {
+    background: rgba(255, 102, 102, 0.06);
+    border: 1px solid rgba(255, 102, 102, 0.15);
+}
+.jb-compare-good {
+    background: rgba(0, 255, 136, 0.06);
+    border: 1px solid rgba(0, 255, 136, 0.15);
+}
+.jb-compare-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+}
+.jb-compare-bad .jb-compare-label { color: rgba(255, 102, 102, 0.7); }
+.jb-compare-good .jb-compare-label { color: rgba(0, 255, 136, 0.7); }
+.jb-compare-bad pre, .jb-compare-good pre { margin: 0; }
+.jb-compare-bad code, .jb-compare-good code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+.jb-compare-bad code { color: rgba(255, 200, 200, 0.8); }
+.jb-compare-good code { color: rgba(0, 255, 136, 0.85); }
+.jb-technique-why {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.5;
+    margin: 0;
+}
+.jb-technique-why strong { color: rgba(168, 85, 247, 0.8); }
+
+/* --- Context Management --- */
+.jb-context-group {
+    margin-bottom: 20px;
+}
+.jb-subheading {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0 0 10px;
+}
+.jb-participants, .jb-variables {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+}
+.jb-context-card {
+    padding: 16px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid rgba(0, 200, 255, 0.4);
+    border-radius: 3px;
+}
+.jb-context-header {
+    margin-bottom: 8px;
+}
+.jb-context-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #00c8ff;
+    letter-spacing: 0.03em;
+}
+.jb-context-desc {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+    margin: 0 0 10px;
+}
+.jb-context-example {
+    margin: 0 0 8px;
+    padding: 8px 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+    overflow-x: auto;
+}
+.jb-context-example pre { margin: 0; }
+.jb-context-example code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    color: rgba(0, 200, 255, 0.85);
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+.jb-context-tip {
+    font-size: 0.66rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.45;
+    margin: 0;
+}
+.jb-context-tip strong { color: rgba(0, 200, 255, 0.7); }
+
+/* --- Edit Mode (workflow cards) --- */
+.jb-workflows {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.jb-workflow {
+    padding: 18px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid rgba(255, 170, 0, 0.4);
+    border-radius: 3px;
+}
+.jb-workflow-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+    gap: 12px;
+}
+.jb-workflow-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-glareshield, #ffaa00);
+    letter-spacing: 0.04em;
+}
+.jb-workflow-bestfor {
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+    text-align: right;
+    flex-shrink: 1;
+}
+.jb-workflow-steps {
+    margin: 0 0 12px;
+    padding-left: 18px;
+    list-style: decimal;
+}
+.jb-workflow-steps li {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.65;
+    padding: 1px 0;
+}
+.jb-workflow-example {
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+    overflow-x: auto;
+}
+.jb-workflow-example pre { margin: 0; }
+.jb-workflow-example code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    color: rgba(255, 170, 0, 0.85);
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+.jb-workflow-example .jb-compare-label { color: rgba(255, 170, 0, 0.5); }
+
+/* --- Agent Patterns --- */
+.jb-patterns {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.jb-pattern {
+    padding: 18px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid rgba(0, 255, 136, 0.4);
+    border-radius: 3px;
+}
+.jb-pattern-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+.jb-pattern-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #00ff88;
+    letter-spacing: 0.04em;
+}
+.jb-pattern-risk {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    border: 1px solid;
+}
+.jb-risk-low { color: #00ff88; border-color: rgba(0, 255, 136, 0.3); background: rgba(0, 255, 136, 0.06); }
+.jb-risk-medium { color: #ffaa00; border-color: rgba(255, 170, 0, 0.3); background: rgba(255, 170, 0, 0.06); }
+.jb-risk-high { color: #ff6666; border-color: rgba(255, 102, 102, 0.3); background: rgba(255, 102, 102, 0.06); }
+.jb-pattern-desc {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+    margin: 0 0 10px;
+}
+.jb-pattern-example {
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+    overflow-x: auto;
+}
+.jb-pattern-example pre { margin: 0; }
+.jb-pattern-example code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    color: rgba(0, 255, 136, 0.85);
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+.jb-pattern-example .jb-compare-label { color: rgba(0, 255, 136, 0.5); }
+
+/* --- Jet Bridge light theme --- */
+body.light-theme .jb-technique,
+body.light-theme .jb-context-card,
+body.light-theme .jb-workflow,
+body.light-theme .jb-pattern {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .jb-technique { border-left-color: rgba(138, 43, 226, 0.4); }
+body.light-theme .jb-technique-title { color: #7c3aed; }
+body.light-theme .jb-technique-why { color: rgba(0, 0, 0, 0.55); }
+body.light-theme .jb-technique-why strong { color: #7c3aed; }
+body.light-theme .jb-compare-bad {
+    background: rgba(200, 50, 50, 0.06);
+    border-color: rgba(200, 50, 50, 0.15);
+}
+body.light-theme .jb-compare-good {
+    background: rgba(0, 130, 60, 0.06);
+    border-color: rgba(0, 130, 60, 0.15);
+}
+body.light-theme .jb-compare-bad .jb-compare-label { color: rgba(200, 50, 50, 0.7); }
+body.light-theme .jb-compare-good .jb-compare-label { color: rgba(0, 130, 60, 0.7); }
+body.light-theme .jb-compare-bad code { color: rgba(180, 40, 40, 0.85); }
+body.light-theme .jb-compare-good code { color: #009944; }
+
+body.light-theme .jb-context-card { border-left-color: rgba(0, 140, 200, 0.4); }
+body.light-theme .jb-context-name { color: #0078d4; }
+body.light-theme .jb-context-desc { color: rgba(0, 0, 0, 0.6); }
+body.light-theme .jb-context-example {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .jb-context-example code { color: #0078d4; }
+body.light-theme .jb-context-tip { color: rgba(0, 0, 0, 0.45); }
+body.light-theme .jb-context-tip strong { color: #0078d4; }
+body.light-theme .jb-subheading { color: rgba(0, 0, 0, 0.4); }
+
+body.light-theme .jb-workflow { border-left-color: rgba(179, 107, 0, 0.4); }
+body.light-theme .jb-workflow-title { color: #b36b00; }
+body.light-theme .jb-workflow-bestfor { color: rgba(0, 0, 0, 0.4); }
+body.light-theme .jb-workflow-steps li { color: rgba(0, 0, 0, 0.65); }
+body.light-theme .jb-workflow-example {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .jb-workflow-example code { color: #b36b00; }
+body.light-theme .jb-workflow-example .jb-compare-label { color: rgba(179, 107, 0, 0.5); }
+
+body.light-theme .jb-pattern { border-left-color: rgba(0, 130, 60, 0.4); }
+body.light-theme .jb-pattern-title { color: #009944; }
+body.light-theme .jb-pattern-desc { color: rgba(0, 0, 0, 0.6); }
+body.light-theme .jb-pattern-example {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .jb-pattern-example code { color: #009944; }
+body.light-theme .jb-pattern-example .jb-compare-label { color: rgba(0, 130, 60, 0.5); }
+
 /* --- Security Perspective --- */
 .security-main {
     max-width: 1200px;

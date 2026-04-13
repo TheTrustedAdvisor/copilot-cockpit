@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jet Bridge — Copilot Cockpit</title>
+    <meta name="description" content="Jet Bridge perspective for GitHub Copilot: prompt craft, context management, edit mode, and agent mode patterns. The walkway from Terminal to Cockpit.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="cockpit-header">
+        <div class="cockpit-title">
+            <span class="icon">🔗</span>
+            <div>
+                <h1>Jet Bridge Perspective</h1>
+                <div class="subtitle">Terminal → Aircraft — mastering Copilot interactions</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <nav class="header-nav" aria-label="Perspectives">
+                <a href="terminal.html" class="nav-link">Terminal</a>
+                <a href="security.html" class="nav-link">Security</a>
+                <a href="jet-bridge.html" class="nav-link active">Jet Bridge</a>
+                <a href="ramp.html" class="nav-link">Ramp</a>
+                <a href="index.html" class="nav-link">Cockpit</a>
+                <a href="runway.html" class="nav-link">Runway</a>
+                <a href="tower.html" class="nav-link">Tower</a>
+                <span class="nav-separator">·</span>
+                <a href="flight-log.html" class="nav-link">Flight Log</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">DAY</button>
+        </div>
+    </header>
+
+    <!-- ==================== JET BRIDGE CONTENT ==================== -->
+    <main class="runway-main" id="jet-bridge-main">
+        <section class="runway-intro">
+            <h2>🔗 Walking the Jet Bridge</h2>
+            <p>You've checked in at the Terminal — Copilot is installed and you've had your
+            first interaction. Now walk the enclosed bridge from the terminal building to
+            the aircraft. Here you'll learn the techniques that turn Copilot from a
+            novelty into a daily co-pilot: prompt craft, context scoping, edit mode
+            precision, and agent mode patterns.</p>
+        </section>
+
+        <!-- ============ PROMPT CRAFT ============ -->
+        <section class="runway-section" aria-label="Prompt craft" id="prompt-craft-section">
+            <h3 class="runway-section-title">✍ Prompt Craft</h3>
+            <p class="runway-section-intro" id="prompt-craft-intro"></p>
+            <div class="jb-techniques" id="jb-techniques">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ CONTEXT MANAGEMENT ============ -->
+        <section class="runway-section" aria-label="Context management" id="context-section">
+            <h3 class="runway-section-title">🎯 Context Management</h3>
+            <p class="runway-section-intro" id="context-intro"></p>
+            <div class="jb-context-group">
+                <h4 class="jb-subheading">Participants</h4>
+                <div class="jb-participants" id="jb-participants">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            <div class="jb-context-group">
+                <h4 class="jb-subheading">Variables</h4>
+                <div class="jb-variables" id="jb-variables">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ EDIT MODE ============ -->
+        <section class="runway-section" aria-label="Edit mode" id="edit-mode-section">
+            <h3 class="runway-section-title">✏ Edit Mode</h3>
+            <p class="runway-section-intro" id="edit-mode-intro"></p>
+            <div class="jb-workflows" id="jb-workflows">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ AGENT PATTERNS ============ -->
+        <section class="runway-section" aria-label="Agent patterns" id="agent-patterns-section">
+            <h3 class="runway-section-title">🤖 Agent Mode Patterns</h3>
+            <p class="runway-section-intro" id="agent-patterns-intro"></p>
+            <div class="jb-patterns" id="jb-patterns">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ NEXT STEPS ============ -->
+        <section class="runway-section" aria-label="Next steps" id="next-steps-section">
+            <h3 class="runway-section-title">🛫 Ready for Boarding</h3>
+            <p class="runway-section-intro" id="next-steps-intro"></p>
+            <div class="terminal-departures" id="jb-destinations">
+                <!-- Populated by JS — reuses terminal-departure-card pattern -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+    // ============================================================
+    // JET BRIDGE PERSPECTIVE — Tutorials & Patterns
+    // ============================================================
+
+    let guideData = null;
+
+    // --- Theme ---
+    function initTheme() {
+        const saved = localStorage.getItem('cockpit-theme');
+        if (saved === 'light') {
+            document.body.classList.add('light-theme');
+            document.getElementById('theme-toggle').textContent = 'NIGHT';
+        }
+    }
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('cockpit-theme', isLight ? 'light' : 'dark');
+        document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
+    });
+
+    // --- Load data ---
+    async function loadAllData() {
+        try {
+            const resp = await fetch('data/jet-bridge-guide.json');
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            guideData = await resp.json();
+            init();
+        } catch (err) {
+            document.getElementById('jet-bridge-main').innerHTML =
+                `<p style="color:#ff4444;padding:40px;">DATA LINK LOST — ${escapeHtml(err.message)}</p>`;
+        }
+    }
+
+    function init() {
+        renderPromptCraft();
+        renderContext();
+        renderEditMode();
+        renderAgentPatterns();
+        renderNextSteps();
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[c]);
+    }
+
+    // --- Prompt Craft ---
+    function renderPromptCraft() {
+        const pc = guideData.promptCraft;
+        document.getElementById('prompt-craft-intro').textContent = pc.intro;
+        const el = document.getElementById('jb-techniques');
+        el.innerHTML = pc.techniques.map(t => `
+            <article class="jb-technique" data-technique-id="${escapeHtml(t.id)}">
+                <div class="jb-technique-title">${escapeHtml(t.title)}</div>
+                <div class="jb-technique-compare">
+                    <div class="jb-compare-bad">
+                        <span class="jb-compare-label">✗ Weak</span>
+                        <pre><code>${escapeHtml(t.bad)}</code></pre>
+                    </div>
+                    <div class="jb-compare-good">
+                        <span class="jb-compare-label">✓ Strong</span>
+                        <pre><code>${escapeHtml(t.good)}</code></pre>
+                    </div>
+                </div>
+                <p class="jb-technique-why"><strong>Why:</strong> ${escapeHtml(t.why)}</p>
+            </article>
+        `).join('');
+    }
+
+    // --- Context Management ---
+    function renderContext() {
+        const cm = guideData.contextManagement;
+        document.getElementById('context-intro').textContent = cm.intro;
+
+        document.getElementById('jb-participants').innerHTML = cm.participants.map(p => `
+            <article class="jb-context-card" data-context-id="${escapeHtml(p.id)}">
+                <div class="jb-context-header">
+                    <span class="jb-context-name">${escapeHtml(p.name)}</span>
+                </div>
+                <p class="jb-context-desc">${escapeHtml(p.description)}</p>
+                <div class="jb-context-example">
+                    <pre><code>${escapeHtml(p.example)}</code></pre>
+                </div>
+                <p class="jb-context-tip"><strong>Tip:</strong> ${escapeHtml(p.tip)}</p>
+            </article>
+        `).join('');
+
+        document.getElementById('jb-variables').innerHTML = cm.variables.map(v => `
+            <article class="jb-context-card" data-context-id="${escapeHtml(v.id)}">
+                <div class="jb-context-header">
+                    <span class="jb-context-name">${escapeHtml(v.name)}</span>
+                </div>
+                <p class="jb-context-desc">${escapeHtml(v.description)}</p>
+                <div class="jb-context-example">
+                    <pre><code>${escapeHtml(v.example)}</code></pre>
+                </div>
+                <p class="jb-context-tip"><strong>Tip:</strong> ${escapeHtml(v.tip)}</p>
+            </article>
+        `).join('');
+    }
+
+    // --- Edit Mode ---
+    function renderEditMode() {
+        const em = guideData.editMode;
+        document.getElementById('edit-mode-intro').textContent = em.intro;
+        const el = document.getElementById('jb-workflows');
+        el.innerHTML = em.workflows.map(w => `
+            <article class="jb-workflow" data-workflow-id="${escapeHtml(w.id)}">
+                <div class="jb-workflow-header">
+                    <span class="jb-workflow-title">${escapeHtml(w.title)}</span>
+                    <span class="jb-workflow-bestfor">${escapeHtml(w.bestFor)}</span>
+                </div>
+                <ol class="jb-workflow-steps">
+                    ${w.steps.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
+                </ol>
+                <div class="jb-workflow-example">
+                    <span class="jb-compare-label">Example</span>
+                    <pre><code>${escapeHtml(w.example)}</code></pre>
+                </div>
+            </article>
+        `).join('');
+    }
+
+    // --- Agent Patterns ---
+    function renderAgentPatterns() {
+        const ap = guideData.agentPatterns;
+        document.getElementById('agent-patterns-intro').textContent = ap.intro;
+        const el = document.getElementById('jb-patterns');
+        el.innerHTML = ap.patterns.map(p => `
+            <article class="jb-pattern" data-pattern-id="${escapeHtml(p.id)}">
+                <div class="jb-pattern-header">
+                    <span class="jb-pattern-title">${escapeHtml(p.title)}</span>
+                    <span class="jb-pattern-risk jb-risk-${escapeHtml(p.risk)}">${escapeHtml(p.risk)} risk</span>
+                </div>
+                <p class="jb-pattern-desc">${escapeHtml(p.description)}</p>
+                <div class="jb-pattern-example">
+                    <span class="jb-compare-label">Prompt</span>
+                    <pre><code>${escapeHtml(p.example)}</code></pre>
+                </div>
+            </article>
+        `).join('');
+    }
+
+    // --- Next Steps ---
+    function renderNextSteps() {
+        const ns = guideData.nextSteps;
+        document.getElementById('next-steps-intro').textContent = ns.intro;
+        const el = document.getElementById('jb-destinations');
+        el.innerHTML = ns.destinations.map(d => `
+            <a href="${escapeHtml(d.page)}" class="terminal-departure-card">
+                <span class="terminal-departure-perspective">${escapeHtml(d.perspective)}</span>
+                <span class="terminal-departure-reason">${escapeHtml(d.reason)}</span>
+            </a>
+        `).join('');
+    }
+
+    // --- Init ---
+    initTheme();
+    loadAllData();
+    </script>
+</body>
+</html>
