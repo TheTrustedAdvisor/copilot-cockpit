@@ -1804,6 +1804,233 @@ body.light-theme .preflight-reset:hover {
     color: #c83232;
 }
 
+/* ============================================================
+   WIRING DIAGRAM — Instrument Connection Graph
+   ============================================================ */
+
+/* --- Filters --- */
+.wiring-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+.wiring-filter-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.wiring-filter-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.8);
+}
+.wiring-filter-btn.active {
+    background: rgba(var(--filter-color-rgb, 255, 255, 255), 0.1);
+    border-color: var(--filter-color, rgba(255, 255, 255, 0.3));
+    color: var(--filter-color, #fff);
+}
+
+/* --- Diagram --- */
+.wiring-diagram-wrapper {
+    min-height: 300px;
+    overflow-x: auto;
+    padding: 16px 0;
+}
+.wiring-loading {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    padding: 60px 0;
+}
+.wiring-diagram-wrapper .mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* --- Legend --- */
+.wiring-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+}
+.wiring-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+}
+.wiring-legend-line {
+    flex: 0 0 32px;
+    height: 0;
+    border-top: 2px solid var(--line-color, #fff);
+}
+.wiring-legend-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.wiring-legend-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.03em;
+}
+.wiring-legend-desc {
+    font-size: 0.64rem;
+    color: rgba(255, 255, 255, 0.4);
+    line-height: 1.4;
+}
+
+/* --- Zones --- */
+.wiring-zones {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+.wiring-zone-card {
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-left: 3px solid var(--zone-color, #888);
+    border-radius: 3px;
+}
+.wiring-zone-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--zone-color, #888);
+    display: block;
+    margin-bottom: 2px;
+}
+.wiring-zone-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.8);
+    display: block;
+    margin-bottom: 4px;
+}
+.wiring-zone-count {
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, 0.4);
+    display: block;
+    margin-bottom: 4px;
+}
+.wiring-zone-desc {
+    font-size: 0.64rem;
+    color: rgba(255, 255, 255, 0.4);
+    line-height: 1.4;
+}
+
+/* --- Stats --- */
+.wiring-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.wiring-stat {
+    padding: 14px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    text-align: center;
+}
+.wiring-stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-glareshield, #ffaa00);
+    display: block;
+}
+.wiring-stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    display: block;
+    margin-top: 4px;
+}
+.wiring-type-breakdown, .wiring-top-nodes {
+    margin-bottom: 16px;
+}
+.wiring-breakdown-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0 0 8px;
+}
+.wiring-type-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+}
+.wiring-type-dot {
+    flex: 0 0 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.wiring-node-symbol {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--color-glareshield, #ffaa00);
+    min-width: 40px;
+}
+.wiring-type-name {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.6);
+    flex: 1;
+}
+.wiring-type-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* --- Wiring light theme --- */
+body.light-theme .wiring-filter-btn {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.5);
+}
+body.light-theme .wiring-filter-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: rgba(0, 0, 0, 0.8);
+}
+body.light-theme .wiring-legend-item,
+body.light-theme .wiring-zone-card,
+body.light-theme .wiring-stat {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .wiring-legend-label { color: rgba(0, 0, 0, 0.8); }
+body.light-theme .wiring-legend-desc { color: rgba(0, 0, 0, 0.45); }
+body.light-theme .wiring-zone-name { color: rgba(0, 0, 0, 0.8); }
+body.light-theme .wiring-zone-count { color: rgba(0, 0, 0, 0.45); }
+body.light-theme .wiring-zone-desc { color: rgba(0, 0, 0, 0.45); }
+body.light-theme .wiring-stat-value { color: #b36b00; }
+body.light-theme .wiring-stat-label { color: rgba(0, 0, 0, 0.4); }
+body.light-theme .wiring-breakdown-title { color: rgba(0, 0, 0, 0.4); }
+body.light-theme .wiring-type-name { color: rgba(0, 0, 0, 0.6); }
+body.light-theme .wiring-type-count { color: rgba(0, 0, 0, 0.7); }
+body.light-theme .wiring-node-symbol { color: #b36b00; }
+body.light-theme .wiring-loading { color: rgba(0, 0, 0, 0.4); }
+
 /* --- Security Perspective --- */
 .security-main {
     max-width: 1200px;

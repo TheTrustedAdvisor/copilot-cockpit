@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiring Diagram — Copilot Cockpit</title>
+    <meta name="description" content="Instrument connection graph showing how GitHub Copilot's 42 features relate — context flows, governance controls, and integration points.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Mermaid -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        window.mermaid = mermaid;
+    </script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="cockpit-header">
+        <div class="cockpit-title">
+            <span class="icon">🔌</span>
+            <div>
+                <h1>Wiring Diagram</h1>
+                <div class="subtitle">Instrument connection graph — how Copilot features relate</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <nav class="header-nav" aria-label="Perspectives">
+                <a href="terminal.html" class="nav-link">Terminal</a>
+                <a href="security.html" class="nav-link">Security</a>
+                <a href="jet-bridge.html" class="nav-link">Jet Bridge</a>
+                <a href="ramp.html" class="nav-link">Ramp</a>
+                <a href="index.html" class="nav-link">Cockpit</a>
+                <a href="runway.html" class="nav-link">Runway</a>
+                <a href="tower.html" class="nav-link">Tower</a>
+                <span class="nav-separator">·</span>
+                <a href="flight-log.html" class="nav-link">Flight Log</a>
+                <a href="preflight.html" class="nav-link">Pre-Flight</a>
+                <a href="wiring.html" class="nav-link active">Wiring</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">DAY</button>
+        </div>
+    </header>
+
+    <!-- ==================== WIRING CONTENT ==================== -->
+    <main class="runway-main" id="wiring-main">
+        <section class="runway-intro">
+            <h2>🔌 Wiring Diagram</h2>
+            <p id="wiring-intro"></p>
+        </section>
+
+        <!-- Connection type filters -->
+        <section class="wiring-filters" id="wiring-filters">
+            <!-- Populated by JS -->
+        </section>
+
+        <!-- Mermaid diagram -->
+        <section class="runway-section" id="wiring-diagram-section">
+            <h3 class="runway-section-title">◉ Connection Graph</h3>
+            <div class="wiring-diagram-wrapper" id="wiring-diagram">
+                <div class="wiring-loading">Generating diagram…</div>
+            </div>
+        </section>
+
+        <!-- Connection legend -->
+        <section class="runway-section" id="wiring-legend-section">
+            <h3 class="runway-section-title">📋 Connection Types</h3>
+            <div class="wiring-legend" id="wiring-legend">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Zone summary -->
+        <section class="runway-section" id="wiring-zones-section">
+            <h3 class="runway-section-title">🗺 Zone Map</h3>
+            <p class="runway-section-intro">Each zone groups instruments by function. The wiring diagram shows how signals flow between zones.</p>
+            <div class="wiring-zones" id="wiring-zones">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="runway-section" id="wiring-stats-section">
+            <h3 class="runway-section-title">📊 Wiring Stats</h3>
+            <div class="wiring-stats" id="wiring-stats">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+    // ============================================================
+    // WIRING DIAGRAM — Instrument Connection Graph
+    // ============================================================
+
+    let wiringData = null;
+    let instrumentData = null;
+    let activeFilter = null;
+
+    // --- Theme ---
+    function initTheme() {
+        const saved = localStorage.getItem('cockpit-theme');
+        if (saved === 'light') {
+            document.body.classList.add('light-theme');
+            document.getElementById('theme-toggle').textContent = 'NIGHT';
+        }
+    }
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('cockpit-theme', isLight ? 'light' : 'dark');
+        document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
+    });
+
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[c]);
+    }
+
+    // --- Load data ---
+    async function loadAllData() {
+        try {
+            const [wiringResp, instrResp] = await Promise.all([
+                fetch('data/wiring-diagram.json'),
+                fetch('data/copilot-instruments.json')
+            ]);
+            if (!wiringResp.ok) throw new Error(`Wiring: HTTP ${wiringResp.status}`);
+            if (!instrResp.ok) throw new Error(`Instruments: HTTP ${instrResp.status}`);
+            wiringData = await wiringResp.json();
+            instrumentData = await instrResp.json();
+            init();
+        } catch (err) {
+            document.getElementById('wiring-main').innerHTML =
+                `<p style="color:#ff4444;padding:40px;">DATA LINK LOST — ${escapeHtml(err.message)}</p>`;
+        }
+    }
+
+    function init() {
+        document.getElementById('wiring-intro').textContent = wiringData.intro;
+        renderFilters();
+        renderDiagram();
+        renderLegend();
+        renderZones();
+        renderStats();
+    }
+
+    // --- Instrument lookup ---
+    function getInstrumentName(id) {
+        const inst = instrumentData.instruments.find(i => i.id === id);
+        return inst ? inst.symbol : id;
+    }
+
+    function getInstrumentZone(id) {
+        const inst = instrumentData.instruments.find(i => i.id === id);
+        return inst ? inst.zone : 'unknown';
+    }
+
+    // --- Filters ---
+    function renderFilters() {
+        const el = document.getElementById('wiring-filters');
+        el.innerHTML = `
+            <button class="wiring-filter-btn active" data-filter="all">All</button>
+            ${wiringData.connectionTypes.map(ct => `
+                <button class="wiring-filter-btn" data-filter="${escapeHtml(ct.id)}"
+                    style="--filter-color: ${ct.color}">
+                    ${escapeHtml(ct.label)}
+                </button>
+            `).join('')}
+        `;
+        el.addEventListener('click', (e) => {
+            const btn = e.target.closest('.wiring-filter-btn');
+            if (!btn) return;
+            el.querySelectorAll('.wiring-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilter = btn.dataset.filter === 'all' ? null : btn.dataset.filter;
+            renderDiagram();
+        });
+    }
+
+    // --- Mermaid diagram ---
+    function buildMermaidSource() {
+        const connections = activeFilter
+            ? wiringData.connections.filter(c => c.type === activeFilter)
+            : wiringData.connections;
+
+        // Collect involved instruments
+        const involved = new Set();
+        connections.forEach(c => { involved.add(c.from); involved.add(c.to); });
+
+        // Group by zone
+        const zoneMap = {};
+        instrumentData.zones.forEach(z => { zoneMap[z.id] = { ...z, instruments: [] }; });
+        instrumentData.instruments.forEach(inst => {
+            if (involved.has(inst.id) && zoneMap[inst.zone]) {
+                zoneMap[inst.zone].instruments.push(inst);
+            }
+        });
+
+        let src = 'graph LR\n';
+
+        // Subgraphs per zone
+        Object.values(zoneMap).forEach(zone => {
+            if (zone.instruments.length === 0) return;
+            src += `    subgraph ${zone.label}["${zone.name}"]\n`;
+            zone.instruments.forEach(inst => {
+                src += `        ${inst.id}["${inst.symbol}"]\n`;
+            });
+            src += '    end\n';
+        });
+
+        // Connections
+        const typeArrows = { solid: '-->', dashed: '-.->' };
+        connections.forEach(c => {
+            const ct = wiringData.connectionTypes.find(t => t.id === c.type);
+            const arrow = ct ? typeArrows[ct.arrow] || '-->' : '-->';
+            src += `    ${c.from} ${arrow}|${c.label}| ${c.to}\n`;
+        });
+
+        return src;
+    }
+
+    async function renderDiagram() {
+        const el = document.getElementById('wiring-diagram');
+        const src = buildMermaidSource();
+
+        el.innerHTML = `<pre class="mermaid">${escapeHtml(src)}</pre>`;
+
+        await initMermaid();
+    }
+
+    async function initMermaid() {
+        if (!window.mermaid) {
+            // Wait for module to load
+            await new Promise(resolve => {
+                const check = setInterval(() => {
+                    if (window.mermaid) { clearInterval(check); resolve(); }
+                }, 100);
+            });
+        }
+        const isLight = document.body.classList.contains('light-theme');
+        window.mermaid.initialize({
+            startOnLoad: false,
+            theme: isLight ? 'default' : 'dark',
+            flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+            securityLevel: 'loose'
+        });
+        await window.mermaid.run({ querySelector: '#wiring-diagram .mermaid' });
+    }
+
+    // --- Legend ---
+    function renderLegend() {
+        const el = document.getElementById('wiring-legend');
+        el.innerHTML = wiringData.connectionTypes.map(ct => `
+            <div class="wiring-legend-item">
+                <span class="wiring-legend-line" style="--line-color: ${ct.color}; ${ct.arrow === 'dashed' ? 'border-style: dashed;' : ''}"></span>
+                <div class="wiring-legend-content">
+                    <span class="wiring-legend-label">${escapeHtml(ct.label)}</span>
+                    <span class="wiring-legend-desc">${escapeHtml(ct.description)}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // --- Zones ---
+    function renderZones() {
+        const el = document.getElementById('wiring-zones');
+        el.innerHTML = instrumentData.zones.map(z => {
+            const count = instrumentData.instruments.filter(i => i.zone === z.id).length;
+            const desc = wiringData.zoneDescriptions[z.id] || z.description;
+            return `
+                <div class="wiring-zone-card" style="--zone-color: ${z.color}">
+                    <span class="wiring-zone-label">${escapeHtml(z.label)}</span>
+                    <span class="wiring-zone-name">${escapeHtml(z.name)}</span>
+                    <span class="wiring-zone-count">${count} instruments</span>
+                    <span class="wiring-zone-desc">${escapeHtml(desc)}</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // --- Stats ---
+    function renderStats() {
+        const el = document.getElementById('wiring-stats');
+        const totalInst = instrumentData.instruments.length;
+        const totalConn = wiringData.connections.length;
+        const connectedInst = new Set();
+        wiringData.connections.forEach(c => { connectedInst.add(c.from); connectedInst.add(c.to); });
+
+        const typeCounts = {};
+        wiringData.connectionTypes.forEach(ct => { typeCounts[ct.id] = 0; });
+        wiringData.connections.forEach(c => { typeCounts[c.type]++; });
+
+        // Most connected instruments
+        const degree = {};
+        wiringData.connections.forEach(c => {
+            degree[c.from] = (degree[c.from] || 0) + 1;
+            degree[c.to] = (degree[c.to] || 0) + 1;
+        });
+        const topNodes = Object.entries(degree)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+
+        el.innerHTML = `
+            <div class="wiring-stats-grid">
+                <div class="wiring-stat">
+                    <span class="wiring-stat-value">${totalInst}</span>
+                    <span class="wiring-stat-label">Total Instruments</span>
+                </div>
+                <div class="wiring-stat">
+                    <span class="wiring-stat-value">${connectedInst.size}</span>
+                    <span class="wiring-stat-label">Connected</span>
+                </div>
+                <div class="wiring-stat">
+                    <span class="wiring-stat-value">${totalConn}</span>
+                    <span class="wiring-stat-label">Connections</span>
+                </div>
+                <div class="wiring-stat">
+                    <span class="wiring-stat-value">${instrumentData.zones.length}</span>
+                    <span class="wiring-stat-label">Zones</span>
+                </div>
+            </div>
+            <div class="wiring-type-breakdown">
+                <h4 class="wiring-breakdown-title">By Type</h4>
+                ${wiringData.connectionTypes.map(ct => `
+                    <div class="wiring-type-row">
+                        <span class="wiring-type-dot" style="background: ${ct.color}"></span>
+                        <span class="wiring-type-name">${escapeHtml(ct.label)}</span>
+                        <span class="wiring-type-count">${typeCounts[ct.id]}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="wiring-top-nodes">
+                <h4 class="wiring-breakdown-title">Most Connected</h4>
+                ${topNodes.map(([id, count]) => `
+                    <div class="wiring-type-row">
+                        <span class="wiring-node-symbol">${escapeHtml(getInstrumentName(id))}</span>
+                        <span class="wiring-type-name">${escapeHtml(id)}</span>
+                        <span class="wiring-type-count">${count}</span>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    // --- Init ---
+    initTheme();
+    loadAllData();
+    </script>
+</body>
+</html>
