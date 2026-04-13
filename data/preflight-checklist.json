@@ -1,0 +1,80 @@
+{
+    "version": "1.0.0",
+    "lastUpdated": "2026-04-13",
+    "description": "Pre-Flight Checklist — interactive onboarding readiness tracker for GitHub Copilot. Categories map to airport journey perspectives.",
+
+    "intro": "Before every flight, pilots run through a pre-flight checklist. This is yours for GitHub Copilot. Work through each category, check off completed items, and your progress is saved automatically. When every box is green, you're cleared for takeoff.",
+
+    "categories": [
+        {
+            "id": "terminal",
+            "title": "Terminal — Account & Plan",
+            "icon": "🛬",
+            "perspective": "terminal.html",
+            "items": [
+                { "id": "github-account", "label": "GitHub account created and active", "detail": "You need a GitHub account to use any Copilot plan." },
+                { "id": "plan-selected", "label": "Copilot plan selected (Free, Pro, Pro+, Business, or Enterprise)", "detail": "Free gives 2,000 completions and 50 chat messages/month. Pro and above unlock unlimited completions and agent mode." },
+                { "id": "copilot-enabled", "label": "Copilot enabled on your GitHub account or organization", "detail": "For Business/Enterprise, an admin must enable Copilot at the org or enterprise level." },
+                { "id": "billing-confirmed", "label": "Billing confirmed (if paid plan)", "detail": "Check Settings → Billing → Copilot to verify your subscription is active." }
+            ]
+        },
+        {
+            "id": "boarding",
+            "title": "Boarding — IDE Setup",
+            "icon": "🎫",
+            "perspective": "terminal.html",
+            "items": [
+                { "id": "ide-installed", "label": "Primary IDE installed and up to date", "detail": "VS Code, JetBrains, Visual Studio, Neovim, or Xcode." },
+                { "id": "extension-installed", "label": "GitHub Copilot extension installed in your IDE", "detail": "Search for 'GitHub Copilot' in your IDE's extension marketplace." },
+                { "id": "signed-in", "label": "Signed in to Copilot with your GitHub account", "detail": "The extension will prompt you to authenticate via browser." },
+                { "id": "completions-working", "label": "Inline completions appear when you type", "detail": "Open a code file, start typing a function, and verify ghost text appears." }
+            ]
+        },
+        {
+            "id": "jet-bridge",
+            "title": "Jet Bridge — Skills",
+            "icon": "🔗",
+            "perspective": "jet-bridge.html",
+            "items": [
+                { "id": "chat-tested", "label": "Used Copilot Chat at least once", "detail": "Open Chat (Ctrl+Shift+I in VS Code) and ask a question about your code." },
+                { "id": "workspace-tried", "label": "Tried @workspace for codebase-wide questions", "detail": "@workspace searches your full project using embeddings. Great for architecture questions." },
+                { "id": "file-ref-used", "label": "Used #file to scope context to a specific file", "detail": "More precise than @workspace when you know which file contains the answer." },
+                { "id": "edit-mode-tested", "label": "Tried Edit mode (Ctrl+I) for a targeted change", "detail": "Select code, press Ctrl+I, describe the change. Review the diff before accepting." },
+                { "id": "agent-mode-tested", "label": "Tried Agent Mode for a multi-step task", "detail": "Switch to Agent mode in Chat and ask Copilot to plan and execute a change." }
+            ]
+        },
+        {
+            "id": "security",
+            "title": "Security — Understanding the Risks",
+            "icon": "🔍",
+            "perspective": "security.html",
+            "items": [
+                { "id": "threat-model-reviewed", "label": "Reviewed the Copilot threat model", "detail": "Understand data flow, prompt injection risks, and telemetry before using Copilot on sensitive code." },
+                { "id": "data-flow-understood", "label": "Understand where your code goes (and doesn't go)", "detail": "Copilot sends context to GitHub's proxy, then to the model provider. No training on your code." },
+                { "id": "content-exclusion-set", "label": "Content exclusion configured (if Business/Enterprise)", "detail": "Exclude sensitive repos or paths from Copilot completions via org settings." }
+            ]
+        },
+        {
+            "id": "tower",
+            "title": "Tower — Governance (Admins)",
+            "icon": "🗼",
+            "perspective": "tower.html",
+            "items": [
+                { "id": "org-policy-reviewed", "label": "Organization Copilot policy reviewed", "detail": "Enable/disable Copilot features per organization. Set suggestion matching to block." },
+                { "id": "seat-assignment", "label": "Seats assigned to the right teams", "detail": "Business/Enterprise: assign Copilot seats via Teams or individual users." },
+                { "id": "audit-logs-checked", "label": "Audit log streaming configured (Enterprise)", "detail": "Stream Copilot events to your SIEM for compliance monitoring." }
+            ]
+        },
+        {
+            "id": "runway",
+            "title": "Runway — Model Awareness",
+            "icon": "🛤",
+            "perspective": "runway.html",
+            "items": [
+                { "id": "default-model-known", "label": "Know which model powers your default completions", "detail": "GPT-4.1 is the default for completions. Chat uses GPT-4.1 or Claude Sonnet depending on the task." },
+                { "id": "model-picker-tried", "label": "Tried switching models in Chat (if Pro/Pro+)", "detail": "Pro and above can pick from GPT-5.x, Claude, Gemini, and more via the model picker." },
+                { "id": "premium-budget-aware", "label": "Understand your premium request budget", "detail": "Free: 0, Pro: 1,000/month, Pro+: 3,000/month. Premium models consume these requests." }
+            ]
+        }
+    ]
+}

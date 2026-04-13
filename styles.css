@@ -1575,6 +1575,235 @@ body.light-theme .jb-pattern-example {
 body.light-theme .jb-pattern-example code { color: #009944; }
 body.light-theme .jb-pattern-example .jb-compare-label { color: rgba(0, 130, 60, 0.5); }
 
+/* ============================================================
+   PRE-FLIGHT CHECKLIST — Interactive Onboarding
+   ============================================================ */
+
+/* --- Progress bar --- */
+.preflight-progress-section {
+    margin-bottom: 28px;
+    padding: 18px 20px;
+    background: rgba(13, 17, 23, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+}
+.preflight-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+.preflight-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+}
+.preflight-progress-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+.preflight-progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+.preflight-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff88, #00cc6a);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+.preflight-progress-status {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.45);
+    font-style: italic;
+}
+.preflight-progress-status.complete {
+    color: #00ff88;
+    font-style: normal;
+    font-weight: 600;
+}
+
+/* --- Category --- */
+.preflight-category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+}
+.preflight-category-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: rgba(255, 170, 0, 0.6);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+.preflight-category-link:hover { color: #ffaa00; }
+.preflight-category-progress {
+    margin-bottom: 12px;
+}
+.preflight-cat-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.06em;
+}
+
+/* --- Checklist items --- */
+.preflight-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.preflight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.preflight-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+.preflight-item.checked {
+    border-left-color: #00ff88;
+    background: rgba(0, 255, 136, 0.03);
+}
+
+/* Custom checkbox */
+.preflight-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.preflight-checkmark {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    margin-top: 1px;
+    position: relative;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.preflight-item.checked .preflight-checkmark {
+    background: #00ff88;
+    border-color: #00ff88;
+}
+.preflight-item.checked .preflight-checkmark::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid #0d1117;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.preflight-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+.preflight-item-label {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.45;
+}
+.preflight-item.checked .preflight-item-label {
+    color: rgba(0, 255, 136, 0.85);
+}
+.preflight-item-detail {
+    font-size: 0.64rem;
+    color: rgba(255, 255, 255, 0.35);
+    line-height: 1.45;
+}
+
+/* --- Actions --- */
+.preflight-actions {
+    margin-top: 24px;
+    text-align: center;
+}
+.preflight-reset {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    background: transparent;
+    border: 1px solid rgba(255, 102, 102, 0.3);
+    border-radius: 3px;
+    color: rgba(255, 102, 102, 0.6);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.preflight-reset:hover {
+    background: rgba(255, 102, 102, 0.1);
+    color: #ff6666;
+}
+
+/* --- Pre-Flight light theme --- */
+body.light-theme .preflight-progress-section {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .preflight-progress-label { color: rgba(0, 0, 0, 0.4); }
+body.light-theme .preflight-progress-count { color: rgba(0, 0, 0, 0.65); }
+body.light-theme .preflight-progress-bar { background: rgba(0, 0, 0, 0.06); }
+body.light-theme .preflight-progress-fill { background: linear-gradient(90deg, #009944, #00782e); }
+body.light-theme .preflight-progress-status { color: rgba(0, 0, 0, 0.45); }
+body.light-theme .preflight-progress-status.complete { color: #009944; }
+
+body.light-theme .preflight-category-link { color: rgba(179, 107, 0, 0.6); }
+body.light-theme .preflight-category-link:hover { color: #b36b00; }
+body.light-theme .preflight-cat-count { color: rgba(0, 0, 0, 0.4); }
+
+body.light-theme .preflight-item {
+    background: rgba(0, 0, 0, 0.015);
+    border-color: rgba(0, 0, 0, 0.08);
+    border-left-color: rgba(0, 0, 0, 0.1);
+}
+body.light-theme .preflight-item:hover { background: rgba(0, 0, 0, 0.03); }
+body.light-theme .preflight-item.checked {
+    border-left-color: #009944;
+    background: rgba(0, 153, 68, 0.04);
+}
+body.light-theme .preflight-checkmark { border-color: rgba(0, 0, 0, 0.2); }
+body.light-theme .preflight-item.checked .preflight-checkmark {
+    background: #009944;
+    border-color: #009944;
+}
+body.light-theme .preflight-item.checked .preflight-checkmark::after {
+    border-color: #fff;
+}
+body.light-theme .preflight-item-label { color: rgba(0, 0, 0, 0.75); }
+body.light-theme .preflight-item.checked .preflight-item-label { color: #009944; }
+body.light-theme .preflight-item-detail { color: rgba(0, 0, 0, 0.4); }
+
+body.light-theme .preflight-reset {
+    border-color: rgba(200, 50, 50, 0.3);
+    color: rgba(200, 50, 50, 0.6);
+}
+body.light-theme .preflight-reset:hover {
+    background: rgba(200, 50, 50, 0.08);
+    color: #c83232;
+}
+
 /* --- Security Perspective --- */
 .security-main {
     max-width: 1200px;

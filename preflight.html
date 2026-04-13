@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Flight Checklist — Copilot Cockpit</title>
+    <meta name="description" content="Interactive pre-flight checklist for GitHub Copilot onboarding. Track your readiness across account setup, IDE, skills, security, governance, and model awareness.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="cockpit-header">
+        <div class="cockpit-title">
+            <span class="icon">✅</span>
+            <div>
+                <h1>Pre-Flight Checklist</h1>
+                <div class="subtitle">Onboarding readiness — check every item before takeoff</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <nav class="header-nav" aria-label="Perspectives">
+                <a href="terminal.html" class="nav-link">Terminal</a>
+                <a href="security.html" class="nav-link">Security</a>
+                <a href="jet-bridge.html" class="nav-link">Jet Bridge</a>
+                <a href="ramp.html" class="nav-link">Ramp</a>
+                <a href="index.html" class="nav-link">Cockpit</a>
+                <a href="runway.html" class="nav-link">Runway</a>
+                <a href="tower.html" class="nav-link">Tower</a>
+                <span class="nav-separator">·</span>
+                <a href="flight-log.html" class="nav-link">Flight Log</a>
+                <a href="preflight.html" class="nav-link active">Pre-Flight</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">DAY</button>
+        </div>
+    </header>
+
+    <!-- ==================== CHECKLIST CONTENT ==================== -->
+    <main class="runway-main" id="preflight-main">
+        <section class="runway-intro">
+            <h2>✅ Pre-Flight Checklist</h2>
+            <p id="preflight-intro"></p>
+        </section>
+
+        <!-- Progress bar -->
+        <section class="preflight-progress-section" id="progress-section">
+            <div class="preflight-progress-header">
+                <span class="preflight-progress-label">READINESS</span>
+                <span class="preflight-progress-count" id="progress-count">0 / 0</span>
+            </div>
+            <div class="preflight-progress-bar">
+                <div class="preflight-progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="preflight-progress-status" id="progress-status">Loading checklist…</div>
+        </section>
+
+        <!-- Categories rendered by JS -->
+        <div id="preflight-categories"></div>
+
+        <!-- Reset button -->
+        <div class="preflight-actions">
+            <button class="preflight-reset" id="reset-btn" title="Uncheck all items and start over">Reset Checklist</button>
+        </div>
+    </main>
+
+    <script>
+    // ============================================================
+    // PRE-FLIGHT CHECKLIST — Interactive Onboarding
+    // ============================================================
+
+    const STORAGE_KEY = 'copilot-preflight';
+    let checklistData = null;
+    let checkedItems = {};
+
+    // --- Theme ---
+    function initTheme() {
+        const saved = localStorage.getItem('cockpit-theme');
+        if (saved === 'light') {
+            document.body.classList.add('light-theme');
+            document.getElementById('theme-toggle').textContent = 'NIGHT';
+        }
+    }
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('cockpit-theme', isLight ? 'light' : 'dark');
+        document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
+    });
+
+    // --- LocalStorage ---
+    function loadCheckedItems() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            checkedItems = raw ? JSON.parse(raw) : {};
+        } catch { checkedItems = {}; }
+    }
+
+    function saveCheckedItems() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(checkedItems));
+    }
+
+    function toggleItem(id) {
+        checkedItems[id] = !checkedItems[id];
+        saveCheckedItems();
+        updateItemUI(id);
+        updateProgress();
+    }
+
+    // --- Load data ---
+    async function loadAllData() {
+        try {
+            const resp = await fetch('data/preflight-checklist.json');
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            checklistData = await resp.json();
+            loadCheckedItems();
+            init();
+        } catch (err) {
+            document.getElementById('preflight-main').innerHTML =
+                `<p style="color:#ff4444;padding:40px;">DATA LINK LOST — ${escapeHtml(err.message)}</p>`;
+        }
+    }
+
+    function init() {
+        document.getElementById('preflight-intro').textContent = checklistData.intro;
+        renderCategories();
+        updateProgress();
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[c]);
+    }
+
+    // --- Render ---
+    function renderCategories() {
+        const el = document.getElementById('preflight-categories');
+        el.innerHTML = checklistData.categories.map(cat => `
+            <section class="runway-section preflight-category" data-category-id="${escapeHtml(cat.id)}">
+                <div class="preflight-category-header">
+                    <h3 class="runway-section-title">
+                        ${escapeHtml(cat.icon)} ${escapeHtml(cat.title)}
+                    </h3>
+                    <a href="${escapeHtml(cat.perspective)}" class="preflight-category-link">Learn more →</a>
+                </div>
+                <div class="preflight-category-progress">
+                    <span class="preflight-cat-count" id="cat-count-${escapeHtml(cat.id)}">0/${cat.items.length}</span>
+                </div>
+                <div class="preflight-items">
+                    ${cat.items.map(item => `
+                        <label class="preflight-item ${checkedItems[item.id] ? 'checked' : ''}" id="item-${escapeHtml(item.id)}" data-item-id="${escapeHtml(item.id)}">
+                            <input type="checkbox" class="preflight-checkbox" ${checkedItems[item.id] ? 'checked' : ''}>
+                            <span class="preflight-checkmark"></span>
+                            <div class="preflight-item-content">
+                                <span class="preflight-item-label">${escapeHtml(item.label)}</span>
+                                <span class="preflight-item-detail">${escapeHtml(item.detail)}</span>
+                            </div>
+                        </label>
+                    `).join('')}
+                </div>
+            </section>
+        `).join('');
+
+        // Bind checkbox events
+        el.querySelectorAll('.preflight-checkbox').forEach(cb => {
+            cb.addEventListener('change', (e) => {
+                const item = e.target.closest('.preflight-item');
+                toggleItem(item.dataset.itemId);
+            });
+        });
+    }
+
+    function updateItemUI(id) {
+        const el = document.getElementById(`item-${id}`);
+        if (!el) return;
+        const cb = el.querySelector('.preflight-checkbox');
+        if (checkedItems[id]) {
+            el.classList.add('checked');
+            cb.checked = true;
+        } else {
+            el.classList.remove('checked');
+            cb.checked = false;
+        }
+    }
+
+    function updateProgress() {
+        let total = 0;
+        let done = 0;
+
+        checklistData.categories.forEach(cat => {
+            let catDone = 0;
+            cat.items.forEach(item => {
+                total++;
+                if (checkedItems[item.id]) { done++; catDone++; }
+            });
+            const catEl = document.getElementById(`cat-count-${cat.id}`);
+            if (catEl) catEl.textContent = `${catDone}/${cat.items.length}`;
+        });
+
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+        document.getElementById('progress-count').textContent = `${done} / ${total}`;
+        document.getElementById('progress-fill').style.width = `${pct}%`;
+
+        const statusEl = document.getElementById('progress-status');
+        if (pct === 0) statusEl.textContent = 'Pre-flight checks not started';
+        else if (pct < 50) statusEl.textContent = 'Pre-flight in progress — keep going';
+        else if (pct < 100) statusEl.textContent = 'Almost ready — a few items remaining';
+        else statusEl.textContent = '✓ ALL CHECKS COMPLETE — CLEARED FOR TAKEOFF';
+
+        statusEl.className = 'preflight-progress-status' + (pct === 100 ? ' complete' : '');
+    }
+
+    // --- Reset ---
+    document.getElementById('reset-btn').addEventListener('click', () => {
+        if (!confirm('Reset all checklist items? This cannot be undone.')) return;
+        checkedItems = {};
+        saveCheckedItems();
+        renderCategories();
+        updateProgress();
+    });
+
+    // --- Init ---
+    initTheme();
+    loadAllData();
+    </script>
+</body>
+</html>
