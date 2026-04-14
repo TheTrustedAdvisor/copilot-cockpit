@@ -40,10 +40,11 @@ const ZONE_LABELS = {
 // --- Boot ---
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const [resp, threatsResp, governanceResp] = await Promise.all([
+        const [resp, threatsResp, governanceResp, modelsResp] = await Promise.all([
             fetch('data/copilot-instruments.json'),
             fetch('data/security-threats.json').catch(() => null),
-            fetch('data/governance-controls.json').catch(() => null)
+            fetch('data/governance-controls.json').catch(() => null),
+            fetch('data/copilot-models.json').catch(() => null)
         ]);
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         cockpitData = await resp.json();
@@ -66,6 +67,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 governanceIndex = new Set((governanceData.controls || []).map(c => c.id));
             } catch (e) {
                 console.warn('Governance index unavailable:', e);
+            }
+        }
+
+        // Load full model catalog for engine zone — soft-fail to embedded fallback
+        if (modelsResp && modelsResp.ok) {
+            try {
+                const modelsData = await modelsResp.json();
+                cockpitData._engineModels = (modelsData.models || [])
+                    .filter(m => m.status !== 'deprecated')
+                    .map(m => ({
+                        name: m.displayName,
+                        provider: m.provider,
+                        tier: m.provider,
+                        included: Object.values(m.planAvailability || {}).some(v => v === true || v === 'included')
+                    }));
+            } catch (e) {
+                console.warn('Model catalog unavailable, using embedded:', e);
             }
         }
 
@@ -146,28 +164,28 @@ function renderInstrumentCard(instrument, zone) {
     const meta = instrument.shortDescription || '';
     return `
         <div class="instrument"
-             data-id="${instrument.id}"
-             data-zone="${instrument.zone}"
-             data-status="${instrument.status}"
-             data-flight-modes="${(instrument.flightMode || []).join(',')}"
-             data-plans="${planKeys(instrument)}"
-             onclick="openDetailPanel('${instrument.id}')"
+             data-id="${escapeHtml(instrument.id)}"
+             data-zone="${escapeHtml(instrument.zone)}"
+             data-status="${escapeHtml(instrument.status)}"
+             data-flight-modes="${escapeHtml((instrument.flightMode || []).join(','))}"
+             data-plans="${escapeHtml(planKeys(instrument))}"
+             onclick="openDetailPanel('${escapeHtml(instrument.id)}')"
              tabindex="0"
              role="button"
-             aria-label="${instrument.name}">
+             aria-label="${escapeHtml(instrument.name)}">
             <div class="instrument-top">
-                <span class="instrument-symbol">${instrument.symbol}</span>
+                <span class="instrument-symbol">${escapeHtml(instrument.symbol)}</span>
                 <span class="instrument-led ${statusClass}" title="${statusLabel(statusClass)}"></span>
             </div>
-            <div class="instrument-name">${instrument.name}</div>
-            <div class="instrument-meta">${meta}</div>
+            <div class="instrument-name">${escapeHtml(instrument.name)}</div>
+            <div class="instrument-meta">${escapeHtml(meta)}</div>
         </div>
     `;
 }
 
 // --- Engine Zone (EICAS) — special: renders AI models ---
 function renderEngineZone(zone) {
-    const models = cockpitData.models || [];
+    const models = cockpitData._engineModels || cockpitData.models || [];
     const grouped = {};
     models.forEach(m => {
         const tier = m.tier || 'other';
@@ -177,11 +195,11 @@ function renderEngineZone(zone) {
 
     const clustersHTML = Object.entries(grouped).map(([tier, models]) => `
         <div class="engine-cluster">
-            <div class="engine-cluster-label">${tier}</div>
+            <div class="engine-cluster-label">${escapeHtml(tier)}</div>
             <div class="engine-models">
                 ${models.map(m => `
-                    <span class="engine-model ${m.included || m.tier === 'included' ? 'included' : ''}" title="${m.provider} — ${m.name}${m.description ? '\n' + m.description : ''}">
-                        ${m.name}
+                    <span class="engine-model ${m.included || m.tier === 'included' ? 'included' : ''}" title="${escapeHtml(m.provider)} — ${escapeHtml(m.name)}${m.description ? '\n' + escapeHtml(m.description) : ''}">
+                        ${escapeHtml(m.name)}
                     </span>
                 `).join('')}
             </div>
@@ -248,9 +266,9 @@ function openDetailPanel(instrumentId, pushState = true) {
     panel.innerHTML = `
         <div class="detail-header">
             <div>
-                <div class="detail-symbol" style="color:${zoneColor}">${instrument.symbol}</div>
-                <div class="detail-name">${instrument.name}</div>
-                <div class="detail-zone-badge" style="color:${zoneColor}">${zoneName}</div>
+                <div class="detail-symbol" style="color:${zoneColor}">${escapeHtml(instrument.symbol)}</div>
+                <div class="detail-name">${escapeHtml(instrument.name)}</div>
+                <div class="detail-zone-badge" style="color:${zoneColor}">${escapeHtml(zoneName)}</div>
             </div>
             <button class="detail-close" onclick="closeDetailPanel()" aria-label="Close">[ESC]</button>
         </div>
@@ -426,7 +444,7 @@ function renderOverviewTab(instrument, zoneColor) {
     if (instrument.description) {
         html += `
             <div class="detail-section">
-                <div class="detail-description">${instrument.description}</div>
+                <div class="detail-description">${escapeHtml(instrument.description)}</div>
             </div>`;
     }
 
@@ -460,8 +478,8 @@ function renderOverviewTab(instrument, zoneColor) {
                 <div class="detail-section-title">Capabilities</div>
                 <ul class="capability-list">
                     ${instrument.capabilities.map(c => {
-                        if (typeof c === 'string') return `<li>${c}</li>`;
-                        return `<li><strong>${c.name}</strong>${c.description ? ' — ' + c.description : ''}</li>`;
+                        if (typeof c === 'string') return `<li>${escapeHtml(c)}</li>`;
+                        return `<li><strong>${escapeHtml(c.name)}</strong>${c.description ? ' — ' + escapeHtml(c.description) : ''}</li>`;
                     }).join('')}
                 </ul>
             </div>`;
@@ -477,8 +495,8 @@ function renderOverviewTab(instrument, zoneColor) {
                     const text = s.description || s.message || '';
                     return `
                     <div class="squawk-card">
-                        <div class="squawk-code">SQUAWK ${s.code} — ${title}</div>
-                        <div class="squawk-text">${text}</div>
+                        <div class="squawk-code">SQUAWK ${escapeHtml(s.code)} — ${escapeHtml(title)}</div>
+                        <div class="squawk-text">${escapeHtml(text)}</div>
                     </div>`;
                 }).join('')}
             </div>`;
@@ -490,7 +508,7 @@ function renderOverviewTab(instrument, zoneColor) {
             <div class="detail-section">
                 <div class="detail-section-title">Pro Tip</div>
                 <div class="detail-description" style="border-left:2px solid ${zoneColor};padding-left:12px;">
-                    ${instrument.proTip}
+                    ${escapeHtml(instrument.proTip)}
                 </div>
             </div>`;
     }
@@ -504,7 +522,7 @@ function renderOverviewTab(instrument, zoneColor) {
                     ${instrument.relatedInstruments.map(rid => {
                         const rel = allInstruments.find(i => i.id === rid);
                         if (!rel) return '';
-                        return `<a class="related-chip" href="#instrument-${rid}" onclick="event.preventDefault();openDetailPanel('${rid}')">${rel.symbol} ${rel.name}</a>`;
+                        return `<a class="related-chip" href="#instrument-${escapeHtml(rid)}" onclick="event.preventDefault();openDetailPanel('${escapeHtml(rid)}')">${escapeHtml(rel.symbol)} ${escapeHtml(rel.name)}</a>`;
                     }).join('')}
                 </div>
             </div>`;
@@ -557,7 +575,7 @@ function renderDiagramsTab(instrument) {
 
     return instrument.mermaidDiagrams.map(d => `
         <div class="mermaid-container">
-            <div class="mermaid-title">${d.title || ''}</div>
+            <div class="mermaid-title">${escapeHtml(d.title || '')}</div>
             <pre class="mermaid">${d.diagram}</pre>
         </div>
     `).join('');
@@ -593,10 +611,10 @@ function renderMediaTab(instrument) {
                 ${instrument.terminalRecordings.map(rec => `
                     <div class="media-recording">
                         <div class="media-recording-header">
-                            <span class="media-recording-title">${rec.title || ''}</span>
-                            ${rec.duration ? `<span class="media-recording-duration">${rec.duration}</span>` : ''}
+                            <span class="media-recording-title">${escapeHtml(rec.title || '')}</span>
+                            ${rec.duration ? `<span class="media-recording-duration">${escapeHtml(rec.duration)}</span>` : ''}
                         </div>
-                        <img src="${rec.gifPath}" alt="${rec.title || 'Terminal recording'}"
+                        <img src="${escapeHtml(rec.gifPath)}" alt="${escapeHtml(rec.title || 'Terminal recording')}"
                              class="media-recording-gif" loading="lazy">
                     </div>
                 `).join('')}
@@ -611,12 +629,12 @@ function renderMediaTab(instrument) {
                 ${instrument.videos.map(vid => `
                     <div class="media-video">
                         <div class="media-recording-header">
-                            <span class="media-recording-title">${vid.title || ''}</span>
-                            ${vid.duration ? `<span class="media-recording-duration">${vid.duration}</span>` : ''}
+                            <span class="media-recording-title">${escapeHtml(vid.title || '')}</span>
+                            ${vid.duration ? `<span class="media-recording-duration">${escapeHtml(vid.duration)}</span>` : ''}
                         </div>
                         <div class="media-video-embed">
-                            <iframe src="https://www.youtube-nocookie.com/embed/${vid.youtubeId}"
-                                    title="${vid.title || ''}" frameborder="0"
+                            <iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(vid.youtubeId)}"
+                                    title="${escapeHtml(vid.title || '')}" frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowfullscreen loading="lazy"></iframe>
                         </div>
@@ -640,10 +658,10 @@ function renderResourcesTab(instrument, zoneColor) {
     const links = instrument.links;
     let linksHTML = '';
     if (Array.isArray(links) && links.length > 0) {
-        linksHTML = links.map(l => `<a class="detail-link" href="${l.url}" target="_blank" rel="noopener">${l.label || 'LINK'}</a>`).join('');
+        linksHTML = links.map(l => `<a class="detail-link" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.label || 'LINK')}</a>`).join('');
     } else if (links && typeof links === 'object') {
         const entries = Object.entries(links).filter(([, v]) => v);
-        linksHTML = entries.map(([key, url]) => `<a class="detail-link" href="${url}" target="_blank" rel="noopener">${key.toUpperCase()}</a>`).join('');
+        linksHTML = entries.map(([key, url]) => `<a class="detail-link" href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(key.toUpperCase())}</a>`).join('');
     }
     if (linksHTML) {
         html += `
@@ -656,8 +674,8 @@ function renderResourcesTab(instrument, zoneColor) {
     // Security relevance (handle both string[] and object[] aspects)
     if (instrument.securityRelevance && instrument.securityRelevance.relevant) {
         const aspects = (instrument.securityRelevance.aspects || []).map(a => {
-            if (typeof a === 'string') return a;
-            return `<strong>${a.title}</strong> — ${a.description}`;
+            if (typeof a === 'string') return escapeHtml(a);
+            return `<strong>${escapeHtml(a.title)}</strong> — ${escapeHtml(a.description)}`;
         });
         html += `
             <div class="detail-section">
@@ -665,7 +683,7 @@ function renderResourcesTab(instrument, zoneColor) {
                 <ul class="capability-list">
                     ${aspects.map(a => `<li>${a}</li>`).join('')}
                 </ul>
-                ${instrument.securityRelevance.complianceNotes ? `<div class="detail-description" style="margin-top:8px;font-size:0.6rem;opacity:0.6">${instrument.securityRelevance.complianceNotes}</div>` : ''}
+                ${instrument.securityRelevance.complianceNotes ? `<div class="detail-description" style="margin-top:8px;font-size:0.6rem;opacity:0.6">${escapeHtml(instrument.securityRelevance.complianceNotes)}</div>` : ''}
             </div>`;
     }
 
@@ -676,11 +694,11 @@ function renderResourcesTab(instrument, zoneColor) {
                 <div class="detail-section-title">Data Quality</div>
                 ${instrument.lastVerified ? `<div class="detail-status-row">
                     <span class="detail-status-label">Verified</span>
-                    <span class="detail-status-value">${instrument.lastVerified}</span>
+                    <span class="detail-status-value">${escapeHtml(instrument.lastVerified)}</span>
                 </div>` : ''}
                 ${instrument.confidenceScore ? `<div class="detail-status-row">
                     <span class="detail-status-label">Confidence</span>
-                    <span class="detail-status-value">${instrument.confidenceScore}%</span>
+                    <span class="detail-status-value">${escapeHtml(String(instrument.confidenceScore))}%</span>
                 </div>` : ''}
             </div>`;
     }

@@ -2,7 +2,6 @@
     "version": "1.0.0",
     "lastUpdated": "2026-04-13",
     "description": "Sovereign Cloud & Data Residency reference for GitHub Copilot. Deployment options, data flow classification, provider EU strategies, and residual risks.",
-
     "sovereignPillars": [
         {
             "id": "data-residency",
@@ -26,7 +25,6 @@
             "copilotRelevance": "Azure OpenAI with Confidential Computing can process Copilot prompts inside TEEs — the strongest sovereignty guarantee for data in use. Not available on AWS Bedrock or Google Vertex AI today."
         }
     ],
-
     "deploymentOptions": [
         {
             "id": "standard-copilot",
@@ -37,31 +35,65 @@
             "effort": "low",
             "euCompliant": false,
             "dataFlows": {
-                "inMotion": { "eu": false, "note": "Prompts/completions transit US-based GitHub API proxy" },
-                "inUse": { "eu": false, "note": "Model inference on provider infrastructure (primarily US)" },
-                "atRest": { "eu": false, "note": "Zero data retention by providers; telemetry stored in US" }
+                "inMotion": {
+                    "eu": false,
+                    "note": "Prompts/completions transit US-based GitHub API proxy"
+                },
+                "inUse": {
+                    "eu": false,
+                    "note": "Model inference on provider infrastructure (primarily US)"
+                },
+                "atRest": {
+                    "eu": false,
+                    "note": "Zero data retention by providers; telemetry stored in US"
+                }
             },
             "zeroRetention": true,
-            "pros": ["Simplest deployment — no configuration", "Full feature parity across all surfaces", "All models available including latest previews"],
-            "cons": ["No EU data residency for any Copilot data flow", "Schrems II exposure for regulated industries", "Telemetry and usage logs in US"]
+            "pros": [
+                "Simplest deployment — no configuration",
+                "Full feature parity across all surfaces",
+                "All models available including latest previews"
+            ],
+            "cons": [
+                "No EU data residency for any Copilot data flow",
+                "Schrems II exposure for regulated industries",
+                "Telemetry and usage logs in US"
+            ]
         },
         {
             "id": "ghe-data-residency",
             "title": "GHE.com with Data Residency",
             "shortTitle": "GHE.com DR",
-            "description": "GitHub Enterprise Cloud on a dedicated GHE.com subdomain with regional data storage (EU, AU, US, JP). Pins repository data, user-generated content, GitHub Actions data, and user metadata to the selected region. Requires Enterprise Managed Users (EMU), SCIM + SAML/OIDC.",
+            "description": "GitHub Enterprise Cloud on a dedicated GHE.com subdomain with regional data storage (EU, AU, US, JP). Pins repository data, user-generated content, GitHub Actions data, and user metadata to the selected region. Requires Enterprise Managed Users (EMU), SCIM + SAML/OIDC. As of January 2026, Copilot usage metrics and dashboards are available in public preview for EU, AU, US, and JP data residency tenants.",
             "scope": "enterprise",
             "effort": "high",
             "euCompliant": false,
             "criticalInsight": "GHE.com Data Residency does NOT cover Copilot prompt and completion traffic. Copilot data is explicitly stored OUTSIDE the selected region. Organizations adopting GHE.com for data residency must not assume Copilot traffic stays in the EU.",
             "dataFlows": {
-                "inMotion": { "eu": false, "note": "Copilot traffic still routes through US proxy" },
-                "inUse": { "eu": false, "note": "Model inference remains on US-region providers" },
-                "atRest": { "eu": "partial", "note": "Repo data in EU; Copilot telemetry in US" }
+                "inMotion": {
+                    "eu": false,
+                    "note": "Copilot traffic still routes through US proxy"
+                },
+                "inUse": {
+                    "eu": false,
+                    "note": "Model inference remains on US-region providers"
+                },
+                "atRest": {
+                    "eu": "partial",
+                    "note": "Repo data in EU; Copilot telemetry in US"
+                }
             },
             "zeroRetention": true,
-            "pros": ["EU residency for repositories, issues, CI/CD", "Schrems II compliance for non-AI data", "Audit logs and user metadata in region"],
-            "cons": ["Copilot data NOT covered — prompts/completions still US", "Separate SKU with feature parity gaps", "Requires EMU — no personal accounts"]
+            "pros": [
+                "EU residency for repositories, issues, CI/CD",
+                "Schrems II compliance for non-AI data",
+                "Audit logs and user metadata in region"
+            ],
+            "cons": [
+                "Copilot data NOT covered — prompts/completions still US",
+                "Separate SKU with feature parity gaps",
+                "Requires EMU — no personal accounts"
+            ]
         },
         {
             "id": "byok-enterprise",
@@ -72,13 +104,31 @@
             "effort": "high",
             "euCompliant": "conditional",
             "dataFlows": {
-                "inMotion": { "eu": "partial", "note": "GitHub proxy hop (US) then your EU endpoint" },
-                "inUse": { "eu": true, "note": "Inference on your EU-region deployment" },
-                "atRest": { "eu": true, "note": "Retention controlled by your provider tenant" }
+                "inMotion": {
+                    "eu": "partial",
+                    "note": "GitHub proxy hop (US) then your EU endpoint"
+                },
+                "inUse": {
+                    "eu": true,
+                    "note": "Inference on your EU-region deployment"
+                },
+                "atRest": {
+                    "eu": true,
+                    "note": "Retention controlled by your provider tenant"
+                }
             },
             "zeroRetention": "configurable",
-            "pros": ["EU inference achievable (Azure, Bedrock, Google)", "Full retention and billing control", "Centralized key management at enterprise level"],
-            "cons": ["GitHub proxy hop remains US-based", "Public Preview status — functionality may change", "Own key lifecycle management required", "No content filtering guaranteed for BYO models"]
+            "pros": [
+                "EU inference achievable (Azure, Bedrock, Google)",
+                "Full retention and billing control",
+                "Centralized key management at enterprise level"
+            ],
+            "cons": [
+                "GitHub proxy hop remains US-based",
+                "Public Preview status — functionality may change",
+                "Own key lifecycle management required",
+                "No content filtering guaranteed for BYO models"
+            ]
         },
         {
             "id": "byok-vscode",
@@ -89,13 +139,30 @@
             "effort": "medium",
             "euCompliant": "conditional",
             "dataFlows": {
-                "inMotion": { "eu": true, "note": "Direct IDE to EU endpoint (bypasses GitHub proxy)" },
-                "inUse": { "eu": true, "note": "Inference on your chosen EU region" },
-                "atRest": { "eu": true, "note": "Controlled by your provider tenant" }
+                "inMotion": {
+                    "eu": true,
+                    "note": "Direct IDE to EU endpoint (bypasses GitHub proxy)"
+                },
+                "inUse": {
+                    "eu": true,
+                    "note": "Inference on your chosen EU region"
+                },
+                "atRest": {
+                    "eu": true,
+                    "note": "Controlled by your provider tenant"
+                }
             },
             "zeroRetention": "configurable",
-            "pros": ["No GitHub proxy hop — full EU data path possible", "Simplest path to EU inference for individuals", "Works with Free/Pro plans (no Enterprise needed)"],
-            "cons": ["No central governance — key sprawl risk", "Not available for Business/Enterprise plans", "Not all Copilot surfaces supported"]
+            "pros": [
+                "No GitHub proxy hop — full EU data path possible",
+                "Simplest path to EU inference for individuals",
+                "Works with Free/Pro plans (no Enterprise needed)"
+            ],
+            "cons": [
+                "No central governance — key sprawl risk",
+                "Not available for Business/Enterprise plans",
+                "Not all Copilot surfaces supported"
+            ]
         },
         {
             "id": "azure-openai-foundry",
@@ -106,16 +173,68 @@
             "effort": "very-high",
             "euCompliant": true,
             "dataFlows": {
-                "inMotion": { "eu": true, "note": "Direct to Azure EU region (private endpoints available)" },
-                "inUse": { "eu": true, "note": "Confidential Computing (TEEs) available" },
-                "atRest": { "eu": true, "note": "Customer-managed keys, EU Data Boundary" }
+                "inMotion": {
+                    "eu": true,
+                    "note": "Direct to Azure EU region (private endpoints available)"
+                },
+                "inUse": {
+                    "eu": true,
+                    "note": "Confidential Computing (TEEs) available"
+                },
+                "atRest": {
+                    "eu": true,
+                    "note": "Customer-managed keys, EU Data Boundary"
+                }
             },
             "zeroRetention": true,
-            "pros": ["Full EU sovereignty across all three pillars", "Confidential Computing for data in use", "Customer-managed encryption keys", "Private endpoints and VNet integration"],
-            "cons": ["No Copilot UX — must build IDE integration", "No GitHub context assembly or policy enforcement", "Significantly higher operational complexity"]
+            "pros": [
+                "Full EU sovereignty across all three pillars",
+                "Confidential Computing for data in use",
+                "Customer-managed encryption keys",
+                "Private endpoints and VNet integration"
+            ],
+            "cons": [
+                "No Copilot UX — must build IDE integration",
+                "No GitHub context assembly or policy enforcement",
+                "Significantly higher operational complexity"
+            ]
+        },
+        {
+            "id": "byok-cli",
+            "title": "BYOK via Copilot CLI",
+            "shortTitle": "CLI BYOK",
+            "description": "Connect your own Azure OpenAI, Anthropic, or any OpenAI-compatible endpoint via Copilot CLI. Run locally via Ollama, vLLM, or Foundry Local. Air-gapped mode available via COPILOT_OFFLINE=true. Shipped April 2026.",
+            "scope": "user",
+            "effort": "medium",
+            "euCompliant": "conditional",
+            "dataFlows": {
+                "inMotion": {
+                    "eu": true,
+                    "note": "Traffic stays within your own infrastructure when using local models"
+                },
+                "inUse": {
+                    "eu": true,
+                    "note": "Local inference — no data leaves the machine"
+                },
+                "atRest": {
+                    "eu": true,
+                    "note": "No GitHub-side storage when using local models"
+                }
+            },
+            "zeroRetention": true,
+            "pros": [
+                "Full air-gap capability",
+                "Any OpenAI-compatible endpoint",
+                "Local model support (Ollama, vLLM)",
+                "User-level — no org admin needed"
+            ],
+            "cons": [
+                "CLI only — no IDE integration",
+                "User must manage model endpoints",
+                "No Copilot Chat features — completions only"
+            ]
         }
     ],
-
     "residualRisks": [
         {
             "id": "intent-detection",
@@ -142,10 +261,11 @@
             "description": "GHE.com Data Residency covers repository data, issues, CI/CD, and user metadata — but Copilot prompt and completion traffic is explicitly NOT covered. This is documented in GitHub's data residency documentation. Organizations relying solely on GHE.com for EU compliance have a coverage gap for all AI-powered features.",
             "mitigation": "Combine GHE.com DR (for repo data) with BYOK to an EU-region provider (for inference). Document the gap in your DPIA. Monitor GitHub's roadmap — Copilot DR coverage may expand.",
             "affectsAllOptions": false,
-            "affectedOptions": ["ghe-data-residency"]
+            "affectedOptions": [
+                "ghe-data-residency"
+            ]
         }
     ],
-
     "providerStrategies": [
         {
             "id": "openai",
@@ -153,7 +273,12 @@
             "euStrategy": "Route through Azure OpenAI Service in EU regions. Azure OpenAI processes data within the EU Data Boundary and supports customer-managed encryption keys. This is the recommended path for EU-compliant GPT inference — the OpenAI direct API does not offer EU region selection.",
             "euAvailable": true,
             "byokMethod": "Microsoft Foundry provider in GitHub BYOK settings",
-            "regions": ["Sweden Central", "West Europe", "France Central", "Switzerland North"],
+            "regions": [
+                "Sweden Central",
+                "West Europe",
+                "France Central",
+                "Switzerland North"
+            ],
             "zeroRetention": true,
             "zeroRetentionNote": "Azure OpenAI: zero retention by default for Copilot. Abuse monitoring opt-out available.",
             "confidentialComputing": true
@@ -164,7 +289,10 @@
             "euStrategy": "Route through AWS Bedrock in EU regions. Bedrock guarantees zero data retention and supports EU-central-1 (Frankfurt) and EU-west-1 (Ireland). The Anthropic direct API does not offer explicit EU region selection. Google Vertex AI is an alternative for Claude in europe-west regions.",
             "euAvailable": true,
             "byokMethod": "AWS Bedrock provider in GitHub BYOK settings",
-            "regions": ["eu-central-1 (Frankfurt)", "eu-west-1 (Ireland)"],
+            "regions": [
+                "eu-central-1 (Frankfurt)",
+                "eu-west-1 (Ireland)"
+            ],
             "zeroRetention": true,
             "zeroRetentionNote": "AWS Bedrock: zero data retention. Prompts/completions not stored or used for training.",
             "confidentialComputing": false
@@ -175,7 +303,10 @@
             "euStrategy": "Route through Google AI Studio or Vertex AI with EU region selection. Vertex AI supports europe-west1 (Belgium) and europe-west4 (Netherlands) with data residency commitments. Google AI Studio: review terms — free-tier usage may be logged.",
             "euAvailable": true,
             "byokMethod": "Google AI Studio provider in GitHub BYOK settings",
-            "regions": ["europe-west1 (Belgium)", "europe-west4 (Netherlands)"],
+            "regions": [
+                "europe-west1 (Belgium)",
+                "europe-west4 (Netherlands)"
+            ],
             "zeroRetention": true,
             "zeroRetentionNote": "Vertex AI: zero retention for paid API calls. Google AI Studio free tier may log — verify current terms.",
             "confidentialComputing": true
@@ -192,15 +323,31 @@
             "confidentialComputing": false
         }
     ],
-
     "dataFlowDiagram": "flowchart LR\n    subgraph IDE[\"Developer IDE\"]\n        P[\"Prompt + Context\"]\n    end\n    subgraph GH[\"GitHub Proxy\"]\n        ID[\"Intent Detection\\nRouting · Telemetry\"]\n    end\n    subgraph STD[\"Standard Path\"]\n        M[\"Model Provider\\n(US regions)\"]\n    end\n    subgraph BYOK_PATH[\"BYOK Path\"]\n        BM[\"Your Endpoint\\n(EU region possible)\"]\n    end\n    P -->|\"TLS 1.2+\"| ID\n    ID -->|\"Standard\"| M\n    ID -.->|\"BYOK\"| BM\n    M -->|\"Completion\"| P\n    BM -.->|\"Completion\"| P\n    style IDE fill:#0d2818,stroke:#00ff88,color:#00ff88\n    style GH fill:#2a1a00,stroke:#ffaa00,color:#ffaa00\n    style STD fill:#1a0d2e,stroke:#aa88ff,color:#aa88ff\n    style BYOK_PATH fill:#001a0d,stroke:#00ff88,color:#00ff88",
-
     "sources": [
-        { "label": "GitHub docs — Data residency with GHE.com", "url": "https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/about-storage-of-your-data-with-data-residency" },
-        { "label": "GitHub docs — BYO API Keys (Enterprise)", "url": "https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-your-own-api-keys" },
-        { "label": "GitHub docs — Model hosting", "url": "https://docs.github.com/en/copilot/reference/ai-models/model-hosting" },
-        { "label": "Microsoft Learn — Sovereign Public Cloud", "url": "https://learn.microsoft.com/azure/azure-sovereign-clouds/public/overview-sovereign-public-cloud" },
-        { "label": "Microsoft Learn — Controls & Principles", "url": "https://learn.microsoft.com/azure/azure-sovereign-clouds/public/overview-controls-principles" },
-        { "label": "Microsoft Learn — Confidential Computing", "url": "https://learn.microsoft.com/azure/azure-sovereign-clouds/public/confidential-computing" }
+        {
+            "label": "GitHub docs — Data residency with GHE.com",
+            "url": "https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/about-storage-of-your-data-with-data-residency"
+        },
+        {
+            "label": "GitHub docs — BYO API Keys (Enterprise)",
+            "url": "https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-your-own-api-keys"
+        },
+        {
+            "label": "GitHub docs — Model hosting",
+            "url": "https://docs.github.com/en/copilot/reference/ai-models/model-hosting"
+        },
+        {
+            "label": "Microsoft Learn — Sovereign Public Cloud",
+            "url": "https://learn.microsoft.com/azure/azure-sovereign-clouds/public/overview-sovereign-public-cloud"
+        },
+        {
+            "label": "Microsoft Learn — Controls & Principles",
+            "url": "https://learn.microsoft.com/azure/azure-sovereign-clouds/public/overview-controls-principles"
+        },
+        {
+            "label": "Microsoft Learn — Confidential Computing",
+            "url": "https://learn.microsoft.com/azure/azure-sovereign-clouds/public/confidential-computing"
+        }
     ]
 }

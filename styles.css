@@ -117,10 +117,10 @@ body.light-theme .instrument:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-body.light-theme .instrument-led.deprecated { border-color: rgba(0, 0, 0, 0.2); }
+body.light-theme .instrument-led.deprecated { border-color: rgba(0, 0, 0, 0.35); }
 
 body.light-theme .instrument-name { color: rgba(0, 0, 0, 0.7); }
-body.light-theme .instrument-meta { color: rgba(0, 0, 0, 0.4); }
+body.light-theme .instrument-meta { color: rgba(0, 0, 0, 0.55); }
 
 /* Light engine models */
 body.light-theme .engine-model {
@@ -518,24 +518,29 @@ body::after {
 .zone-side .instrument-symbol { color: var(--color-side); }
 .zone-fms .instrument-symbol { color: var(--color-fms); }
 
-.instrument-led { width: 7px; height: 7px; border-radius: 50%; }
+.instrument-led { width: 7px; height: 7px; border-radius: 50%; position: relative; }
 
 .instrument-led.ga {
     background: var(--status-ga);
     box-shadow: 0 0 6px var(--status-ga);
     animation: pulse-led 3s ease-in-out infinite;
+    /* Shape: circle — universally recognized as "active/go" */
 }
 
 .instrument-led.preview {
     background: var(--status-preview);
     box-shadow: 0 0 8px var(--status-preview);
     animation: pulse-led 2s ease-in-out infinite;
+    /* Shape: diamond — distinct from GA circle for colorblind users */
+    border-radius: 1px;
+    transform: rotate(45deg);
 }
 
 .instrument-led.deprecated {
     background: transparent;
     border: 1.5px solid rgba(255, 255, 255, 0.2);
     box-shadow: none;
+    /* Shape: hollow circle — empty/inactive */
 }
 
 .instrument-name {
@@ -1854,6 +1859,16 @@ body.light-theme .preflight-reset:hover {
     max-width: 100%;
     height: auto;
 }
+.wiring-diagram-wrapper .mermaid .node { cursor: pointer; }
+.wiring-diagram-wrapper .mermaid .node:hover rect,
+.wiring-diagram-wrapper .mermaid .node:hover polygon {
+    filter: brightness(1.3);
+    transition: filter 0.15s ease;
+}
+.wiring-diagram-wrapper .mermaid .node small {
+    font-size: 0.65em;
+    opacity: 0.75;
+}
 
 /* --- Legend --- */
 .wiring-legend {
@@ -3109,6 +3124,49 @@ body.light-theme .log-empty { color: rgba(0, 0, 0, 0.3); }
     .filter-bar { padding: 10px 16px; }
     .cockpit-legend { padding: 10px 16px; }
     .search-input { width: 160px; }
+}
+
+/* --- Mobile nav: hamburger toggle --- */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.2rem;
+    padding: 4px 8px;
+    cursor: pointer;
+    line-height: 1;
+    font-family: var(--font-mono);
+}
+.nav-toggle:hover { color: var(--color-pfd); border-color: var(--color-pfd); }
+body.light-theme .nav-toggle { color: rgba(0, 0, 0, 0.5); border-color: rgba(0, 0, 0, 0.15); }
+body.light-theme .nav-toggle:hover { color: var(--color-pfd); border-color: var(--color-pfd); }
+
+@media (max-width: 900px) {
+    .cockpit-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .header-right {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    .nav-toggle { display: block; }
+    .header-nav {
+        display: none;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 4px;
+        order: 10;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .header-nav.open { display: flex; }
+    body.light-theme .header-nav {
+        border-top-color: rgba(0, 0, 0, 0.08);
+    }
+    .nav-separator { display: none; }
 }
 
 /* ============================================================
@@ -5329,4 +5387,559 @@ body.light-theme .runway-callout-text { color: rgba(0, 0, 0, 0.7); }
 @media (prefers-reduced-motion: reduce) {
     .departure-row { transition: none; }
     .model-blade { transition: none; }
+}
+
+/* ============================================================
+   GLOBAL SEARCH — Command Palette (Ctrl+K)
+   ============================================================ */
+.search-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 15vh;
+}
+.search-overlay.open { display: flex; }
+
+.search-palette {
+    width: min(640px, 90vw);
+    background: #0d1117;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    border-radius: 10px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    font-family: var(--font-mono);
+}
+
+.search-palette-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.search-palette-icon {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.3);
+    padding: 2px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    white-space: nowrap;
+}
+.search-palette-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #e6edf3;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    caret-color: var(--color-pfd);
+}
+.search-palette-input::placeholder { color: rgba(255, 255, 255, 0.25); }
+.search-palette-close {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.3);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    padding: 2px 8px;
+    cursor: pointer;
+}
+.search-palette-close:hover { color: #fff; border-color: rgba(255, 255, 255, 0.4); }
+
+.search-palette-results {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding: 6px;
+}
+.search-palette-empty {
+    padding: 24px 16px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 0.7rem;
+}
+.search-palette-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    text-decoration: none;
+    color: #e6edf3;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+.search-palette-item:hover,
+.search-palette-item.active {
+    background: rgba(0, 255, 136, 0.06);
+}
+.search-palette-type {
+    font-size: 0.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border: 1px solid;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.search-palette-item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+.search-palette-item-title {
+    font-size: 0.72rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.search-palette-item-sub {
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.35);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-palette-footer {
+    display: flex;
+    gap: 16px;
+    padding: 8px 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.search-palette-hint {
+    font-size: 0.55rem;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.5px;
+}
+
+/* Light theme */
+body.light-theme .search-overlay { background: rgba(255, 255, 255, 0.5); }
+body.light-theme .search-palette {
+    background: #ffffff;
+    border-color: rgba(0, 153, 77, 0.2);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+body.light-theme .search-palette-header { border-bottom-color: rgba(0, 0, 0, 0.06); }
+body.light-theme .search-palette-icon { color: rgba(0, 0, 0, 0.4); border-color: rgba(0, 0, 0, 0.12); }
+body.light-theme .search-palette-input { color: #1a2233; }
+body.light-theme .search-palette-input::placeholder { color: rgba(0, 0, 0, 0.3); }
+body.light-theme .search-palette-close { color: rgba(0, 0, 0, 0.4); border-color: rgba(0, 0, 0, 0.12); }
+body.light-theme .search-palette-item { color: #1a2233; }
+body.light-theme .search-palette-item:hover,
+body.light-theme .search-palette-item.active { background: rgba(0, 153, 77, 0.06); }
+body.light-theme .search-palette-item-sub { color: rgba(0, 0, 0, 0.4); }
+body.light-theme .search-palette-footer { border-top-color: rgba(0, 0, 0, 0.06); }
+body.light-theme .search-palette-hint { color: rgba(0, 0, 0, 0.25); }
+body.light-theme .search-palette-empty { color: rgba(0, 0, 0, 0.3); }
+
+/* ============================================================
+   PRINT BUTTON
+   ============================================================ */
+.print-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: rgba(0, 255, 136, 0.08);
+    border: 1px solid rgba(0, 255, 136, 0.25);
+    border-radius: 3px;
+    color: #00ff88;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.print-btn:hover {
+    background: rgba(0, 255, 136, 0.15);
+    border-color: rgba(0, 255, 136, 0.45);
+}
+body.light-theme .print-btn {
+    background: rgba(0, 153, 77, 0.08);
+    border-color: rgba(0, 153, 77, 0.3);
+    color: #00994d;
+}
+body.light-theme .print-btn:hover {
+    background: rgba(0, 153, 77, 0.15);
+}
+
+/* ============================================================
+   PRINT STYLES — Tower & Security export
+   Forces light palette, hides interactive chrome, avoids
+   mid-card page breaks. Works for all pages but optimised
+   for Tower governance and Security X-Ray content.
+   ============================================================ */
+@media print {
+    /* --- Global resets --- */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    body {
+        background: #fff !important;
+        color: #1a2233 !important;
+        font-size: 10pt !important;
+    }
+
+    /* --- Hide interactive chrome --- */
+    .cockpit-header,
+    .nav-toggle,
+    .header-nav,
+    .theme-toggle,
+    .print-btn,
+    .search-overlay,
+    .filter-bar,
+    .wiring-filters,
+    .verification-banner,
+    .posture-checkbox {
+        display: none !important;
+    }
+
+    /* --- Main content: remove dark backgrounds, full width --- */
+    main {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .runway-main,
+    .security-main {
+        padding: 10px 0 !important;
+    }
+
+    .runway-intro h2,
+    .security-intro h2 {
+        color: #1a2233 !important;
+        font-size: 16pt !important;
+        margin-bottom: 6px !important;
+    }
+
+    .runway-intro p,
+    .security-intro p {
+        color: #333 !important;
+        font-size: 9pt !important;
+    }
+
+    /* --- Sections --- */
+    .runway-section,
+    .security-section {
+        background: #fff !important;
+        border: 1px solid #ddd !important;
+        border-radius: 0 !important;
+        padding: 14px 16px !important;
+        margin-bottom: 16px !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .runway-section-title,
+    .security-section-title {
+        color: #1a2233 !important;
+        border-bottom: 1px solid #ccc !important;
+        font-size: 12pt !important;
+    }
+
+    .runway-section-intro {
+        color: #555 !important;
+    }
+
+    /* --- Tower: governance controls --- */
+    .control-row {
+        background: #fff !important;
+        border: 1px solid #ddd !important;
+        border-left: 3px solid #b36b00 !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .control-row-title {
+        color: #1a2233 !important;
+    }
+
+    .control-row-note {
+        color: #555 !important;
+    }
+
+    .control-row-badges .badge {
+        border-color: #999 !important;
+        color: #555 !important;
+    }
+
+    /* --- Tower: framework chips --- */
+    .framework-chip {
+        background: #f5f5f5 !important;
+        border-color: #ccc !important;
+        break-inside: avoid;
+    }
+
+    .framework-chip-name { color: #1a2233 !important; }
+    .framework-chip-note { color: #555 !important; }
+
+    /* --- Tower: sovereign cloud --- */
+    .sovereign-pillar {
+        background: #f8f9fa !important;
+        border-color: #ccc !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .sovereign-pillar-title { color: #1a2233 !important; }
+    .sovereign-pillar-desc,
+    .sovereign-pillar-relevance { color: #555 !important; }
+
+    .sovereign-option {
+        background: #fff !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .sovereign-narrative {
+        color: #333 !important;
+    }
+    .sovereign-narrative strong {
+        color: #1a2233 !important;
+    }
+
+    .sovereign-insight {
+        background: #fff5f5 !important;
+        border-color: #cc0000 !important;
+        color: #660000 !important;
+    }
+
+    .sovereign-risk {
+        background: #fff !important;
+        border-color: #ddd !important;
+        break-inside: avoid;
+    }
+
+    .sovereign-provider {
+        background: #fff !important;
+        border-color: #ddd !important;
+        break-inside: avoid;
+    }
+
+    /* --- Tower: topology matrix / data flow matrix --- */
+    .topology-matrix,
+    .sovereign-matrix {
+        border-collapse: collapse !important;
+    }
+
+    .topology-matrix th,
+    .topology-matrix td,
+    .sovereign-matrix th,
+    .sovereign-matrix td {
+        border: 1px solid #ccc !important;
+        color: #1a2233 !important;
+        background: #fff !important;
+    }
+
+    .topology-matrix th,
+    .sovereign-matrix th {
+        background: #f0f0f0 !important;
+    }
+
+    /* --- Tower: flight plans --- */
+    .flight-plan-card {
+        background: #fff !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .flight-plan-title { color: #1a2233 !important; }
+    .flight-plan-context,
+    .flight-plan-rationale { color: #555 !important; }
+
+    /* --- Tower: roadmap --- */
+    .tower-roadmap li {
+        color: #333 !important;
+    }
+    .tower-roadmap li::before {
+        color: #b36b00 !important;
+    }
+
+    /* --- Security: X-Ray scanner --- */
+    .xray-scanner {
+        border: none !important;
+        background: #fff !important;
+    }
+
+    .luggage-lane {
+        display: none !important;
+    }
+
+    .scanner-screen {
+        background: #fff !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+
+    .scanner-screen::before,
+    .scanner-screen::after {
+        display: none !important;
+    }
+
+    .scanner-header {
+        border-bottom: 1px solid #ccc !important;
+    }
+
+    .scanner-symbol {
+        color: #1a2233 !important;
+        text-shadow: none !important;
+    }
+
+    .scanner-title { color: #1a2233 !important; }
+    .scanner-classification { color: #555 !important; }
+    .scanner-open-cockpit { display: none !important; }
+
+    .scanner-section-title { color: #1a2233 !important; }
+
+    .scenario-narrative { color: #333 !important; }
+
+    .severity-badge,
+    .likelihood-badge {
+        border: 1px solid #999 !important;
+        color: #333 !important;
+        background: #f5f5f5 !important;
+    }
+
+    .demo-panel {
+        background: #f8f9fa !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid;
+    }
+
+    .demo-panel-header {
+        background: #f0f0f0 !important;
+        color: #1a2233 !important;
+    }
+
+    .demo-panel pre,
+    .demo-panel code {
+        color: #1a2233 !important;
+        background: #f8f9fa !important;
+        white-space: pre-wrap !important;
+        word-break: break-word !important;
+    }
+
+    .countermeasures-list li { color: #333 !important; }
+
+    .blast-radius-bar {
+        border: 1px solid #ccc !important;
+    }
+
+    .blast-radius-text { color: #333 !important; }
+
+    /* --- Security: posture --- */
+    .posture-score-card {
+        background: #fff !important;
+        border: 1px solid #ddd !important;
+    }
+
+    .posture-score-value {
+        color: #1a2233 !important;
+        text-shadow: none !important;
+    }
+
+    .posture-score-label,
+    .posture-score-status {
+        color: #555 !important;
+    }
+
+    .posture-item-name { color: #1a2233 !important; }
+    .posture-item-desc { color: #555 !important; }
+
+    /* --- Security: compliance table --- */
+    .compliance-table {
+        border-collapse: collapse !important;
+    }
+
+    .compliance-table th,
+    .compliance-table td {
+        border: 1px solid #ccc !important;
+        color: #1a2233 !important;
+        background: #fff !important;
+    }
+
+    .compliance-table th {
+        background: #f0f0f0 !important;
+    }
+
+    .compliance-control {
+        color: #b36b00 !important;
+    }
+
+    /* --- Security: framework chips & CWE --- */
+    .fw-chip {
+        border: 1px solid #999 !important;
+        color: #333 !important;
+        background: #f5f5f5 !important;
+    }
+
+    .cwe-chip {
+        border: 1px solid #999 !important;
+        color: #333 !important;
+    }
+
+    /* --- Mermaid diagrams: ensure visibility --- */
+    .mermaid svg {
+        max-width: 100% !important;
+    }
+
+    .sovereign-diagram,
+    .threat-model-diagram {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* --- Links: show URLs in print --- */
+    .scanner-content a[href^="http"]::after,
+    .control-row a[href^="http"]::after,
+    .fw-chip[href]::after {
+        content: " (" attr(href) ")" !important;
+        font-size: 7pt !important;
+        color: #666 !important;
+        word-break: break-all !important;
+    }
+
+    /* --- Page breaks: new page per major section --- */
+    #sovereign-cloud-section {
+        break-before: page;
+        page-break-before: always;
+    }
+
+    /* --- NOTAMs --- */
+    .notam-card {
+        background: #fffbee !important;
+        border-color: #ccc !important;
+        color: #333 !important;
+        break-inside: avoid;
+    }
+
+    /* --- Print header: show page title --- */
+    @page {
+        margin: 1.5cm;
+        @top-center {
+            content: "Copilot Cockpit";
+            font-family: monospace;
+            font-size: 8pt;
+            color: #999;
+        }
+    }
+
+    @page :first {
+        margin-top: 1cm;
+    }
 }

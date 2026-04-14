@@ -23,27 +23,78 @@
         }
     ],
     "capabilities": [
-        { "id": "reasoning", "label": "Reasoning" },
-        { "id": "code", "label": "Code" },
-        { "id": "long-context", "label": "Long context" },
-        { "id": "vision", "label": "Vision" },
-        { "id": "tool-use", "label": "Tool use" },
-        { "id": "speed", "label": "Speed" }
+        {
+            "id": "reasoning",
+            "label": "Reasoning"
+        },
+        {
+            "id": "code",
+            "label": "Code"
+        },
+        {
+            "id": "long-context",
+            "label": "Long context"
+        },
+        {
+            "id": "vision",
+            "label": "Vision"
+        },
+        {
+            "id": "tool-use",
+            "label": "Tool use"
+        },
+        {
+            "id": "speed",
+            "label": "Speed"
+        }
     ],
     "surfaces": [
-        { "id": "chat", "label": "Chat" },
-        { "id": "inline", "label": "Inline" },
-        { "id": "edits", "label": "Edits" },
-        { "id": "agent", "label": "Agent Mode" },
-        { "id": "coding-agent", "label": "Coding Agent" },
-        { "id": "code-review", "label": "Code Review" }
+        {
+            "id": "chat",
+            "label": "Chat"
+        },
+        {
+            "id": "inline",
+            "label": "Inline"
+        },
+        {
+            "id": "edits",
+            "label": "Edits"
+        },
+        {
+            "id": "agent",
+            "label": "Agent Mode"
+        },
+        {
+            "id": "coding-agent",
+            "label": "Cloud Agent"
+        },
+        {
+            "id": "code-review",
+            "label": "Code Review"
+        }
     ],
     "plans": [
-        { "id": "free", "label": "Free" },
-        { "id": "pro", "label": "Pro" },
-        { "id": "pro-plus", "label": "Pro+" },
-        { "id": "business", "label": "Business" },
-        { "id": "enterprise", "label": "Enterprise" }
+        {
+            "id": "free",
+            "label": "Free"
+        },
+        {
+            "id": "pro",
+            "label": "Pro"
+        },
+        {
+            "id": "pro-plus",
+            "label": "Pro+"
+        },
+        {
+            "id": "business",
+            "label": "Business"
+        },
+        {
+            "id": "enterprise",
+            "label": "Enterprise"
+        }
     ],
     "models": [
         {
@@ -53,29 +104,72 @@
             "family": "GPT",
             "status": "ga",
             "tagline": "Fast, accurate code completions and explanations",
-            "strengths": ["General-purpose coding", "Fast responses"],
+            "strengths": [
+                "General-purpose coding",
+                "Fast responses"
+            ],
             "limitations": [],
             "contextWindow": 1047576,
-            "capabilities": { "reasoning": "partial", "code": "strong", "long-context": "partial", "vision": "partial", "tool-use": "strong", "speed": "strong" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": true, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "partial",
+                "code": "strong",
+                "long-context": "partial",
+                "vision": "partial",
+                "tool-use": "strong",
+                "speed": "strong"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": true,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 0.0,
             "releasedAt": "2025-04-14",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": "2024-06-30",
-            "inputModalities": ["image", "text", "file"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "image",
+                "text",
+                "file"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "General-purpose coding and writing",
             "excelsAt": "Fast, accurate code completions and explanations",
             "modelCardUrl": "https://openai.com/index/gpt-4-1/",
             "taskFit": null,
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 70,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -87,29 +181,76 @@
             "family": "GPT",
             "status": "ga",
             "tagline": "General-purpose coding with multimodal input",
-            "strengths": ["Multimodal input for visual tasks", "General-purpose coding"],
+            "strengths": [
+                "Multimodal input for visual tasks",
+                "General-purpose coding"
+            ],
             "limitations": [],
             "contextWindow": 400000,
-            "capabilities": { "reasoning": "partial", "code": "strong", "long-context": "partial", "vision": "strong", "tool-use": "strong", "speed": "strong" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": true, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "partial",
+                "code": "strong",
+                "long-context": "partial",
+                "vision": "strong",
+                "tool-use": "strong",
+                "speed": "strong"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": true,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 0.0,
             "releasedAt": "2025-08-07",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": "2024-05-31",
-            "inputModalities": ["text", "image", "file"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "text",
+                "image",
+                "file"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "General-purpose coding and writing",
             "excelsAt": "Fast, accurate code completions and explanations",
             "modelCardUrl": "https://cdn.openai.com/gpt-5-system-card.pdf",
-            "taskFit": {"general-purpose": "Reliable default for most coding and writing tasks. Fast, accurate, and works well across languages and frameworks.", "deep-reasoning": "Delivers deep reasoning and debugging with faster responses and lower resource usage than GPT-5. Ideal for interactive sessions and step-by-step code analysis.", "visuals": "Reliable default for most coding and writing tasks. Fast, accurate, and supports multimodal input for visual reasoning tasks. Works well across languages and frameworks."},
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "taskFit": {
+                "general-purpose": "Reliable default for most coding and writing tasks. Fast, accurate, and works well across languages and frameworks.",
+                "deep-reasoning": "Delivers deep reasoning and debugging with faster responses and lower resource usage than GPT-5. Ideal for interactive sessions and step-by-step code analysis.",
+                "visuals": "Reliable default for most coding and writing tasks. Fast, accurate, and supports multimodal input for visual reasoning tasks. Works well across languages and frameworks."
+            },
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 70,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -121,29 +262,74 @@
             "family": "GPT",
             "status": "deprecated",
             "tagline": "Multi-step problem solving and architecture-level code analysis",
-            "strengths": ["Multi-step problem solving", "Architecture-level analysis"],
-            "limitations": ["Scheduled for removal — closes 2026-04-15"],
+            "strengths": [
+                "Multi-step problem solving",
+                "Architecture-level analysis"
+            ],
+            "limitations": [
+                "Scheduled for removal — closes 2026-04-15"
+            ],
             "contextWindow": 400000,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "partial", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "partial",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 1.0,
             "releasedAt": "2025-11-13",
             "deprecatedAt": "2026-04-15",
             "maxOutputTokens": null,
             "knowledgeCutoff": null,
-            "inputModalities": ["image", "text", "file"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "image",
+                "text",
+                "file"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": "GPT-5.3-Codex",
             "taskArea": "Deep reasoning and debugging",
             "excelsAt": "Multi-step problem solving and architecture-level code analysis",
             "modelCardUrl": "https://cdn.openai.com/pdf/4173ec8d-1229-47db-96de-06d87147e07e/5_1_system_card.pdf",
             "taskFit": null,
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 80,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -155,29 +341,73 @@
             "family": "GPT",
             "status": "ga",
             "tagline": "Deep reasoning for multi-step problem solving",
-            "strengths": ["Deep reasoning", "Multi-step problem solving", "Architecture-level analysis"],
+            "strengths": [
+                "Deep reasoning",
+                "Multi-step problem solving",
+                "Architecture-level analysis"
+            ],
             "limitations": [],
             "contextWindow": 400000,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "partial", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "partial",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 1.0,
             "releasedAt": "2025-12-10",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": null,
-            "inputModalities": ["file", "image", "text"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "file",
+                "image",
+                "text"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Deep reasoning and debugging",
             "excelsAt": "Multi-step problem solving and architecture-level code analysis",
             "modelCardUrl": "https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf",
             "taskFit": null,
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 70,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -189,29 +419,71 @@
             "family": "Codex",
             "status": "ga",
             "tagline": "Agentic software development tasks",
-            "strengths": ["Agentic workflows", "Code-focused"],
+            "strengths": [
+                "Agentic workflows",
+                "Code-focused"
+            ],
             "limitations": [],
             "contextWindow": 400000,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "none", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "none",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 1.0,
             "releasedAt": "2026-01-14",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": null,
-            "inputModalities": ["text", "image"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "text",
+                "image"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Agentic software development",
             "excelsAt": "Agentic tasks",
             "modelCardUrl": "https://cdn.openai.com/pdf/ac7c37ae-7f4c-4442-b741-2eabdeaf77e0/oai_5_2_Codex.pdf",
             "taskFit": null,
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 70,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -223,29 +495,75 @@
             "family": "Codex",
             "status": "ga",
             "tagline": "Higher-quality code on complex engineering tasks",
-            "strengths": ["Agentic tasks", "Complex engineering", "Higher-quality code"],
+            "strengths": [
+                "Agentic tasks",
+                "Complex engineering",
+                "Higher-quality code"
+            ],
             "limitations": [],
             "contextWindow": 400000,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "none", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "none",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 1.0,
             "releasedAt": "2026-02-24",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": null,
-            "inputModalities": ["text", "image", "file"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "text",
+                "image",
+                "file"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Agentic software development",
             "excelsAt": "Agentic tasks",
             "modelCardUrl": "https://deploymentsafety.openai.com/gpt-5-3-codex",
-            "taskFit": {"general-purpose": "Delivers higher-quality code on complex engineering tasks like features, tests, debugging, refactors, and reviews without lengthy instructions."},
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "taskFit": {
+                "general-purpose": "Delivers higher-quality code on complex engineering tasks like features, tests, debugging, refactors, and reviews without lengthy instructions."
+            },
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 70,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -257,29 +575,74 @@
             "family": "GPT",
             "status": "ga",
             "tagline": "Complex reasoning and technical decision-making",
-            "strengths": ["Complex reasoning", "Technical decision-making"],
+            "strengths": [
+                "Complex reasoning",
+                "Technical decision-making"
+            ],
             "limitations": [],
             "contextWindow": 1050000,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "partial", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "partial",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 1.0,
             "releasedAt": "2026-03-05",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": null,
-            "inputModalities": ["text", "image", "file"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "text",
+                "image",
+                "file"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Deep reasoning and debugging",
             "excelsAt": "Multi-step problem solving and architecture-level code analysis",
             "modelCardUrl": "https://deploymentsafety.openai.com/gpt-5-4-thinking/introduction",
-            "taskFit": {"deep-reasoning": "Great at complex reasoning, code analysis, and technical decision-making."},
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "taskFit": {
+                "deep-reasoning": "Great at complex reasoning, code analysis, and technical decision-making."
+            },
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 70,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -291,29 +654,73 @@
             "family": "GPT",
             "status": "ga",
             "tagline": "Effective with grep-style tools for codebase exploration",
-            "strengths": ["Agentic mode", "Tool use", "Codebase exploration"],
+            "strengths": [
+                "Agentic mode",
+                "Tool use",
+                "Codebase exploration"
+            ],
             "limitations": [],
             "contextWindow": 400000,
-            "capabilities": { "reasoning": "partial", "code": "strong", "long-context": "partial", "vision": "partial", "tool-use": "strong", "speed": "strong" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "partial",
+                "code": "strong",
+                "long-context": "partial",
+                "vision": "partial",
+                "tool-use": "strong",
+                "speed": "strong"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 0.33,
             "releasedAt": "2026-03-17",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": "2025-08-31",
-            "inputModalities": ["file", "image", "text"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "file",
+                "image",
+                "text"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Agentic software development",
             "excelsAt": "Codebase exploration and is especially effective when using grep-style tools",
             "modelCardUrl": null,
             "taskFit": null,
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 70,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -325,28 +732,74 @@
             "family": "Claude Haiku",
             "status": "ga",
             "tagline": "Fast responses — ideal for small tasks and lightweight code explanations",
-            "strengths": ["Fast responses", "Lightweight code explanations", "Small tasks"],
+            "strengths": [
+                "Fast responses",
+                "Lightweight code explanations",
+                "Small tasks"
+            ],
             "limitations": [],
             "contextWindow": 200000,
-            "capabilities": { "reasoning": "partial", "code": "strong", "long-context": "partial", "vision": "partial", "tool-use": "strong", "speed": "strong" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": true, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "partial",
+                "code": "strong",
+                "long-context": "partial",
+                "vision": "partial",
+                "tool-use": "strong",
+                "speed": "strong"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": true,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 0.33,
             "releasedAt": "2025-10-15",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": null,
-            "inputModalities": ["image", "text"],
-            "outputModalities": ["text"],
-            "thinkingTypes": ["enabled", "adaptive"],
+            "inputModalities": [
+                "image",
+                "text"
+            ],
+            "outputModalities": [
+                "text"
+            ],
+            "thinkingTypes": [
+                "enabled",
+                "adaptive"
+            ],
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Fast help with simple or repetitive tasks",
             "excelsAt": "Fast, reliable answers to lightweight coding questions",
             "modelCardUrl": "https://assets.anthropic.com/m/99128ddd009bdcb/Claude-Haiku-4-5-System-Card.pdf",
-            "taskFit": {"fast-help": "Balances fast responses with quality output. Ideal for small tasks and lightweight code explanations."},
+            "taskFit": {
+                "fast-help": "Balances fast responses with quality output. Ideal for small tasks and lightweight code explanations."
+            },
             "sourceLinks": [
                 "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
                 "https://docs.github.com/en/copilot/get-started/plans"
@@ -362,23 +815,67 @@
             "family": "Claude Opus",
             "status": "ga",
             "tagline": "Complex problem-solving and sophisticated reasoning",
-            "strengths": ["Complex problem-solving", "Sophisticated reasoning"],
+            "strengths": [
+                "Complex problem-solving",
+                "Sophisticated reasoning"
+            ],
             "limitations": [],
             "contextWindow": 200000,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "strong", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "strong",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 3.0,
             "releasedAt": "2025-11-24",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": null,
-            "inputModalities": ["file", "image", "text"],
-            "outputModalities": ["text"],
-            "thinkingTypes": ["enabled", "adaptive"],
+            "inputModalities": [
+                "file",
+                "image",
+                "text"
+            ],
+            "outputModalities": [
+                "text"
+            ],
+            "thinkingTypes": [
+                "enabled",
+                "adaptive"
+            ],
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Deep reasoning and debugging",
             "excelsAt": "Complex problem-solving challenges, sophisticated reasoning",
@@ -399,28 +896,74 @@
             "family": "Claude Opus",
             "status": "ga",
             "tagline": "Anthropic's most powerful model for deep reasoning",
-            "strengths": ["Deep reasoning", "Most powerful Claude model", "Complex tasks"],
+            "strengths": [
+                "Deep reasoning",
+                "Most powerful Claude model",
+                "Complex tasks"
+            ],
             "limitations": [],
             "contextWindow": 1000000,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "strong", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "strong",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 3.0,
             "releasedAt": "2026-02-04",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": null,
-            "inputModalities": ["text", "image"],
-            "outputModalities": ["text"],
-            "thinkingTypes": ["enabled", "adaptive"],
+            "inputModalities": [
+                "text",
+                "image"
+            ],
+            "outputModalities": [
+                "text"
+            ],
+            "thinkingTypes": [
+                "enabled",
+                "adaptive"
+            ],
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Deep reasoning and debugging",
             "excelsAt": "Complex problem-solving challenges, sophisticated reasoning",
             "modelCardUrl": "https://www-cdn.anthropic.com/14e4fb01875d2a69f646fa5e574dea2b1c0ff7b5.pdf",
-            "taskFit": {"deep-reasoning": "Anthropic’s most powerful model. Improves on Claude Opus 4.5."},
+            "taskFit": {
+                "deep-reasoning": "Anthropic’s most powerful model. Improves on Claude Opus 4.5."
+            },
             "sourceLinks": [
                 "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
                 "https://docs.github.com/en/copilot/get-started/plans"
@@ -436,23 +979,66 @@
             "family": "Claude Opus",
             "status": "preview",
             "tagline": "Complex problem-solving with faster response times",
-            "strengths": ["Faster response than standard Opus 4.6", "Complex problem-solving"],
-            "limitations": ["Public preview", "Pro+ only"],
+            "strengths": [
+                "Faster response than standard Opus 4.6",
+                "Complex problem-solving"
+            ],
+            "limitations": [
+                "Public preview",
+                "Pro+ only"
+            ],
             "contextWindow": 1000000,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "strong", "tool-use": "strong", "speed": "strong" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": false, "pro-plus": true, "business": false, "enterprise": false },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "strong",
+                "tool-use": "strong",
+                "speed": "strong"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": false,
+                "pro-plus": true,
+                "business": false,
+                "enterprise": false
+            },
             "pricingMultiplier": 30.0,
             "releasedAt": "2026-04-07",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": null,
-            "inputModalities": ["text", "image"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "text",
+                "image"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": false, "copilot-cli": true, "vscode": true, "visual-studio": false, "eclipse": false, "xcode": false, "jetbrains": false},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": false,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": false,
+                "eclipse": false,
+                "xcode": false,
+                "jetbrains": false
+            },
             "suggestedAlternative": null,
             "taskArea": "Deep reasoning and debugging",
             "excelsAt": "Complex problem-solving challenges, sophisticated reasoning",
@@ -473,23 +1059,67 @@
             "family": "Claude Sonnet",
             "status": "ga",
             "tagline": "Balanced performance for coding workflows",
-            "strengths": ["Balanced performance", "Coding workflows"],
+            "strengths": [
+                "Balanced performance",
+                "Coding workflows"
+            ],
             "limitations": [],
             "contextWindow": 1000000,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "strong", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "strong",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 1.0,
             "releasedAt": "2025-05-22",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": "2025-01-31",
-            "inputModalities": ["image", "text", "file"],
-            "outputModalities": ["text"],
-            "thinkingTypes": ["enabled", "adaptive"],
+            "inputModalities": [
+                "image",
+                "text",
+                "file"
+            ],
+            "outputModalities": [
+                "text"
+            ],
+            "thinkingTypes": [
+                "enabled",
+                "adaptive"
+            ],
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Deep reasoning and debugging",
             "excelsAt": "Performance and practicality, perfectly balanced for coding workflows",
@@ -510,23 +1140,67 @@
             "family": "Claude Sonnet",
             "status": "ga",
             "tagline": "General-purpose coding and agent tasks",
-            "strengths": ["General-purpose coding", "Agent tasks"],
+            "strengths": [
+                "General-purpose coding",
+                "Agent tasks"
+            ],
             "limitations": [],
             "contextWindow": 1000000,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "strong", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "strong",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 1.0,
             "releasedAt": "2025-09-29",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": "2025-01-31",
-            "inputModalities": ["text", "image", "file"],
-            "outputModalities": ["text"],
-            "thinkingTypes": ["enabled", "adaptive"],
+            "inputModalities": [
+                "text",
+                "image",
+                "file"
+            ],
+            "outputModalities": [
+                "text"
+            ],
+            "thinkingTypes": [
+                "enabled",
+                "adaptive"
+            ],
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "General-purpose coding and agent tasks",
             "excelsAt": "Complex problem-solving challenges, sophisticated reasoning",
@@ -547,28 +1221,74 @@
             "family": "Claude Sonnet",
             "status": "ga",
             "tagline": "More reliable completions and smarter reasoning under pressure",
-            "strengths": ["Reliable completions", "Reasoning under pressure"],
+            "strengths": [
+                "Reliable completions",
+                "Reasoning under pressure"
+            ],
             "limitations": [],
             "contextWindow": 1000000,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "strong", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "strong",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 1.0,
             "releasedAt": "2026-02-17",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": null,
-            "inputModalities": ["text", "image"],
-            "outputModalities": ["text"],
-            "thinkingTypes": ["enabled", "adaptive"],
+            "inputModalities": [
+                "text",
+                "image"
+            ],
+            "outputModalities": [
+                "text"
+            ],
+            "thinkingTypes": [
+                "enabled",
+                "adaptive"
+            ],
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": true, "vscode": true, "visual-studio": true, "eclipse": false, "xcode": false, "jetbrains": false},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": true,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": false,
+                "xcode": false,
+                "jetbrains": false
+            },
             "suggestedAlternative": null,
             "taskArea": "General-purpose coding and agent tasks",
             "excelsAt": "Complex problem-solving challenges, sophisticated reasoning",
             "modelCardUrl": "https://www-cdn.anthropic.com/78073f739564e986ff3e28522761a7a0b4484f84.pdf",
-            "taskFit": {"deep-reasoning": "Improves on Sonnet 4.5 with more reliable completions and smarter reasoning under pressure.", "visuals": "Improves on Sonnet 4.5 with more reliable completions and smarter reasoning under pressure."},
+            "taskFit": {
+                "deep-reasoning": "Improves on Sonnet 4.5 with more reliable completions and smarter reasoning under pressure.",
+                "visuals": "Improves on Sonnet 4.5 with more reliable completions and smarter reasoning under pressure."
+            },
             "sourceLinks": [
                 "https://docs.github.com/en/copilot/reference/ai-models/supported-models",
                 "https://docs.github.com/en/copilot/get-started/plans"
@@ -584,23 +1304,67 @@
             "family": "Gemini Pro",
             "status": "ga",
             "tagline": "Complex code generation, debugging, and research workflows",
-            "strengths": ["Complex code generation", "Debugging", "Research workflows"],
+            "strengths": [
+                "Complex code generation",
+                "Debugging",
+                "Research workflows"
+            ],
             "limitations": [],
             "contextWindow": 1048576,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "strong", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": true, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "strong",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": true,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 1.0,
             "releasedAt": "2025-06-17",
             "deprecatedAt": null,
             "maxOutputTokens": 65536,
             "knowledgeCutoff": "2025-01-31",
-            "inputModalities": ["text", "image", "file", "audio", "video"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "text",
+                "image",
+                "file",
+                "audio",
+                "video"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": false, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": false,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Deep reasoning and debugging",
             "excelsAt": "Complex code generation, debugging, and research workflows",
@@ -621,23 +1385,68 @@
             "family": "Gemini Flash",
             "status": "preview",
             "tagline": "Fast responses for lightweight coding questions",
-            "strengths": ["Fast responses", "Lightweight coding"],
-            "limitations": ["Public preview"],
+            "strengths": [
+                "Fast responses",
+                "Lightweight coding"
+            ],
+            "limitations": [
+                "Public preview"
+            ],
             "contextWindow": 1048576,
-            "capabilities": { "reasoning": "partial", "code": "strong", "long-context": "partial", "vision": "strong", "tool-use": "partial", "speed": "strong" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": true, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "partial",
+                "code": "strong",
+                "long-context": "partial",
+                "vision": "strong",
+                "tool-use": "partial",
+                "speed": "strong"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": true,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 0.33,
             "releasedAt": "2025-12-17",
             "deprecatedAt": null,
             "maxOutputTokens": 65536,
             "knowledgeCutoff": null,
-            "inputModalities": ["text", "image", "file", "audio", "video"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "text",
+                "image",
+                "file",
+                "audio",
+                "video"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": false, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": false,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Fast help with simple or repetitive tasks",
             "excelsAt": "Fast, reliable answers to lightweight coding questions",
@@ -658,29 +1467,80 @@
             "family": "Gemini Pro",
             "status": "preview",
             "tagline": "Advanced reasoning for long contexts and technical analysis",
-            "strengths": ["Advanced reasoning", "Long contexts", "Technical analysis"],
-            "limitations": ["Public preview"],
+            "strengths": [
+                "Advanced reasoning",
+                "Long contexts",
+                "Technical analysis"
+            ],
+            "limitations": [
+                "Public preview"
+            ],
             "contextWindow": 1048576,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "strong", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": false, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "strong",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": false,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 1.0,
             "releasedAt": "2026-02-25",
             "deprecatedAt": null,
             "maxOutputTokens": 65536,
             "knowledgeCutoff": null,
-            "inputModalities": ["text", "audio", "image", "video", "file"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "text",
+                "audio",
+                "image",
+                "video",
+                "file"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": false, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": false,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "Deep reasoning and debugging",
             "excelsAt": "Effective and efficient edit-then-test loops with high tool precision",
             "modelCardUrl": null,
-            "taskFit": {"deep-reasoning": "Advanced reasoning across long contexts and scientific or technical analysis.", "visuals": "Deep reasoning and debugging, ideal for complex code generation, debugging, and research workflows."},
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "taskFit": {
+                "deep-reasoning": "Advanced reasoning across long contexts and scientific or technical analysis.",
+                "visuals": "Deep reasoning and debugging, ideal for complex code generation, debugging, and research workflows."
+            },
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 70,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -692,29 +1552,73 @@
             "family": "Grok",
             "status": "ga",
             "tagline": "Fast, accurate code completions and explanations",
-            "strengths": ["Fast responses", "Code completions", "Explanations"],
+            "strengths": [
+                "Fast responses",
+                "Code completions",
+                "Explanations"
+            ],
             "limitations": [],
             "contextWindow": 256000,
-            "capabilities": { "reasoning": "partial", "code": "strong", "long-context": "partial", "vision": "none", "tool-use": "partial", "speed": "strong" },
-            "surfaceAvailability": { "chat": true, "inline": true, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": true, "pro": true, "pro-plus": true, "business": true, "enterprise": true },
+            "capabilities": {
+                "reasoning": "partial",
+                "code": "strong",
+                "long-context": "partial",
+                "vision": "none",
+                "tool-use": "partial",
+                "speed": "strong"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": true,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": true,
+                "pro": true,
+                "pro-plus": true,
+                "business": true,
+                "enterprise": true
+            },
             "pricingMultiplier": 0.25,
             "releasedAt": "2025-08-26",
             "deprecatedAt": null,
             "maxOutputTokens": null,
             "knowledgeCutoff": "2025-09-30",
-            "inputModalities": ["text"],
-            "outputModalities": ["text"],
+            "inputModalities": [
+                "text"
+            ],
+            "outputModalities": [
+                "text"
+            ],
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": true, "copilot-cli": false, "vscode": true, "visual-studio": true, "eclipse": true, "xcode": true, "jetbrains": true},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": true,
+                "copilot-cli": false,
+                "vscode": true,
+                "visual-studio": true,
+                "eclipse": true,
+                "xcode": true,
+                "jetbrains": true
+            },
             "suggestedAlternative": null,
             "taskArea": "General-purpose coding and writing",
             "excelsAt": "Fast, accurate code completions and explanations",
             "modelCardUrl": "https://data.x.ai/2025-08-20-grok-4-model-card.pdf",
-            "taskFit": {"general-purpose": "Specialized for coding tasks. Performs well on code generation, and debugging across multiple languages."},
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "taskFit": {
+                "general-purpose": "Specialized for coding tasks. Performs well on code generation, and debugging across multiple languages."
+            },
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 70,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -726,12 +1630,38 @@
             "family": "Raptor (fine-tuned GPT-5 mini)",
             "status": "preview",
             "tagline": "Fast inline suggestions — fine-tuned GPT-5 mini",
-            "strengths": ["Fast inline suggestions", "Code completions"],
-            "limitations": ["Public preview", "Internal fine-tune of GPT-5 mini"],
+            "strengths": [
+                "Fast inline suggestions",
+                "Code completions"
+            ],
+            "limitations": [
+                "Public preview",
+                "Internal fine-tune of GPT-5 mini"
+            ],
             "contextWindow": null,
-            "capabilities": { "reasoning": "partial", "code": "strong", "long-context": "partial", "vision": "none", "tool-use": "partial", "speed": "strong" },
-            "surfaceAvailability": { "chat": false, "inline": true, "edits": false, "agent": false, "coding-agent": false, "code-review": false },
-            "planAvailability": { "free": true, "pro": true, "pro-plus": true, "business": false, "enterprise": false },
+            "capabilities": {
+                "reasoning": "partial",
+                "code": "strong",
+                "long-context": "partial",
+                "vision": "none",
+                "tool-use": "partial",
+                "speed": "strong"
+            },
+            "surfaceAvailability": {
+                "chat": false,
+                "inline": true,
+                "edits": false,
+                "agent": false,
+                "coding-agent": false,
+                "code-review": false
+            },
+            "planAvailability": {
+                "free": true,
+                "pro": true,
+                "pro-plus": true,
+                "business": false,
+                "enterprise": false
+            },
             "pricingMultiplier": 0.0,
             "releasedAt": null,
             "deprecatedAt": null,
@@ -741,14 +1671,30 @@
             "outputModalities": null,
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": false, "copilot-cli": false, "vscode": true, "visual-studio": false, "eclipse": false, "xcode": false, "jetbrains": false},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": false,
+                "copilot-cli": false,
+                "vscode": true,
+                "visual-studio": false,
+                "eclipse": false,
+                "xcode": false,
+                "jetbrains": false
+            },
             "suggestedAlternative": null,
             "taskArea": "General-purpose coding and writing",
             "excelsAt": "Fast, accurate code completions and explanations",
             "modelCardUrl": null,
-            "taskFit": {"general-purpose": "Specialized for fast, accurate inline suggestions and explanations."},
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "taskFit": {
+                "general-purpose": "Specialized for fast, accurate inline suggestions and explanations."
+            },
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 65,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -760,12 +1706,40 @@
             "family": "Goldeneye (fine-tuned GPT-5.1-Codex)",
             "status": "preview",
             "tagline": "Complex problem-solving — fine-tuned GPT-5.1-Codex",
-            "strengths": ["Complex problem-solving", "Sophisticated reasoning", "Code-focused"],
-            "limitations": ["Public preview", "Internal fine-tune of GPT-5.1-Codex", "Upstream base model GPT-5.1 closing 2026-04-15"],
+            "strengths": [
+                "Complex problem-solving",
+                "Sophisticated reasoning",
+                "Code-focused"
+            ],
+            "limitations": [
+                "Public preview",
+                "Internal fine-tune of GPT-5.1-Codex",
+                "Upstream base model GPT-5.1 closing 2026-04-15"
+            ],
             "contextWindow": null,
-            "capabilities": { "reasoning": "strong", "code": "strong", "long-context": "strong", "vision": "none", "tool-use": "strong", "speed": "partial" },
-            "surfaceAvailability": { "chat": true, "inline": false, "edits": true, "agent": true, "coding-agent": true, "code-review": true },
-            "planAvailability": { "free": true, "pro": false, "pro-plus": false, "business": false, "enterprise": false },
+            "capabilities": {
+                "reasoning": "strong",
+                "code": "strong",
+                "long-context": "strong",
+                "vision": "none",
+                "tool-use": "strong",
+                "speed": "partial"
+            },
+            "surfaceAvailability": {
+                "chat": true,
+                "inline": false,
+                "edits": true,
+                "agent": true,
+                "coding-agent": true,
+                "code-review": true
+            },
+            "planAvailability": {
+                "free": true,
+                "pro": false,
+                "pro-plus": false,
+                "business": false,
+                "enterprise": false
+            },
             "pricingMultiplier": null,
             "releasedAt": null,
             "deprecatedAt": null,
@@ -775,14 +1749,30 @@
             "outputModalities": null,
             "thinkingTypes": null,
             "effortLevels": null,
-            "modeAvailability": {"agent": true, "ask": true, "edit": true},
-            "ideAvailability": {"github-com": false, "copilot-cli": false, "vscode": true, "visual-studio": false, "eclipse": false, "xcode": false, "jetbrains": false},
+            "modeAvailability": {
+                "agent": true,
+                "ask": true,
+                "edit": true
+            },
+            "ideAvailability": {
+                "github-com": false,
+                "copilot-cli": false,
+                "vscode": true,
+                "visual-studio": false,
+                "eclipse": false,
+                "xcode": false,
+                "jetbrains": false
+            },
             "suggestedAlternative": null,
             "taskArea": null,
             "excelsAt": null,
             "modelCardUrl": null,
-            "taskFit": {"deep-reasoning": "Complex problem-solving challenges and sophisticated reasoning."},
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"],
+            "taskFit": {
+                "deep-reasoning": "Complex problem-solving challenges and sophisticated reasoning."
+            },
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ],
             "confidenceScore": 65,
             "lastVerified": "2026-04-10",
             "verificationRequired": true
@@ -795,17 +1785,57 @@
             "effectiveDate": "2026-04-15",
             "title": "GPT-5.1 closing down — 2026-04-15",
             "body": "OpenAI's GPT-5.1 is scheduled for removal from GitHub Copilot on 2026-04-15. Migrate chat, agent, and coding-agent workflows to GPT-5.2 or GPT-5.4 for comparable reasoning, or to GPT-5.4 mini if you need agentic tool-use at lower latency. Note: Goldeneye is a fine-tune of GPT-5.1-Codex and its status after the upstream removal is not yet confirmed — verify before committing long-running workloads.",
-            "affectedModels": ["gpt-5-1", "goldeneye"],
-            "sourceLinks": ["https://docs.github.com/en/copilot/reference/ai-models/supported-models"]
+            "affectedModels": [
+                "gpt-5-1",
+                "goldeneye"
+            ],
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/reference/ai-models/supported-models"
+            ]
         },
         {
-            "id": "opus-4-6-fast-preview",
-            "severity": "medium",
+            "id": "opus-4-6-fast-retired",
+            "severity": "high",
             "effectiveDate": "2026-04-10",
-            "title": "Claude Opus 4.6 fast mode — public preview, Pro+ only",
-            "body": "Claude Opus 4.6 in fast mode is available only on the Pro+ plan and still in public preview. Do not plan production workloads around it until it reaches GA.",
-            "affectedModels": ["claude-opus-4-6-fast"],
-            "sourceLinks": ["https://docs.github.com/en/copilot/get-started/plans"]
+            "title": "Claude Opus 4.6 fast mode retired from Pro+",
+            "body": "Claude Opus 4.6 fast mode has been retired from Copilot Pro+ as of April 10, 2026. Users are directed to standard Opus 4.6 or Auto mode instead. Fast mode is no longer available in the model picker.",
+            "affectedModels": [
+                "claude-opus-4-6-fast"
+            ],
+            "sourceLinks": [
+                "https://docs.github.com/en/copilot/get-started/plans"
+            ]
+        },
+        {
+            "id": "rubber-duck-experimental",
+            "severity": "low",
+            "effectiveDate": "2026-04-01",
+            "title": "Rubber Duck — experimental dual-model review in CLI",
+            "body": "Copilot CLI experimental feature: a second model from a different AI family independently reviews the primary agent's plans before execution, improving output quality by ~75% in early testing. Not available in IDE extensions.",
+            "affectedModels": [],
+            "sourceLinks": []
+        },
+        {
+            "id": "model-picker-mobile",
+            "severity": "low",
+            "effectiveDate": "2026-02-11",
+            "title": "Model picker now available in GitHub Mobile",
+            "body": "Pro and Pro+ users can choose models for cloud agent sessions on GitHub Mobile. Options include Auto, Claude Opus 4.5, Opus 4.6, Sonnet 4.5, GPT-5.1-Codex-Max, and GPT-5.2-Codex.",
+            "affectedModels": [],
+            "sourceLinks": [
+                "https://github.blog/changelog/2026-02-11-github-mobile-model-picker-for-copilot-coding-agent/"
+            ]
+        },
+        {
+            "id": "auto-model-resolution",
+            "severity": "low",
+            "effectiveDate": "2026-03-20",
+            "title": "Auto model selection now resolves to actual model names in metrics",
+            "body": "Usage metrics API now shows which specific model was used when 'Auto' was selected, instead of the opaque 'Auto' label. Helps admins understand actual model consumption patterns.",
+            "affectedModels": [],
+            "sourceLinks": [
+                "https://github.blog/changelog/2026-03-20-copilot-usage-metrics-now-resolve-auto-model-selection-to-actual-models/"
+            ]
         }
     ],
     "flightPlans": [
@@ -813,16 +1843,28 @@
             "id": "big-refactor",
             "title": "Refactor a 2k-line file",
             "context": "You need consistent judgement across a large surface — architecture changes, renames, behaviour preservation.",
-            "recommendedModels": ["claude-opus-4-6", "gpt-5-4", "claude-sonnet-4-6"],
+            "recommendedModels": [
+                "claude-opus-4-6",
+                "gpt-5-4",
+                "claude-sonnet-4-6"
+            ],
             "rationale": "Deep reasoning + long context. Opus 4.6 and GPT-5.4 are both positioned for multi-step problem solving; Sonnet 4.6 is the reliability-first fallback.",
-            "avoidModels": ["claude-haiku-4-5", "gemini-3-flash", "raptor-mini"],
+            "avoidModels": [
+                "claude-haiku-4-5",
+                "gemini-3-flash",
+                "raptor-mini"
+            ],
             "avoidRationale": "Fast-tier models will make locally plausible but globally inconsistent edits across a file this size."
         },
         {
             "id": "unit-tests",
             "title": "Generate unit tests for a module",
             "context": "Bounded scope, quick turnaround, code-focused.",
-            "recommendedModels": ["claude-sonnet-4-6", "gpt-5-4-mini", "claude-sonnet-4-5"],
+            "recommendedModels": [
+                "claude-sonnet-4-6",
+                "gpt-5-4-mini",
+                "claude-sonnet-4-5"
+            ],
             "rationale": "Good judgement without over-reasoning. GPT-5.4 mini is specifically tuned for grep-style codebase exploration, which matches the 'find all call sites' pattern of test generation.",
             "avoidModels": [],
             "avoidRationale": null
@@ -831,16 +1873,27 @@
             "id": "code-review",
             "title": "Review a pull request",
             "context": "Catch subtle bugs, suggest improvements, remain terse.",
-            "recommendedModels": ["claude-sonnet-4-6", "gpt-5-4", "claude-opus-4-5"],
+            "recommendedModels": [
+                "claude-sonnet-4-6",
+                "gpt-5-4",
+                "claude-opus-4-5"
+            ],
             "rationale": "Sonnet 4.6 is the reliability pick; GPT-5.4 adds strong technical decision-making; Opus 4.5 for the deepest reviews on critical paths.",
-            "avoidModels": ["raptor-mini", "gemini-3-flash"],
+            "avoidModels": [
+                "raptor-mini",
+                "gemini-3-flash"
+            ],
             "avoidRationale": "Fast-tier models produce shallow reviews that miss logic defects."
         },
         {
             "id": "long-research",
             "title": "Long research task (investigate unfamiliar codebase)",
             "context": "Broad exploration, lots of context, needs to stay on-topic over many turns.",
-            "recommendedModels": ["gemini-2-5-pro", "gemini-3-1-pro", "claude-opus-4-6"],
+            "recommendedModels": [
+                "gemini-2-5-pro",
+                "gemini-3-1-pro",
+                "claude-opus-4-6"
+            ],
             "rationale": "Long-context models shine here. Gemini 2.5 Pro is the GA pick; Gemini 3.1 Pro is the preview alternative; Opus 4.6 for the deepest analysis.",
             "avoidModels": [],
             "avoidRationale": null
@@ -849,16 +1902,24 @@
             "id": "fast-inline",
             "title": "Fast inline completions while typing",
             "context": "Sub-second latency matters more than reasoning depth.",
-            "recommendedModels": ["claude-haiku-4-5", "gpt-5-4-mini", "raptor-mini", "grok-code-fast-1"],
+            "recommendedModels": [
+                "claude-haiku-4-5",
+                "gpt-5-4-mini",
+                "raptor-mini",
+                "grok-code-fast-1"
+            ],
             "rationale": "All four are fast-tier models positioned for inline completions. Raptor mini is an internal fine-tune specifically for this surface.",
-            "avoidModels": ["claude-opus-4-6", "gpt-5-4"],
+            "avoidModels": [
+                "claude-opus-4-6",
+                "gpt-5-4"
+            ],
             "avoidRationale": "Flagship reasoning models introduce latency that disrupts the inline typing loop."
         }
     ],
     "copilotEngine": {
         "summary": "GitHub Copilot does not call a single model. It's a routing and context layer — the Copilot engine — that picks a model per surface, mixes in enterprise policy (allow/deny lists, data residency, content exclusion), and hands off to the selected provider with a sanitized context.",
         "capabilities": [
-            "Per-surface model routing (Chat / Inline / Agent / Coding Agent / Code Review)",
+            "Per-surface model routing (Chat / Inline / Agent / Cloud Agent / Code Review)",
             "Fallback to secondary models on provider outage",
             "Context assembly (open files, workspace index, chat history, instructions)",
             "Policy enforcement (content exclusion, feature policies, data residency)",

@@ -29,7 +29,8 @@
             </div>
         </div>
         <div class="header-right">
-            <nav class="header-nav" aria-label="Perspectives">
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="this.nextElementSibling.classList.toggle('open')">☰</button>
+                <nav class="header-nav" aria-label="Perspectives">
                 <a href="terminal.html" class="nav-link">Terminal</a>
                 <a href="security.html" class="nav-link">Security</a>
                 <a href="jet-bridge.html" class="nav-link">Jet Bridge</a>
@@ -91,7 +92,7 @@
                             <span class="topology-quadrant-icon">🏗️</span>
                             <span class="topology-quadrant-title">Cloud Runtime</span>
                         </div>
-                        <p class="topology-quadrant-desc">GitHub-hosted headless agents — Coding Agent, Copilot Workspace. No local IDE involved: the entire loop (read repo → plan → code → test → PR) runs on GitHub infrastructure.</p>
+                        <p class="topology-quadrant-desc">GitHub-hosted headless agents — Cloud Agent, Copilot Workspace. No local IDE involved: the entire loop (read repo → plan → code → test → PR) runs on GitHub infrastructure.</p>
                         <div class="topology-quadrant-examples" id="topo-cloud-runtime-examples"></div>
                     </div>
                     <div class="topology-quadrant" data-quadrant="byok">
@@ -118,7 +119,7 @@
                         <span class="topology-flow-note">Multi-turn local loop. The IDE orchestrates tool calls (terminal, file edits) between model responses.</span>
                     </div>
                     <div class="topology-flow">
-                        <span class="topology-flow-label">Coding Agent</span>
+                        <span class="topology-flow-label">Cloud Agent</span>
                         <span class="topology-flow-path">GitHub Issue → Cloud Runtime → Cloud Model → PR</span>
                         <span class="topology-flow-note">Fully headless. No local runtime. GitHub clones, plans, codes, tests, and opens a PR autonomously.</span>
                     </div>
@@ -251,11 +252,23 @@ flowchart LR
             document.getElementById('theme-toggle').textContent = 'NIGHT';
         }
     }
+    // Store static engine diagram source for re-rendering on theme toggle
+    const ENGINE_MERMAID_SRC = document.querySelector('.engine-diagram .mermaid')?.textContent || '';
+
     document.getElementById('theme-toggle').addEventListener('click', () => {
         document.body.classList.toggle('light-theme');
         const isLight = document.body.classList.contains('light-theme');
         localStorage.setItem('cockpit-theme', isLight ? 'light' : 'dark');
         document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
+        // Re-render Mermaid diagrams with new theme
+        if (modelsData) {
+            // Restore static engine diagram source
+            const engineEl = document.querySelector('.engine-diagram');
+            if (engineEl) engineEl.innerHTML = `<pre class="mermaid">${ENGINE_MERMAID_SRC}</pre>`;
+            // Re-inject dynamic topology diagram
+            renderTopology();
+            initMermaid();
+        }
     });
 
     // --- Load data ---
@@ -455,7 +468,7 @@ graph LR
 
     subgraph CLOUD_RUNTIME["🏗️ CLOUD RUNTIME"]
         direction TB
-        CDA["Coding Agent<br/>Headless · Issue→PR"]
+        CDA["Cloud Agent<br/>Headless · Issue→PR"]
         CWS["Copilot Workspace<br/>AI-driven prep"]
     end
 
@@ -522,7 +535,7 @@ graph LR
             'chat': 'Chat',
             'edits': 'Edits',
             'agent': 'Agent Mode',
-            'coding-agent': 'Coding Agent'
+            'coding-agent': 'Cloud Agent'
         };
         const runtimeLabels = {
             'inline': 'Local',
@@ -857,12 +870,25 @@ graph LR
         const isLight = document.body.classList.contains('light-theme');
         mermaid.initialize({
             startOnLoad: false,
-            theme: isLight ? 'default' : 'dark',
-            themeVariables: {
+            theme: 'base',
+            themeVariables: isLight ? {
+                primaryColor: '#e8f4fd',
+                primaryTextColor: '#1a2233',
+                primaryBorderColor: '#00aacc',
+                lineColor: '#5a6a7a',
+                background: '#ffffff',
+                mainBkg: '#e8f4fd',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '12px'
+            } : {
                 primaryColor: '#1a2233',
                 primaryTextColor: '#c0c8d8',
+                primaryBorderColor: '#5a6a7a',
                 lineColor: '#5a6a7a',
-                background: '#07080c'
+                background: '#07080c',
+                mainBkg: '#1a2233',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '12px'
             },
             securityLevel: 'loose'
         });
@@ -875,5 +901,6 @@ graph LR
     initTheme();
     loadAllData();
     </script>
+    <script src="search.js"></script>
 </body>
 </html>

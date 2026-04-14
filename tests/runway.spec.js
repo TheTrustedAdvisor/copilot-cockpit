@@ -228,7 +228,7 @@ test.describe('Runway v2 — Handover Topology', () => {
 test.describe('Runway v2 — NOTAMs + Engine', () => {
     test('NOTAMs render with severity classes', async ({ page }) => {
         await page.goto('/runway.html');
-        await expect(page.locator('#notam-list .notam-card')).toHaveCount(2);
+        await expect(page.locator('#notam-list .notam-card')).toHaveCount(5);
         await expect(page.locator('#notam-list .notam-card.severity-high').first()).toBeVisible();
     });
 

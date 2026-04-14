@@ -179,7 +179,7 @@
         "destinations": [
             { "perspective": "Cockpit", "page": "index.html", "reason": "See all 48 instruments and start your daily Copilot workflow" },
             { "perspective": "Security", "page": "security.html", "reason": "Understand the threat model and how Copilot handles your code" },
-            { "perspective": "Ramp", "page": "ramp.html", "reason": "Deep dive into Agent Mode, MCP servers, and the Coding Agent" },
+            { "perspective": "Ramp", "page": "ramp.html", "reason": "Deep dive into Agent Mode, MCP servers, and the Cloud Agent" },
             { "perspective": "Runway", "page": "runway.html", "reason": "Explore which AI models power each Copilot surface" },
             { "perspective": "Tower", "page": "tower.html", "reason": "Admin controls, governance policies, and sovereign cloud options" }
         ]

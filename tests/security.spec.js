@@ -392,3 +392,12 @@ test.describe('Cockpit → X-Ray Scanner Integration', () => {
         await expect(page.locator('.instrument-xray-badge')).toHaveCount(0);
     });
 });
+
+test.describe('Security — print export', () => {
+    test('print button is visible in intro section', async ({ page }) => {
+        await page.goto('/security.html');
+        const btn = page.locator('.security-intro .print-btn');
+        await expect(btn).toBeVisible();
+        await expect(btn).toContainText('Print');
+    });
+});

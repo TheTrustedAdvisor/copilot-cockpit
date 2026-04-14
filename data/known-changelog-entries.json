@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-04-09",
+  "lastUpdated": "2026-04-13",
   "entryTypes": {
     "departure": { "label": "DEPARTURE", "description": "Feature reaches General Availability", "color": "#00ff88" },
     "cleared": { "label": "CLEARED FOR TAKEOFF", "description": "Feature enters Public Preview", "color": "#ffaa00" },
@@ -10,6 +10,116 @@
     "turbulence": { "label": "TURBULENCE", "description": "Breaking change or known issue", "color": "#ff8800" }
   },
   "entries": [
+    {
+      "id": "2026-04-autopilot-preview",
+      "date": "2026-04",
+      "type": "cleared",
+      "title": "Autopilot cleared for takeoff",
+      "description": "Fully autonomous agent sessions without step-by-step confirmations enter preview. Copilot can plan, implement, test, and iterate without waiting for user approval at each step.",
+      "instruments": ["autopilot"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-04-agent-mcp-ga",
+      "date": "2026-04",
+      "type": "departure",
+      "title": "Agent Mode + MCP reach GA in VS Code",
+      "description": "Agent Mode and Model Context Protocol support both reach General Availability in VS Code, completing the transition from preview to stable for the autonomous coding loop and external tool integration.",
+      "instruments": ["agent-mode", "mcp"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-04-cloud-agent-rename",
+      "date": "2026-04",
+      "type": "upgrade",
+      "title": "Coding Agent renamed to Cloud Agent — validation 20% faster",
+      "description": "The Coding Agent is rebranded as Cloud Agent to better reflect its cloud-native execution model. Validation tools run 20% faster with improved sandboxed environment performance.",
+      "instruments": ["coding-agent"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-04-custom-agents-preview",
+      "date": "2026-04",
+      "type": "cleared",
+      "title": "Custom Agents (.agent.md) cleared for takeoff",
+      "description": "Define and share specialized agents via .agent.md files in repositories. Custom agents can use tools, MCP servers, and follow tailored instructions for domain-specific workflows.",
+      "instruments": ["copilot-agents-yml"],
+      "zone": "fms",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-04-mcp-allowlist-ga",
+      "date": "2026-04",
+      "type": "departure",
+      "title": "MCP Allowlist reaches GA",
+      "description": "Enterprise admins can now enforce an allowlist of approved MCP servers across the organization, ensuring only vetted tool integrations are available to developers.",
+      "instruments": ["mcp"],
+      "zone": "overhead",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-04-byok-cli",
+      "date": "2026-04",
+      "type": "departure",
+      "title": "BYOK configuration via CLI reaches GA",
+      "description": "Bring Your Own Key for Azure OpenAI can now be configured via the GitHub CLI, eliminating the need for manual portal setup and enabling infrastructure-as-code workflows.",
+      "instruments": ["copilot-plans"],
+      "zone": "overhead",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-04-eu-metrics",
+      "date": "2026-04",
+      "type": "upgrade",
+      "title": "Usage Metrics available in EU data boundary",
+      "description": "Copilot usage metrics dashboards now process and store data within the EU for organizations using GHE.com Data Residency, satisfying GDPR locality requirements for analytics.",
+      "instruments": ["usage-metrics", "data-residency"],
+      "zone": "overhead",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-04-opus-fast-retired",
+      "date": "2026-04",
+      "type": "grounded",
+      "title": "Opus 4.6 Fast grounded — merged into standard Opus",
+      "description": "The separate Opus 4.6 Fast preview model is retired. Its speed optimizations have been folded into the standard Opus 4.6 model, simplifying the model lineup.",
+      "instruments": ["model-picker"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-04-session-forking",
+      "date": "2026-04",
+      "type": "upgrade",
+      "title": "Session Forking in VS Code",
+      "description": "Agent Mode sessions can now be forked to explore alternative approaches in parallel. Branch your conversation to try different strategies without losing your original thread.",
+      "instruments": ["agent-mode"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-04-cloud-agent-mobile",
+      "date": "2026-04",
+      "type": "upgrade",
+      "title": "Cloud Agent on GitHub Mobile",
+      "description": "Cloud Agent sessions can now be initiated and monitored from GitHub Mobile, enabling research and code generation workflows from mobile devices.",
+      "instruments": ["coding-agent"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
+    {
+      "id": "2026-04-rubber-duck-experimental",
+      "date": "2026-04",
+      "type": "cleared",
+      "title": "Rubber Duck dual-model review enters preview",
+      "description": "Experimental feature where a second model reviews Agent Mode output before presenting it to the user, catching errors and improving suggestion quality through adversarial validation.",
+      "instruments": ["agent-mode"],
+      "zone": "pfd",
+      "source": "https://github.blog/changelog/label/copilot/"
+    },
     {
       "id": "2026-03-agent-mode-next-edit",
       "date": "2026-03",
@@ -34,8 +144,8 @@
       "id": "2026-01-coding-agent-ga",
       "date": "2026-01",
       "type": "departure",
-      "title": "Coding Agent (Copilot Workspace) clears for departure",
-      "description": "Cloud-based autonomous coding agent reaches GA. Assigns GitHub Issues to Copilot for end-to-end implementation in a sandboxed environment.",
+      "title": "Cloud Agent (Copilot Workspace) clears for departure",
+      "description": "Cloud-based autonomous cloud agent reaches GA. Assigns GitHub Issues to Copilot for end-to-end implementation in a sandboxed environment.",
       "instruments": ["coding-agent"],
       "zone": "pfd",
       "source": "https://github.blog/changelog/label/copilot/"

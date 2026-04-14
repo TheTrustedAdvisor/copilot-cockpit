@@ -26,7 +26,8 @@
             </div>
         </div>
         <div class="header-right">
-            <nav class="header-nav" aria-label="Perspectives">
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="this.nextElementSibling.classList.toggle('open')">☰</button>
+                <nav class="header-nav" aria-label="Perspectives">
                 <a href="terminal.html" class="nav-link">Terminal</a>
                 <a href="security.html" class="nav-link">Security</a>
                 <a href="jet-bridge.html" class="nav-link">Jet Bridge</a>
@@ -83,7 +84,7 @@
                 <div class="ramp-metaphor-item">
                     <span class="ramp-metaphor-term">Baggage Handling</span>
                     <span class="ramp-metaphor-arrow">→</span>
-                    <span class="ramp-metaphor-meaning">Coding Agent processing issues autonomously — moving code "luggage" without the pilot</span>
+                    <span class="ramp-metaphor-meaning">Cloud Agent processing issues autonomously — moving code "luggage" without the pilot</span>
                 </div>
                 <div class="ramp-metaphor-item">
                     <span class="ramp-metaphor-term">Fuel Truck</span>
@@ -112,12 +113,23 @@
         <section class="runway-section" aria-label="Roadmap">
             <h3 class="runway-section-title">✈ On Final Approach</h3>
             <p class="runway-section-intro">Planned Ramp expansions:</p>
+            <p class="runway-section-intro" style="margin-top:12px;color:rgba(0,255,136,0.7);font-style:normal;">Recently landed:</p>
             <ul class="tower-roadmap">
-                <li>Copilot Workspace integration (AI-driven issue → PR prep)</li>
+                <li>✓ Autopilot — fully autonomous agent sessions without step-by-step confirmations (preview April 2026)</li>
+                <li>✓ Agent Mode + MCP GA in VS Code (April 2026)</li>
+                <li>✓ Cloud Agent rename (formerly Coding Agent) + validation tools 20% faster (April 2026)</li>
+                <li>✓ Custom Agents via .agent.md files — define and share specialized agents in repos (preview April 2026)</li>
+                <li>✓ Session forking — explore alternative agent approaches in parallel (VS Code)</li>
+                <li>✓ Cloud Agent on GitHub Mobile — research and code from mobile (April 2026)</li>
+            </ul>
+            <p class="runway-section-intro" style="margin-top:12px;">Still on approach:</p>
+            <ul class="tower-roadmap">
                 <li>Agent execution monitoring dashboard (run status, tool calls, token usage)</li>
                 <li>MCP server health indicators (connected, latency, errors)</li>
                 <li>Multi-agent orchestration patterns (sequential, parallel, supervisor)</li>
                 <li>Ground crew Mermaid diagrams — tool call flows and agent decision trees</li>
+                <li>Profiling Agent integration — debug-time PerfTips feed into performance analysis</li>
+                <li>Rubber Duck GA — dual-model review for improved agent output quality</li>
             </ul>
         </section>
     </main>
@@ -290,5 +302,6 @@
     initTheme();
     loadData();
     </script>
+    <script src="search.js"></script>
 </body>
 </html>

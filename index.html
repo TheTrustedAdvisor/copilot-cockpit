@@ -38,7 +38,8 @@
             </div>
         </div>
         <div class="header-right">
-            <nav class="header-nav" aria-label="Perspectives">
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="this.nextElementSibling.classList.toggle('open')">☰</button>
+                <nav class="header-nav" aria-label="Perspectives">
                 <a href="terminal.html" class="nav-link">Terminal</a>
                 <a href="security.html" class="nav-link">Security</a>
                 <a href="jet-bridge.html" class="nav-link">Jet Bridge</a>
@@ -107,5 +108,6 @@
 
     <!-- App Logic -->
     <script src="app.js"></script>
+    <script src="search.js"></script>
 </body>
 </html>

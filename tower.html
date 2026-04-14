@@ -29,7 +29,8 @@
             </div>
         </div>
         <div class="header-right">
-            <nav class="header-nav" aria-label="Perspectives">
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="this.nextElementSibling.classList.toggle('open')">☰</button>
+                <nav class="header-nav" aria-label="Perspectives">
                 <a href="terminal.html" class="nav-link">Terminal</a>
                 <a href="security.html" class="nav-link">Security</a>
                 <a href="jet-bridge.html" class="nav-link">Jet Bridge</a>
@@ -53,6 +54,7 @@
             <p>The Tower governs who flies, when and under which rules. Org-level policies,
             seat management, audit telemetry and compliance mappings live here. GitHub ships
             new Copilot admin controls regularly — this surface grows with them.</p>
+            <button class="print-btn" onclick="window.print()" aria-label="Print this page">🖨 Print / Export PDF</button>
             <div id="verification-banner" class="verification-banner" hidden>
                 <strong>⚠ VERIFICATION REQUIRED</strong>
                 <span id="verification-banner-text"></span>
@@ -117,13 +119,23 @@
         <section class="runway-section" aria-label="Roadmap">
             <h3 class="runway-section-title">✈ On Final Approach</h3>
             <p class="runway-section-intro">Planned Tower expansions as GitHub ships them and as we catch up on their rollout:</p>
+            <p class="runway-section-intro" style="margin-top:12px;color:rgba(0,255,136,0.7);font-style:normal;">Recently landed:</p>
+            <ul class="tower-roadmap">
+                <li>✓ MCP Allowlist Governance — admins control which MCP servers are permitted (GA April 2026)</li>
+                <li>✓ Copilot usage metrics for EU/AU/US/JP data residency tenants (preview Jan 2026)</li>
+                <li>✓ BYOK + local models in Copilot CLI — Ollama, vLLM, Foundry Local, air-gap (April 2026)</li>
+                <li>✓ Auto model resolution in usage metrics — see actual model names instead of "Auto" (March 2026)</li>
+                <li>✓ CLI activity included in aggregate usage metrics (April 2026)</li>
+            </ul>
+            <p class="runway-section-intro" style="margin-top:12px;">Still on approach:</p>
             <ul class="tower-roadmap">
                 <li>Fine-grained content exclusion UI (per-path, per-repo glob patterns)</li>
                 <li>Org-level model allowlists &amp; deny-lists (which models your seats can reach)</li>
-                <li>Usage analytics dashboards (acceptance rate, active seats, feature adoption)</li>
+                <li>Usage analytics dashboards GA (acceptance rate, active seats, feature adoption)</li>
                 <li>Seat lifecycle automation (onboarding/offboarding hooks)</li>
                 <li>SOC 2 / ISO 27001 / GDPR evidence pack generation</li>
                 <li>Audit log retention + SIEM export configuration</li>
+                <li>Autopilot governance controls (org-level enable/disable for autonomous mode)</li>
             </ul>
         </section>
     </main>
@@ -155,6 +167,11 @@
         const isLight = document.body.classList.contains('light-theme');
         localStorage.setItem('cockpit-theme', isLight ? 'light' : 'dark');
         document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
+        // Re-render Mermaid diagram with new theme
+        if (typeof sovereignData !== 'undefined' && sovereignData) {
+            renderSovereignDiagram();
+            initMermaid();
+        }
     });
 
     // --- Load data ---
@@ -431,12 +448,25 @@
         const isLight = document.body.classList.contains('light-theme');
         mermaid.initialize({
             startOnLoad: false,
-            theme: isLight ? 'default' : 'dark',
-            themeVariables: {
+            theme: 'base',
+            themeVariables: isLight ? {
+                primaryColor: '#e8f4fd',
+                primaryTextColor: '#1a2233',
+                primaryBorderColor: '#00aacc',
+                lineColor: '#5a6a7a',
+                background: '#ffffff',
+                mainBkg: '#e8f4fd',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '12px'
+            } : {
                 primaryColor: '#1a2233',
                 primaryTextColor: '#c0c8d8',
+                primaryBorderColor: '#5a6a7a',
                 lineColor: '#5a6a7a',
-                background: '#07080c'
+                background: '#07080c',
+                mainBkg: '#1a2233',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '12px'
             },
             securityLevel: 'loose'
         });
@@ -507,5 +537,6 @@
     initTheme();
     loadAllData();
     </script>
+    <script src="search.js"></script>
 </body>
 </html>

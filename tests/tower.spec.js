@@ -68,8 +68,8 @@ test.describe('Tower — governance controls', () => {
     test('renders one row per control in the catalog', async ({ page }) => {
         await page.goto('/tower.html');
         await expect(page.locator('#control-list .control-row').first()).toBeVisible();
-        // 19 controls in the verified catalog
-        await expect(page.locator('#control-list .control-row')).toHaveCount(19);
+        // 20 controls in the verified catalog (added autopilot)
+        await expect(page.locator('#control-list .control-row')).toHaveCount(20);
     });
 
     test('control rows carry compliance badges', async ({ page }) => {
@@ -117,9 +117,9 @@ test.describe('Tower — sovereign cloud', () => {
         await expect(page.locator('#sovereign-diagram svg').first()).toBeVisible({ timeout: 5000 });
     });
 
-    test('five deployment options render with badges', async ({ page }) => {
+    test('six deployment options render with badges', async ({ page }) => {
         await page.goto('/tower.html');
-        await expect(page.locator('#sovereign-options .sovereign-option')).toHaveCount(5);
+        await expect(page.locator('#sovereign-options .sovereign-option')).toHaveCount(6);
         await expect(page.locator('#sovereign-options .sovereign-badge').first()).toBeVisible();
     });
 
@@ -134,9 +134,9 @@ test.describe('Tower — sovereign cloud', () => {
         await expect(page.locator('#sovereign-options .sovereign-flow-dot').first()).toBeVisible();
     });
 
-    test('data flow matrix renders with five rows', async ({ page }) => {
+    test('data flow matrix renders with six rows', async ({ page }) => {
         await page.goto('/tower.html');
-        await expect(page.locator('.sovereign-matrix tbody tr')).toHaveCount(5);
+        await expect(page.locator('.sovereign-matrix tbody tr')).toHaveCount(6);
     });
 
     test('four provider strategy cards render', async ({ page }) => {
@@ -177,6 +177,15 @@ test.describe('Tower — roadmap stub', () => {
     test('on-final-approach roadmap lists planned expansions', async ({ page }) => {
         await page.goto('/tower.html');
         await expect(page.locator('.tower-roadmap li').first()).toBeVisible();
+    });
+});
+
+test.describe('Tower — print export', () => {
+    test('print button is visible in intro section', async ({ page }) => {
+        await page.goto('/tower.html');
+        const btn = page.locator('.runway-intro .print-btn');
+        await expect(btn).toBeVisible();
+        await expect(btn).toContainText('Print');
     });
 });
 

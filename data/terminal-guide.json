@@ -153,7 +153,7 @@
         "destinations": [
             { "perspective": "Cockpit", "page": "index.html", "reason": "See all 48 Copilot instruments at a glance — the daily operations dashboard" },
             { "perspective": "Security", "page": "security.html", "reason": "X-Ray scanner for threat models, hardening steps, and compliance mapping" },
-            { "perspective": "Ramp", "page": "ramp.html", "reason": "Deep dive into Agent Mode, Coding Agent, MCP, and autonomous workflows" },
+            { "perspective": "Ramp", "page": "ramp.html", "reason": "Deep dive into Agent Mode, Cloud Agent, MCP, and autonomous workflows" },
             { "perspective": "Runway", "page": "runway.html", "reason": "Which AI models power Copilot and how local↔cloud routing works" },
             { "perspective": "Tower", "page": "tower.html", "reason": "Admin controls, governance, sovereign cloud, and compliance frameworks" }
         ]

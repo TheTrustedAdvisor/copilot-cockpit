@@ -44,8 +44,8 @@ test.describe('Ramp — instrument cards', () => {
         await page.goto('/ramp.html');
         const cards = page.locator('#ramp-grid .ramp-card');
         await expect(cards.first()).toBeVisible();
-        // coding-agent, mcp, agent-self-review, copilot-extensions
-        await expect(cards).toHaveCount(4);
+        // coding-agent, mcp, agent-self-review, copilot-extensions, autopilot, copilot-agents-yml
+        await expect(cards).toHaveCount(6);
     });
 
     test('cards show symbol, name, and status', async ({ page }) => {

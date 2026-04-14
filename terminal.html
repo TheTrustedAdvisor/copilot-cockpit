@@ -26,7 +26,8 @@
             </div>
         </div>
         <div class="header-right">
-            <nav class="header-nav" aria-label="Perspectives">
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="this.nextElementSibling.classList.toggle('open')">☰</button>
+                <nav class="header-nav" aria-label="Perspectives">
                 <a href="terminal.html" class="nav-link active">Terminal</a>
                 <a href="security.html" class="nav-link">Security</a>
                 <a href="jet-bridge.html" class="nav-link">Jet Bridge</a>
@@ -221,5 +222,6 @@
     initTheme();
     loadAllData();
     </script>
+    <script src="search.js"></script>
 </body>
 </html>

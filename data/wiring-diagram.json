@@ -1,69 +1,370 @@
 {
     "version": "1.0.0",
-    "lastUpdated": "2026-04-13",
+    "lastUpdated": "2026-04-14",
     "description": "Wiring Diagram — instrument connection graph showing functional dependencies between Copilot features. Each connection represents a data flow, control flow, or dependency between instruments.",
-
-    "intro": "The Copilot cockpit has 42 instruments across 8 zones. This diagram shows how they connect — which instruments feed context to others, which are governed by admin controls, and how data flows from your IDE to AI models and back. Click a connection type to filter the view.",
-
+    "intro": "The Copilot cockpit has 46 instruments across 8 zones. This diagram shows how they connect — which instruments feed context to others, which are governed by admin controls, and how data flows from your IDE to AI models and back. Click a node to jump to its instrument detail, or use the filter buttons to isolate a connection type.",
     "connectionTypes": [
-        { "id": "context", "label": "Context Flow", "description": "One instrument provides context or input to another", "color": "#00d4ff", "arrow": "solid" },
-        { "id": "powers", "label": "Powers / Executes", "description": "One instrument drives or executes another", "color": "#00ff88", "arrow": "solid" },
-        { "id": "governs", "label": "Governs / Controls", "description": "An admin control gates or restricts another instrument", "color": "#ffaa00", "arrow": "dashed" },
-        { "id": "extends", "label": "Extends / Integrates", "description": "One instrument adds capability to another via extension or integration", "color": "#aa88ff", "arrow": "solid" }
+        {
+            "id": "context",
+            "label": "Context Flow",
+            "description": "One instrument provides context or input to another",
+            "color": "#00d4ff",
+            "arrow": "solid"
+        },
+        {
+            "id": "powers",
+            "label": "Powers / Executes",
+            "description": "One instrument drives or executes another",
+            "color": "#00ff88",
+            "arrow": "solid"
+        },
+        {
+            "id": "governs",
+            "label": "Governs / Controls",
+            "description": "An admin control gates or restricts another instrument",
+            "color": "#ffaa00",
+            "arrow": "dashed"
+        },
+        {
+            "id": "extends",
+            "label": "Extends / Integrates",
+            "description": "One instrument adds capability to another via extension or integration",
+            "color": "#aa88ff",
+            "arrow": "solid"
+        }
     ],
-
     "connections": [
-        { "from": "workspace-participant", "to": "copilot-chat", "type": "context", "label": "workspace search" },
-        { "from": "file-participant", "to": "copilot-chat", "type": "context", "label": "file content" },
-        { "from": "terminal-context", "to": "copilot-chat", "type": "context", "label": "terminal output" },
-        { "from": "vscode-participant", "to": "copilot-chat", "type": "context", "label": "editor state" },
-        { "from": "github-participant", "to": "copilot-chat", "type": "context", "label": "GitHub data" },
-        { "from": "codebase-indexing", "to": "workspace-participant", "type": "context", "label": "embeddings" },
-        { "from": "codebase-indexing", "to": "inline-completions", "type": "context", "label": "ranked context" },
-        { "from": "codebase-indexing", "to": "copilot-edits", "type": "context", "label": "ranked context" },
-
-        { "from": "copilot-chat", "to": "agent-mode", "type": "powers", "label": "chat surface" },
-        { "from": "agent-mode", "to": "copilot-edits", "type": "powers", "label": "file edits" },
-        { "from": "agent-mode", "to": "coding-agent", "type": "powers", "label": "autonomous runs" },
-        { "from": "copilot-chat", "to": "copilot-edits", "type": "powers", "label": "edit proposals" },
-        { "from": "copilot-chat", "to": "slash-explain", "type": "powers", "label": "explain handler" },
-        { "from": "copilot-chat", "to": "slash-fix", "type": "powers", "label": "fix handler" },
-        { "from": "copilot-chat", "to": "slash-tests", "type": "powers", "label": "test handler" },
-        { "from": "copilot-chat", "to": "slash-doc", "type": "powers", "label": "doc handler" },
-        { "from": "copilot-chat", "to": "slash-new", "type": "powers", "label": "scaffold handler" },
-        { "from": "copilot-chat", "to": "slash-search", "type": "powers", "label": "search handler" },
-        { "from": "next-edit-suggestions", "to": "inline-completions", "type": "powers", "label": "predictive edits" },
-        { "from": "coding-agent", "to": "pr-summaries", "type": "powers", "label": "auto-summarize" },
-
-        { "from": "feature-policies", "to": "agent-mode", "type": "governs", "label": "enable/disable" },
-        { "from": "feature-policies", "to": "copilot-chat", "type": "governs", "label": "enable/disable" },
-        { "from": "feature-policies", "to": "inline-completions", "type": "governs", "label": "enable/disable" },
-        { "from": "feature-policies", "to": "coding-agent", "type": "governs", "label": "enable/disable" },
-        { "from": "content-exclusion", "to": "inline-completions", "type": "governs", "label": "path filter" },
-        { "from": "content-exclusion", "to": "copilot-chat", "type": "governs", "label": "path filter" },
-        { "from": "seat-management", "to": "copilot-plans", "type": "governs", "label": "seat allocation" },
-        { "from": "audit-logs", "to": "usage-metrics", "type": "governs", "label": "event stream" },
-        { "from": "data-residency", "to": "byok", "type": "governs", "label": "key routing" },
-        { "from": "security-scanning", "to": "copilot-autofix", "type": "governs", "label": "triggers fixes" },
-
-        { "from": "mcp", "to": "agent-mode", "type": "extends", "label": "tool servers" },
-        { "from": "mcp", "to": "copilot-chat", "type": "extends", "label": "tool servers" },
-        { "from": "copilot-extensions", "to": "copilot-chat", "type": "extends", "label": "custom agents" },
-        { "from": "copilot-cli", "to": "copilot-chat", "type": "extends", "label": "terminal chat" },
-        { "from": "copilot-spark", "to": "copilot-chat", "type": "extends", "label": "low-code surface" },
-        { "from": "github-mobile-copilot", "to": "copilot-chat", "type": "extends", "label": "mobile surface" },
-        { "from": "copilot-instructions", "to": "copilot-chat", "type": "context", "label": "repo instructions" },
-        { "from": "copilot-instructions", "to": "agent-mode", "type": "context", "label": "repo instructions" },
-        { "from": "custom-instructions-personal", "to": "copilot-chat", "type": "context", "label": "personal style" },
-        { "from": "prompt-files", "to": "agent-mode", "type": "context", "label": "reusable prompts" },
-        { "from": "copilot-agents-yml", "to": "coding-agent", "type": "context", "label": "agent config" },
-
-        { "from": "code-review", "to": "pr-summaries", "type": "powers", "label": "review feedback" },
-        { "from": "auto-review-assign", "to": "code-review", "type": "powers", "label": "auto-assign" },
-        { "from": "agent-self-review", "to": "coding-agent", "type": "governs", "label": "self-review gate" },
-        { "from": "ip-indemnity", "to": "copilot-plans", "type": "governs", "label": "legal coverage" }
+        {
+            "from": "workspace-participant",
+            "to": "copilot-chat",
+            "type": "context",
+            "label": "workspace search"
+        },
+        {
+            "from": "file-participant",
+            "to": "copilot-chat",
+            "type": "context",
+            "label": "file content"
+        },
+        {
+            "from": "terminal-context",
+            "to": "copilot-chat",
+            "type": "context",
+            "label": "terminal output"
+        },
+        {
+            "from": "vscode-participant",
+            "to": "copilot-chat",
+            "type": "context",
+            "label": "editor state"
+        },
+        {
+            "from": "github-participant",
+            "to": "copilot-chat",
+            "type": "context",
+            "label": "GitHub data"
+        },
+        {
+            "from": "codebase-indexing",
+            "to": "workspace-participant",
+            "type": "context",
+            "label": "embeddings"
+        },
+        {
+            "from": "codebase-indexing",
+            "to": "inline-completions",
+            "type": "context",
+            "label": "ranked context"
+        },
+        {
+            "from": "codebase-indexing",
+            "to": "copilot-edits",
+            "type": "context",
+            "label": "ranked context"
+        },
+        {
+            "from": "copilot-chat",
+            "to": "agent-mode",
+            "type": "powers",
+            "label": "chat surface"
+        },
+        {
+            "from": "agent-mode",
+            "to": "copilot-edits",
+            "type": "powers",
+            "label": "file edits"
+        },
+        {
+            "from": "agent-mode",
+            "to": "coding-agent",
+            "type": "powers",
+            "label": "autonomous runs"
+        },
+        {
+            "from": "copilot-chat",
+            "to": "copilot-edits",
+            "type": "powers",
+            "label": "edit proposals"
+        },
+        {
+            "from": "copilot-chat",
+            "to": "slash-explain",
+            "type": "powers",
+            "label": "explain handler"
+        },
+        {
+            "from": "copilot-chat",
+            "to": "slash-fix",
+            "type": "powers",
+            "label": "fix handler"
+        },
+        {
+            "from": "copilot-chat",
+            "to": "slash-tests",
+            "type": "powers",
+            "label": "test handler"
+        },
+        {
+            "from": "copilot-chat",
+            "to": "slash-doc",
+            "type": "powers",
+            "label": "doc handler"
+        },
+        {
+            "from": "copilot-chat",
+            "to": "slash-new",
+            "type": "powers",
+            "label": "scaffold handler"
+        },
+        {
+            "from": "copilot-chat",
+            "to": "slash-search",
+            "type": "powers",
+            "label": "search handler"
+        },
+        {
+            "from": "next-edit-suggestions",
+            "to": "inline-completions",
+            "type": "powers",
+            "label": "predictive edits"
+        },
+        {
+            "from": "coding-agent",
+            "to": "pr-summaries",
+            "type": "powers",
+            "label": "auto-summarize"
+        },
+        {
+            "from": "feature-policies",
+            "to": "agent-mode",
+            "type": "governs",
+            "label": "enable/disable"
+        },
+        {
+            "from": "feature-policies",
+            "to": "copilot-chat",
+            "type": "governs",
+            "label": "enable/disable"
+        },
+        {
+            "from": "feature-policies",
+            "to": "inline-completions",
+            "type": "governs",
+            "label": "enable/disable"
+        },
+        {
+            "from": "feature-policies",
+            "to": "coding-agent",
+            "type": "governs",
+            "label": "enable/disable"
+        },
+        {
+            "from": "content-exclusion",
+            "to": "inline-completions",
+            "type": "governs",
+            "label": "path filter"
+        },
+        {
+            "from": "content-exclusion",
+            "to": "copilot-chat",
+            "type": "governs",
+            "label": "path filter"
+        },
+        {
+            "from": "seat-management",
+            "to": "copilot-plans",
+            "type": "governs",
+            "label": "seat allocation"
+        },
+        {
+            "from": "audit-logs",
+            "to": "usage-metrics",
+            "type": "governs",
+            "label": "event stream"
+        },
+        {
+            "from": "data-residency",
+            "to": "byok",
+            "type": "governs",
+            "label": "key routing"
+        },
+        {
+            "from": "security-scanning",
+            "to": "copilot-autofix",
+            "type": "governs",
+            "label": "triggers fixes"
+        },
+        {
+            "from": "mcp",
+            "to": "agent-mode",
+            "type": "extends",
+            "label": "tool servers"
+        },
+        {
+            "from": "mcp",
+            "to": "copilot-chat",
+            "type": "extends",
+            "label": "tool servers"
+        },
+        {
+            "from": "copilot-extensions",
+            "to": "copilot-chat",
+            "type": "extends",
+            "label": "custom agents"
+        },
+        {
+            "from": "copilot-cli",
+            "to": "copilot-chat",
+            "type": "extends",
+            "label": "terminal chat"
+        },
+        {
+            "from": "copilot-spark",
+            "to": "copilot-chat",
+            "type": "extends",
+            "label": "low-code surface"
+        },
+        {
+            "from": "github-mobile-copilot",
+            "to": "copilot-chat",
+            "type": "extends",
+            "label": "mobile surface"
+        },
+        {
+            "from": "copilot-instructions",
+            "to": "copilot-chat",
+            "type": "context",
+            "label": "repo instructions"
+        },
+        {
+            "from": "copilot-instructions",
+            "to": "agent-mode",
+            "type": "context",
+            "label": "repo instructions"
+        },
+        {
+            "from": "custom-instructions-personal",
+            "to": "copilot-chat",
+            "type": "context",
+            "label": "personal style"
+        },
+        {
+            "from": "prompt-files",
+            "to": "agent-mode",
+            "type": "context",
+            "label": "reusable prompts"
+        },
+        {
+            "from": "copilot-agents-yml",
+            "to": "coding-agent",
+            "type": "context",
+            "label": "agent config"
+        },
+        {
+            "from": "code-review",
+            "to": "pr-summaries",
+            "type": "powers",
+            "label": "review feedback"
+        },
+        {
+            "from": "auto-review-assign",
+            "to": "code-review",
+            "type": "powers",
+            "label": "auto-assign"
+        },
+        {
+            "from": "agent-self-review",
+            "to": "coding-agent",
+            "type": "governs",
+            "label": "self-review gate"
+        },
+        {
+            "from": "ip-indemnity",
+            "to": "copilot-plans",
+            "type": "governs",
+            "label": "legal coverage"
+        },
+        {
+            "from": "agent-mode",
+            "to": "autopilot",
+            "type": "powers",
+            "label": "autonomous mode"
+        },
+        {
+            "from": "mcp",
+            "to": "autopilot",
+            "type": "extends",
+            "label": "tool servers"
+        },
+        {
+            "from": "feature-policies",
+            "to": "autopilot",
+            "type": "governs",
+            "label": "enable/disable"
+        },
+        {
+            "from": "custom-agents",
+            "to": "agent-mode",
+            "type": "context",
+            "label": "agent definitions"
+        },
+        {
+            "from": "copilot-agents-yml",
+            "to": "custom-agents",
+            "type": "context",
+            "label": "agent config"
+        },
+        {
+            "from": "model-picker",
+            "to": "copilot-chat",
+            "type": "powers",
+            "label": "model selection"
+        },
+        {
+            "from": "model-picker",
+            "to": "agent-mode",
+            "type": "powers",
+            "label": "model selection"
+        },
+        {
+            "from": "feature-policies",
+            "to": "model-picker",
+            "type": "governs",
+            "label": "model access"
+        },
+        {
+            "from": "knowledge-bases",
+            "to": "copilot-chat",
+            "type": "context",
+            "label": "org knowledge"
+        },
+        {
+            "from": "knowledge-bases",
+            "to": "github-participant",
+            "type": "context",
+            "label": "indexed docs"
+        }
     ],
-
     "zoneDescriptions": {
         "pfd": "Core AI surfaces — the instruments you interact with directly",
         "nd": "Context providers — what Copilot sees when it generates",
