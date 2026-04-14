@@ -5621,6 +5621,23 @@ body.light-theme .footer-link:hover {
     background: rgba(0, 153, 77, 0.06);
 }
 
+.footer-feedback {
+    color: var(--color-glareshield) !important;
+    border-color: rgba(255, 170, 0, 0.25) !important;
+}
+.footer-feedback:hover {
+    border-color: var(--color-glareshield) !important;
+    background: rgba(255, 170, 0, 0.08) !important;
+}
+body.light-theme .footer-feedback {
+    color: #b36b00 !important;
+    border-color: rgba(179, 107, 0, 0.25) !important;
+}
+body.light-theme .footer-feedback:hover {
+    border-color: #b36b00 !important;
+    background: rgba(179, 107, 0, 0.08) !important;
+}
+
 @media print {
     .site-footer {
         border-top: 1px solid #ccc !important;
