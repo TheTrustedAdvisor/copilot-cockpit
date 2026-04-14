@@ -5550,6 +5550,90 @@ body.light-theme .search-palette-hint { color: rgba(0, 0, 0, 0.25); }
 body.light-theme .search-palette-empty { color: rgba(0, 0, 0, 0.3); }
 
 /* ============================================================
+   SITE FOOTER — Author attribution
+   ============================================================ */
+.site-footer {
+    border-top: 1px solid rgba(0, 255, 136, 0.1);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-author {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.footer-author-name {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.04em;
+}
+
+.footer-author-role {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.06em;
+}
+
+.footer-links {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.footer-link {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    padding: 3px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+}
+
+.footer-link:hover {
+    color: var(--color-pfd);
+    border-color: var(--color-pfd);
+    background: rgba(0, 255, 136, 0.06);
+}
+
+body.light-theme .site-footer { border-top-color: rgba(0, 0, 0, 0.08); }
+body.light-theme .footer-author-name { color: rgba(0, 0, 0, 0.85); }
+body.light-theme .footer-author-role { color: rgba(0, 0, 0, 0.45); }
+body.light-theme .footer-link {
+    color: rgba(0, 0, 0, 0.45);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+body.light-theme .footer-link:hover {
+    color: var(--color-pfd);
+    border-color: var(--color-pfd);
+    background: rgba(0, 153, 77, 0.06);
+}
+
+@media print {
+    .site-footer {
+        border-top: 1px solid #ccc !important;
+    }
+    .footer-author-name { color: #1a2233 !important; }
+    .footer-author-role { color: #555 !important; }
+    .footer-link {
+        color: #333 !important;
+        border-color: #ccc !important;
+    }
+}
+
+/* ============================================================
    PRINT BUTTON
    ============================================================ */
 .print-btn {

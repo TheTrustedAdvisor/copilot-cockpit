@@ -6,6 +6,9 @@
     <title>Terminal — Copilot Cockpit</title>
     <meta name="description" content="Terminal perspective for GitHub Copilot: getting started — plan selection, IDE setup, and your first Copilot interaction. The airport entry point.">
 
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +30,7 @@
         </div>
         <div class="header-right">
             <button class="nav-toggle" aria-label="Toggle navigation" onclick="this.nextElementSibling.classList.toggle('open')">☰</button>
-                <nav class="header-nav" aria-label="Perspectives">
+            <nav class="header-nav" aria-label="Perspectives">
                 <a href="terminal.html" class="nav-link active">Terminal</a>
                 <a href="security.html" class="nav-link">Security</a>
                 <a href="jet-bridge.html" class="nav-link">Jet Bridge</a>
@@ -43,6 +46,7 @@
             <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">DAY</button>
         </div>
     </header>
+    <noscript><p style="padding:40px;text-align:center;color:#ffaa00;font-family:monospace;">This page requires JavaScript to render. Please enable JavaScript and reload.</p></noscript>
 
     <!-- ==================== TERMINAL CONTENT ==================== -->
     <main class="runway-main" id="terminal-main">
@@ -222,6 +226,19 @@
     initTheme();
     loadAllData();
     </script>
+    <!-- ==================== SITE FOOTER ==================== -->
+    <footer class="site-footer">
+        <div class="footer-author">
+            <span class="footer-author-name">Built by Matthias Falland</span>
+            <span class="footer-author-role">Microsoft Data Platform MVP &amp; The Trusted Advisor</span>
+        </div>
+        <nav class="footer-links" aria-label="Author links">
+            <a href="https://www.linkedin.com/in/matthias-falland" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://www.the-trusted-advisor.com/" class="footer-link" target="_blank" rel="noopener">Homepage</a>
+            <a href="https://www.youtube.com/@The-Trusted-Advisor" class="footer-link" target="_blank" rel="noopener">YouTube</a>
+            <a href="https://github.com/TheTrustedAdvisor" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+    </footer>
     <script src="search.js"></script>
 </body>
 </html>
