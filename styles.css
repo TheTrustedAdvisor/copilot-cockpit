@@ -590,6 +590,7 @@ body::after {
     border: 1px solid rgba(255, 102, 68, 0.2);
     color: rgba(255, 102, 68, 0.7);
     cursor: pointer; transition: all 0.2s;
+    text-decoration: none;
 }
 
 .engine-model:hover {

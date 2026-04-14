@@ -198,9 +198,9 @@ function renderEngineZone(zone) {
             <div class="engine-cluster-label">${escapeHtml(tier)}</div>
             <div class="engine-models">
                 ${models.map(m => `
-                    <span class="engine-model ${m.included || m.tier === 'included' ? 'included' : ''}" title="${escapeHtml(m.provider)} — ${escapeHtml(m.name)}${m.description ? '\n' + escapeHtml(m.description) : ''}">
+                    <a href="runway.html#model-${escapeHtml(m.id)}" class="engine-model ${m.included || m.tier === 'included' ? 'included' : ''}" title="${escapeHtml(m.provider)} — ${escapeHtml(m.name)}${m.description ? '\n' + escapeHtml(m.description) : ''}">
                         ${escapeHtml(m.name)}
-                    </span>
+                    </a>
                 `).join('')}
             </div>
         </div>
