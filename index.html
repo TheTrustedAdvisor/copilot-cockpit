@@ -52,12 +52,6 @@
                 <a href="preflight.html" class="nav-link">Pre-Flight</a>
                 <a href="wiring.html" class="nav-link">Wiring</a>
             </nav>
-            <div class="search-container">
-                <span class="search-icon">⌕</span>
-                <input type="text" id="search-input" class="search-input"
-                       placeholder="Search instruments… (/ or Ctrl+K)"
-                       aria-label="Search instruments">
-            </div>
             <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">DAY</button>
             <div class="header-status">
                 <span class="dot"></span>
@@ -84,6 +78,13 @@
         <span class="filter-label" style="margin-left:16px">Status</span>
         <button class="filter-btn" data-filter-type="status" data-filter-value="ga">GA</button>
         <button class="filter-btn" data-filter-type="status" data-filter-value="preview">Preview</button>
+
+        <div class="search-container" style="margin-left:auto">
+            <span class="search-icon">⌕</span>
+            <input type="text" id="search-input" class="search-input"
+                   placeholder="Filter instruments… (/ to focus)"
+                   aria-label="Search instruments">
+        </div>
     </div>
 
     <!-- ==================== BLADE LAYOUT ==================== -->

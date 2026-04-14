@@ -3150,10 +3150,6 @@ body.light-theme .log-empty { color: rgba(0, 0, 0, 0.3); }
 body.light-theme .nav-toggle { color: rgba(0, 0, 0, 0.5); border-color: rgba(0, 0, 0, 0.15); }
 body.light-theme .nav-toggle:hover { color: var(--color-pfd); border-color: var(--color-pfd); }
 
-@media (max-width: 1200px) {
-    .search-container { display: none; }
-}
-
 @media (max-width: 900px) {
     .cockpit-header {
         flex-wrap: wrap;
