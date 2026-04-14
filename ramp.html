@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramp — Copilot Cockpit</title>
+    <meta name="description" content="Ramp perspective for GitHub Copilot: agents, ground handling, MCP tool execution, and autonomous workflows. The infrastructure that services the aircraft before the pilot takes control.">
+
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://copilot-cockpit.com/ramp.html">
+    <meta property="og:title" content="Ramp — Copilot Cockpit">
+    <meta property="og:description" content="Agents & ground handling: MCP servers, custom agents, and autonomous workflows.">
+    <meta property="og:image" content="https://copilot-cockpit.com/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ramp — Copilot Cockpit">
+    <meta name="twitter:description" content="Agents & ground handling: MCP servers, custom agents, and autonomous workflows.">
+    <meta name="twitter:image" content="https://copilot-cockpit.com/og-image.png">
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="cockpit-header">
+        <div class="cockpit-title">
+            <span class="icon">🛬</span>
+            <div>
+                <h1>Ramp Perspective</h1>
+                <div class="subtitle">Ground Handling — agents &amp; tool execution</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="this.nextElementSibling.classList.toggle('open')">☰</button>
+            <nav class="header-nav" aria-label="Perspectives">
+                <a href="terminal.html" class="nav-link">Terminal</a>
+                <a href="security.html" class="nav-link">Security</a>
+                <a href="jet-bridge.html" class="nav-link">Jet Bridge</a>
+                <a href="ramp.html" class="nav-link active">Ramp</a>
+                <a href="index.html" class="nav-link">Cockpit</a>
+                <a href="runway.html" class="nav-link">Runway</a>
+                <a href="tower.html" class="nav-link">Tower</a>
+                <span class="nav-separator">·</span>
+                <a href="flight-log.html" class="nav-link">Flight Log</a>
+                <a href="preflight.html" class="nav-link">Pre-Flight</a>
+                <a href="wiring.html" class="nav-link">Wiring</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">DAY</button>
+        </div>
+    </header>
+    <noscript><p style="padding:40px;text-align:center;color:#ffaa00;font-family:monospace;">This page requires JavaScript to render. Please enable JavaScript and reload.</p></noscript>
+
+    <!-- ==================== RAMP CONTENT ==================== -->
+    <main class="runway-main" id="ramp-main">
+        <section class="runway-intro">
+            <h2>🛬 Ground Operations Briefing</h2>
+            <p>The Ramp is where aircraft get serviced before flight — baggage,
+            fueling, catering, pushback. In Copilot terms: <strong>autonomous agents,
+            MCP tool execution, and the infrastructure that works without the pilot's
+            hands on the controls.</strong> These instruments run in the background,
+            on GitHub's infrastructure, or via external tool servers.</p>
+        </section>
+
+        <!-- ============ RAMP INSTRUMENTS ============ -->
+        <section class="runway-section" aria-label="Ramp instruments">
+            <h3 class="runway-section-title">◉ Ground Crew</h3>
+            <p class="runway-section-intro">Instruments that operate autonomously or bridge to external tool infrastructure. Click a card to see details.</p>
+            <div class="ramp-grid" id="ramp-grid" role="list">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ============ RAMP DETAIL BLADE ============ -->
+        <div id="ramp-blade-backdrop" class="blade-backdrop"></div>
+        <aside id="ramp-blade" class="ramp-blade" role="dialog" aria-label="Instrument detail">
+            <header class="ramp-blade-header">
+                <h3 id="ramp-blade-title">—</h3>
+                <button id="ramp-blade-close" class="blade-close-btn" aria-label="Close detail">✕</button>
+            </header>
+    <noscript><p style="padding:40px;text-align:center;color:#ffaa00;font-family:monospace;">This page requires JavaScript to render. Please enable JavaScript and reload.</p></noscript>
+            <div id="ramp-blade-body" class="ramp-blade-body">
+                <!-- Populated by JS -->
+            </div>
+        </aside>
+
+        <!-- ============ METAPHOR KEY ============ -->
+        <section class="runway-section" aria-label="Metaphor key">
+            <h3 class="runway-section-title">✦ Ramp Metaphor Key</h3>
+            <p class="runway-section-intro">How aviation ground handling maps to Copilot's autonomous layer:</p>
+            <div class="ramp-metaphor-list">
+                <div class="ramp-metaphor-item">
+                    <span class="ramp-metaphor-term">Baggage Handling</span>
+                    <span class="ramp-metaphor-arrow">→</span>
+                    <span class="ramp-metaphor-meaning">Cloud Agent processing issues autonomously — moving code "luggage" without the pilot</span>
+                </div>
+                <div class="ramp-metaphor-item">
+                    <span class="ramp-metaphor-term">Fuel Truck</span>
+                    <span class="ramp-metaphor-arrow">→</span>
+                    <span class="ramp-metaphor-meaning">MCP servers — external data and tools that fuel the model's context</span>
+                </div>
+                <div class="ramp-metaphor-item">
+                    <span class="ramp-metaphor-term">Catering</span>
+                    <span class="ramp-metaphor-arrow">→</span>
+                    <span class="ramp-metaphor-meaning">Extensions — third-party integrations that serve specialized knowledge</span>
+                </div>
+                <div class="ramp-metaphor-item">
+                    <span class="ramp-metaphor-term">Safety Inspector</span>
+                    <span class="ramp-metaphor-arrow">→</span>
+                    <span class="ramp-metaphor-meaning">Agent Self-Review — autonomous quality gate before presenting results</span>
+                </div>
+                <div class="ramp-metaphor-item">
+                    <span class="ramp-metaphor-term">Pushback Tug</span>
+                    <span class="ramp-metaphor-arrow">→</span>
+                    <span class="ramp-metaphor-meaning">Copilot Workspace — AI-driven prep that positions the project before the pilot takes over</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ COMING SOON ============ -->
+        <section class="runway-section" aria-label="Roadmap">
+            <h3 class="runway-section-title">✈ On Final Approach</h3>
+            <p class="runway-section-intro">Planned Ramp expansions:</p>
+            <p class="runway-section-intro" style="margin-top:12px;color:rgba(0,255,136,0.7);font-style:normal;">Recently landed:</p>
+            <ul class="tower-roadmap">
+                <li>✓ Autopilot — fully autonomous agent sessions without step-by-step confirmations (preview April 2026)</li>
+                <li>✓ Agent Mode + MCP GA in VS Code (April 2026)</li>
+                <li>✓ Cloud Agent rename (formerly Coding Agent) + validation tools 20% faster (April 2026)</li>
+                <li>✓ Custom Agents via .agent.md files — define and share specialized agents in repos (preview April 2026)</li>
+                <li>✓ Session forking — explore alternative agent approaches in parallel (VS Code)</li>
+                <li>✓ Cloud Agent on GitHub Mobile — research and code from mobile (April 2026)</li>
+            </ul>
+            <p class="runway-section-intro" style="margin-top:12px;">Still on approach:</p>
+            <ul class="tower-roadmap">
+                <li>Agent execution monitoring dashboard (run status, tool calls, token usage)</li>
+                <li>MCP server health indicators (connected, latency, errors)</li>
+                <li>Multi-agent orchestration patterns (sequential, parallel, supervisor)</li>
+                <li>Ground crew Mermaid diagrams — tool call flows and agent decision trees</li>
+                <li>Profiling Agent integration — debug-time PerfTips feed into performance analysis</li>
+                <li>Rubber Duck GA — dual-model review for improved agent output quality</li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+    // ============================================================
+    // RAMP PERSPECTIVE — Agents & Ground Handling
+    //
+    // Loads copilot-instruments.json, filters for instruments with
+    // perspectives.includes("ramp"), renders as cards with a
+    // click-to-open detail blade.
+    // ============================================================
+
+    let instrumentData = null;
+    let rampInstruments = [];
+
+    // --- Theme ---
+    function initTheme() {
+        const saved = localStorage.getItem('cockpit-theme');
+        if (saved === 'light') {
+            document.body.classList.add('light-theme');
+            document.getElementById('theme-toggle').textContent = 'NIGHT';
+        }
+    }
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('cockpit-theme', isLight ? 'light' : 'dark');
+        document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
+    });
+
+    // --- Zone colors (for card accents) ---
+    const ZONE_COLORS = {
+        pfd: '#00ff88',
+        nd: '#00d4ff',
+        glareshield: '#ffaa00',
+        eicas: '#ff4444',
+        pedestal: '#aa88ff',
+        overhead: '#888888',
+        side: '#ff88cc',
+        fms: '#44aaff'
+    };
+
+    // --- Load data ---
+    async function loadData() {
+        try {
+            const resp = await fetch('data/copilot-instruments.json');
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            instrumentData = await resp.json();
+            rampInstruments = instrumentData.instruments.filter(
+                (i) => i.perspectives && i.perspectives.includes('ramp')
+            );
+            init();
+        } catch (err) {
+            document.getElementById('ramp-main').innerHTML =
+                `<p style="color:#ff4444;padding:40px;">DATA LINK LOST — ${escapeHtml(err.message)}</p>`;
+        }
+    }
+
+    function init() {
+        renderGrid();
+        handleDeepLink();
+        window.addEventListener('hashchange', handleDeepLink);
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[c]);
+    }
+
+    // --- Render instrument cards ---
+    function renderGrid() {
+        const grid = document.getElementById('ramp-grid');
+        grid.innerHTML = rampInstruments.map((inst) => {
+            const color = ZONE_COLORS[inst.zone] || '#888';
+            const statusClass = inst.status === 'ga' ? 'status-ga' : inst.status === 'preview' ? 'status-preview' : 'status-deprecated';
+            const caps = (inst.capabilities || []).slice(0, 3).map((c) =>
+                `<span class="ramp-card-cap">${escapeHtml(c)}</span>`
+            ).join('');
+            return `
+                <article class="ramp-card ${statusClass}" data-instrument-id="${escapeHtml(inst.id)}" role="listitem"
+                         style="--accent: ${color}" tabindex="0">
+                    <header class="ramp-card-header">
+                        <span class="ramp-card-symbol" style="color: ${color}">${escapeHtml(inst.symbol)}</span>
+                        <span class="ramp-card-status">${escapeHtml(inst.status.toUpperCase())}</span>
+                    </header>
+    <noscript><p style="padding:40px;text-align:center;color:#ffaa00;font-family:monospace;">This page requires JavaScript to render. Please enable JavaScript and reload.</p></noscript>
+                    <h4 class="ramp-card-name">${escapeHtml(inst.name)}</h4>
+                    <p class="ramp-card-desc">${escapeHtml(inst.shortDescription || '')}</p>
+                    <div class="ramp-card-caps">${caps}</div>
+                </article>
+            `;
+        }).join('');
+
+        // Click handlers
+        grid.querySelectorAll('.ramp-card').forEach((card) => {
+            card.addEventListener('click', () => openBlade(card.dataset.instrumentId));
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openBlade(card.dataset.instrumentId); }
+            });
+        });
+    }
+
+    // --- Detail blade ---
+    function openBlade(id) {
+        const inst = rampInstruments.find((i) => i.id === id);
+        if (!inst) return;
+
+        const blade = document.getElementById('ramp-blade');
+        const color = ZONE_COLORS[inst.zone] || '#888';
+        document.getElementById('ramp-blade-title').textContent = `${inst.symbol} — ${inst.name}`;
+
+        const caps = (inst.capabilities || []).map((c) =>
+            `<span class="blade-cap-pill">${escapeHtml(c)}</span>`
+        ).join('');
+
+        const squawks = (inst.squawkCodes || []).map((s) =>
+            `<div class="ramp-blade-squawk"><strong>${escapeHtml(s.code)}</strong> ${escapeHtml(s.title)}<br><span class="ramp-blade-squawk-desc">${escapeHtml(s.description)}</span></div>`
+        ).join('');
+
+        const links = inst.links ? Object.entries(inst.links).map(([k, v]) =>
+            v ? `<a href="${escapeHtml(v)}" target="_blank" rel="noopener noreferrer" class="ramp-blade-link">${escapeHtml(k)}</a>` : ''
+        ).filter(Boolean).join('') : '';
+
+        const related = (inst.relatedInstruments || []).map((r) =>
+            `<a href="index.html#instrument-${escapeHtml(r)}" class="ramp-blade-related">${escapeHtml(r)}</a>`
+        ).join('');
+
+        document.getElementById('ramp-blade-body').innerHTML = `
+            <div class="blade-section">
+                <div class="blade-section-label">Status</div>
+                <span class="ramp-blade-status" style="color:${color}">${escapeHtml(inst.status.toUpperCase())}</span>
+                <span class="ramp-blade-zone" style="color:${color}">${escapeHtml(inst.zone)}</span>
+            </div>
+            ${inst.description ? `<div class="blade-section"><div class="blade-section-label">Description</div><p class="ramp-blade-desc">${escapeHtml(inst.description)}</p></div>` : ''}
+            ${caps ? `<div class="blade-section"><div class="blade-section-label">Capabilities</div><div class="blade-caps-grid">${caps}</div></div>` : ''}
+            ${inst.proTip ? `<div class="blade-section"><div class="blade-section-label">Pro Tip</div><p class="ramp-blade-tip">${escapeHtml(inst.proTip)}</p></div>` : ''}
+            ${squawks ? `<div class="blade-section"><div class="blade-section-label">Squawk Codes</div>${squawks}</div>` : ''}
+            ${related ? `<div class="blade-section"><div class="blade-section-label">Related</div><div class="ramp-blade-related-list">${related}</div></div>` : ''}
+            ${links ? `<div class="blade-section"><div class="blade-section-label">Links</div><div class="ramp-blade-links">${links}</div></div>` : ''}
+        `;
+
+        blade.classList.add('open');
+        document.getElementById('ramp-blade-backdrop').classList.add('open');
+        window.location.hash = `instrument-${id}`;
+    }
+
+    function closeBlade() {
+        document.getElementById('ramp-blade').classList.remove('open');
+        document.getElementById('ramp-blade-backdrop').classList.remove('open');
+        history.replaceState(null, '', window.location.pathname);
+    }
+
+    document.getElementById('ramp-blade-close').addEventListener('click', closeBlade);
+    document.getElementById('ramp-blade-backdrop').addEventListener('click', closeBlade);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeBlade();
+    });
+
+    // --- Deep link ---
+    function handleDeepLink() {
+        const hash = window.location.hash;
+        if (!hash || !hash.startsWith('#instrument-')) return;
+        const id = hash.slice('#instrument-'.length);
+        if (rampInstruments.find((i) => i.id === id)) {
+            openBlade(id);
+        }
+    }
+
+    initTheme();
+    loadData();
+    </script>
+    <!-- ==================== SITE FOOTER ==================== -->
+    <footer class="site-footer">
+        <div class="footer-author">
+            <span class="footer-author-name">Built by Matthias Falland</span>
+            <span class="footer-author-role">Microsoft Data Platform MVP &amp; The Trusted Advisor</span>
+        </div>
+        <nav class="footer-links" aria-label="Author links">
+            <a href="https://www.linkedin.com/in/matthias-falland" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://www.the-trusted-advisor.com/" class="footer-link" target="_blank" rel="noopener">Homepage</a>
+            <a href="https://www.youtube.com/@The-Trusted-Advisor" class="footer-link" target="_blank" rel="noopener">YouTube</a>
+            <a href="https://github.com/TheTrustedAdvisor" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+    </footer>
+    <script src="search.js"></script>
+</body>
+</html>

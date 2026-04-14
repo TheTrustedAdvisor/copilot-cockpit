@@ -2,9 +2,141 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Copilot Cockpit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copilot Cockpit — GitHub Copilot Interactive Reference</title>
+    <meta name="description" content="Interactive HUD-style reference for all GitHub Copilot features. Explore instruments, diagrams, code examples, and more.">
+
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://copilot-cockpit.com/">
+    <meta property="og:title" content="Copilot Cockpit">
+    <meta property="og:description" content="GitHub Copilot Interactive Reference — 46 instruments across 10 perspectives. Built by Matthias Falland.">
+    <meta property="og:image" content="https://copilot-cockpit.com/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Copilot Cockpit">
+    <meta name="twitter:description" content="GitHub Copilot Interactive Reference — 46 instruments across 10 perspectives. Built by Matthias Falland.">
+    <meta name="twitter:image" content="https://copilot-cockpit.com/og-image.png">
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Prism.js — Syntax Highlighting (Tomorrow Night theme for HUD aesthetic) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism-tomorrow.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1/prism.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-markdown.min.js" defer></script>
+
+    <!-- Mermaid (loaded async, rendered on demand) -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js" defer></script>
 </head>
 <body>
-    <p>Coming soon.</p>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="cockpit-header">
+        <div class="cockpit-title">
+            <span class="icon">✈</span>
+            <div>
+                <h1>Copilot Cockpit</h1>
+                <div class="subtitle">GitHub Copilot Interactive Reference</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="this.nextElementSibling.classList.toggle('open')">☰</button>
+            <nav class="header-nav" aria-label="Perspectives">
+                <a href="terminal.html" class="nav-link">Terminal</a>
+                <a href="security.html" class="nav-link">Security</a>
+                <a href="jet-bridge.html" class="nav-link">Jet Bridge</a>
+                <a href="ramp.html" class="nav-link">Ramp</a>
+                <a href="index.html" class="nav-link active">Cockpit</a>
+                <a href="runway.html" class="nav-link">Runway</a>
+                <a href="tower.html" class="nav-link">Tower</a>
+                <span class="nav-separator">·</span>
+                <a href="flight-log.html" class="nav-link">Flight Log</a>
+                <a href="preflight.html" class="nav-link">Pre-Flight</a>
+                <a href="wiring.html" class="nav-link">Wiring</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">DAY</button>
+            <div class="header-status">
+                <span class="dot"></span>
+                <span id="visible-count"></span>
+                <span>SYS ONLINE</span>
+                <span style="margin-left:8px;opacity:0.5" id="last-updated"></span>
+            </div>
+        </div>
+    </header>
+    <noscript><p style="padding:40px;text-align:center;color:#ffaa00;font-family:monospace;">This page requires JavaScript to render. Please enable JavaScript and reload.</p></noscript>
+
+    <!-- ==================== FILTER BAR ==================== -->
+    <div class="filter-bar">
+        <span class="filter-label">Flight Mode</span>
+        <button class="filter-btn" data-filter-type="flightMode" data-filter-value="beginner">VFR · Beginner</button>
+        <button class="filter-btn" data-filter-type="flightMode" data-filter-value="advanced">IFR · Advanced</button>
+        <button class="filter-btn" data-filter-type="flightMode" data-filter-value="atc">ATC · Admin</button>
+
+        <span class="filter-label" style="margin-left:16px">Plan</span>
+        <button class="filter-btn" data-filter-type="plan" data-filter-value="free">Free</button>
+        <button class="filter-btn" data-filter-type="plan" data-filter-value="pro">Pro</button>
+        <button class="filter-btn" data-filter-type="plan" data-filter-value="business">Business</button>
+        <button class="filter-btn" data-filter-type="plan" data-filter-value="enterprise">Enterprise</button>
+
+        <span class="filter-label" style="margin-left:16px">Status</span>
+        <button class="filter-btn" data-filter-type="status" data-filter-value="ga">GA</button>
+        <button class="filter-btn" data-filter-type="status" data-filter-value="preview">Preview</button>
+
+        <div class="search-container" style="margin-left:auto">
+            <span class="search-icon">⌕</span>
+            <input type="text" id="search-input" class="search-input"
+                   placeholder="Filter instruments… (/ to focus)"
+                   aria-label="Search instruments">
+        </div>
+    </div>
+
+    <!-- ==================== BLADE LAYOUT ==================== -->
+    <div id="cockpit-body" class="cockpit-body">
+
+        <!-- Main content area (shrinks when blade opens) -->
+        <div class="cockpit-main" id="cockpit-main">
+            <main id="cockpit-grid" class="cockpit-grid">
+                <!-- Rendered by app.js from data/copilot-instruments.json -->
+            </main>
+            <footer id="cockpit-legend" class="cockpit-legend">
+                <!-- Rendered by app.js -->
+            </footer>
+        </div>
+
+        <!-- Detail blade (slides in from right) -->
+        <aside id="detail-panel" class="detail-blade">
+            <!-- Populated dynamically by openDetailPanel() -->
+        </aside>
+
+    </div>
+
+    <!-- App Logic -->
+    <script src="app.js"></script>
+    <!-- ==================== SITE FOOTER ==================== -->
+    <footer class="site-footer">
+        <div class="footer-author">
+            <span class="footer-author-name">Built by Matthias Falland</span>
+            <span class="footer-author-role">Microsoft Data Platform MVP &amp; The Trusted Advisor</span>
+        </div>
+        <nav class="footer-links" aria-label="Author links">
+            <a href="https://www.linkedin.com/in/matthias-falland" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://www.the-trusted-advisor.com/" class="footer-link" target="_blank" rel="noopener">Homepage</a>
+            <a href="https://www.youtube.com/@The-Trusted-Advisor" class="footer-link" target="_blank" rel="noopener">YouTube</a>
+            <a href="https://github.com/TheTrustedAdvisor" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+    </footer>
+    <script src="search.js"></script>
 </body>
 </html>

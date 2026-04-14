@@ -1,0 +1,187 @@
+{
+    "version": "1.0.0",
+    "lastUpdated": "2026-04-13",
+    "description": "Jet Bridge perspective — the walkway from Terminal to Cockpit. Tutorials on prompt craft, context management, edit mode, and agent mode patterns.",
+
+    "promptCraft": {
+        "title": "Prompt Craft — Talking to Copilot",
+        "intro": "Copilot is only as good as the context you give it. A vague prompt gets a vague answer. A precise prompt — with intent, constraints, and examples — gets production-ready code. These techniques apply across all surfaces: completions, chat, edits, and agent mode.",
+        "techniques": [
+            {
+                "id": "be-specific",
+                "title": "Be Specific About Intent",
+                "bad": "// handle errors",
+                "good": "// Wrap the API call in try/catch. On 429, retry with exponential backoff (max 3 retries). On 5xx, log the error and return a fallback response.",
+                "why": "Copilot uses your comment as the spec. More detail means fewer iterations."
+            },
+            {
+                "id": "provide-examples",
+                "title": "Provide Input/Output Examples",
+                "bad": "// parse the date string",
+                "good": "// Parse date strings like '2026-04-13', 'April 13, 2026', or '13/04/2026' into ISO 8601 format.\n// Example: 'April 13, 2026' → '2026-04-13'",
+                "why": "Concrete examples disambiguate format expectations and edge cases."
+            },
+            {
+                "id": "name-things-well",
+                "title": "Name Things Well",
+                "bad": "function process(data) {",
+                "good": "function validateAndNormalizeUserProfile(rawProfile) {",
+                "why": "Copilot reads your function name, parameter names, and type annotations to infer what to generate. Descriptive names act as implicit prompts."
+            },
+            {
+                "id": "keep-relevant-tabs",
+                "title": "Keep Relevant Tabs Open",
+                "bad": "Work with only the current file open",
+                "good": "Open related files (types, tests, similar implementations) as tabs in your editor",
+                "why": "Copilot uses open tabs as context. A test file open alongside your implementation helps Copilot understand the expected behavior."
+            },
+            {
+                "id": "iterate-dont-restart",
+                "title": "Iterate, Don't Restart",
+                "bad": "Delete Copilot's suggestion and retype your prompt from scratch",
+                "good": "Accept the partial suggestion, then add a follow-up comment refining what's missing",
+                "why": "Each accepted line becomes context for the next suggestion. Building incrementally is faster than starting over."
+            },
+            {
+                "id": "use-type-annotations",
+                "title": "Use Type Annotations",
+                "bad": "function getUser(id) {",
+                "good": "function getUser(id: string): Promise<User | null> {",
+                "why": "Type signatures tell Copilot the exact shape of inputs and outputs. In TypeScript and Python (with type hints), this dramatically improves suggestion quality."
+            }
+        ]
+    },
+
+    "contextManagement": {
+        "title": "Context Management — Scoping What Copilot Sees",
+        "intro": "Copilot Chat offers participants and variables that control what context is sent with your prompt. Mastering these is the difference between generic answers and codebase-aware solutions.",
+        "participants": [
+            {
+                "id": "workspace",
+                "name": "@workspace",
+                "description": "Searches your entire workspace using embeddings and ranks relevant files. Best for broad questions about architecture, patterns, or finding code.",
+                "example": "@workspace How does authentication work in this project?",
+                "tip": "Use @workspace for discovery. Once you know which files matter, switch to #file for precision."
+            },
+            {
+                "id": "vscode",
+                "name": "@vscode",
+                "description": "Asks about VS Code settings, keybindings, and extension APIs. Useful when configuring your editor.",
+                "example": "@vscode How do I change the font size in the terminal?",
+                "tip": "This participant knows VS Code internals — use it for editor questions, not code questions."
+            },
+            {
+                "id": "terminal",
+                "name": "@terminal",
+                "description": "Has context about your integrated terminal — recent commands, output, and errors.",
+                "example": "@terminal What caused the last error?",
+                "tip": "Great for debugging build failures or test errors without copy-pasting terminal output."
+            }
+        ],
+        "variables": [
+            {
+                "id": "file",
+                "name": "#file",
+                "description": "Attaches a specific file to the chat context. Pick the exact file Copilot should read.",
+                "example": "Explain the retry logic in #file:src/api/client.ts",
+                "tip": "More precise than @workspace when you know which file contains the answer."
+            },
+            {
+                "id": "selection",
+                "name": "#selection",
+                "description": "Sends your current editor selection as context.",
+                "example": "Refactor #selection to use async/await instead of callbacks",
+                "tip": "Select the code first, then reference it in chat for targeted refactoring."
+            },
+            {
+                "id": "codebase",
+                "name": "#codebase",
+                "description": "Like @workspace but as a variable — searches the full codebase for relevant context.",
+                "example": "Find all usages of the UserService class #codebase",
+                "tip": "Use when you want codebase search combined with other participants."
+            }
+        ]
+    },
+
+    "editMode": {
+        "title": "Edit Mode — Targeted Multi-File Changes",
+        "intro": "Edit mode sits between inline completions and agent mode. You describe a change in natural language, Copilot proposes diffs across one or more files, and you review before applying. No terminal commands, no autonomous actions — just precise edits with human review.",
+        "workflows": [
+            {
+                "id": "inline-edit",
+                "title": "Inline Edit (Ctrl+I)",
+                "steps": ["Select code in the editor", "Press Ctrl+I (Cmd+I on Mac)", "Describe the change in natural language", "Review the inline diff and accept or reject"],
+                "bestFor": "Quick, scoped changes to a single block of code",
+                "example": "Select a function → Ctrl+I → 'Add null checks for all parameters and throw descriptive errors'"
+            },
+            {
+                "id": "edit-panel",
+                "title": "Edits Panel",
+                "steps": ["Open Copilot Edits (Ctrl+Shift+I → switch to Edits)", "Add files to the working set", "Describe the change", "Review proposed diffs across all files"],
+                "bestFor": "Multi-file refactors where you want to review every change before applying",
+                "example": "Add working set: model.ts, controller.ts, routes.ts → 'Add a deletedAt soft-delete field and filter it in all queries'"
+            },
+            {
+                "id": "edit-from-chat",
+                "title": "Apply from Chat",
+                "steps": ["Ask a question in Chat", "When Copilot suggests code, click 'Apply in Editor'", "Review the diff overlay in the editor"],
+                "bestFor": "When a chat conversation produces code you want to use immediately",
+                "example": "Ask 'How would I add rate limiting to this Express router?' → Apply the suggested middleware"
+            }
+        ]
+    },
+
+    "agentPatterns": {
+        "title": "Agent Mode — Autonomous Workflows",
+        "intro": "Agent mode is Copilot's most powerful surface. It can read files, edit code, run terminal commands, and iterate on errors — all autonomously. But with great power comes the need for clear instructions and careful review.",
+        "patterns": [
+            {
+                "id": "plan-first",
+                "title": "Ask for a Plan First",
+                "description": "Before letting the agent execute, ask it to outline its approach. Review the plan, adjust scope, then approve execution.",
+                "example": "I need to migrate from Express to Fastify. Don't make changes yet — first outline which files need to change and what the migration steps are.",
+                "risk": "low"
+            },
+            {
+                "id": "scope-boundaries",
+                "title": "Set Clear Boundaries",
+                "description": "Tell the agent what NOT to change. Explicit exclusions prevent scope creep.",
+                "example": "Add input validation to the user registration endpoint. Don't modify the database schema or change any existing tests.",
+                "risk": "low"
+            },
+            {
+                "id": "test-driven",
+                "title": "Test-Driven Agent Work",
+                "description": "Give the agent a failing test and ask it to make it pass. The test becomes both specification and verification.",
+                "example": "The test in tests/auth.spec.ts line 42 is failing. Read the test, understand what it expects, and fix the implementation to make it pass.",
+                "risk": "low"
+            },
+            {
+                "id": "iterative-review",
+                "title": "Iterative Review Cycles",
+                "description": "Don't approve everything at once. Review each terminal command and file change before the agent continues.",
+                "example": "After each file change, pause and show me a summary of what you changed and why before continuing to the next file.",
+                "risk": "medium"
+            },
+            {
+                "id": "rollback-awareness",
+                "title": "Use Git as Your Safety Net",
+                "description": "Commit before starting agent work. If the agent goes off track, you can always git stash or reset.",
+                "example": "Before we start: commit all current changes. Then create a new branch 'feature/agent-refactor' for this work.",
+                "risk": "medium"
+            }
+        ]
+    },
+
+    "nextSteps": {
+        "title": "Ready for Boarding — Next Steps",
+        "intro": "You've walked the jet bridge. You know how to talk to Copilot, scope its context, use edit mode for precision, and agent mode for autonomy. Now board the aircraft:",
+        "destinations": [
+            { "perspective": "Cockpit", "page": "index.html", "reason": "See all 48 instruments and start your daily Copilot workflow" },
+            { "perspective": "Security", "page": "security.html", "reason": "Understand the threat model and how Copilot handles your code" },
+            { "perspective": "Ramp", "page": "ramp.html", "reason": "Deep dive into Agent Mode, MCP servers, and the Cloud Agent" },
+            { "perspective": "Runway", "page": "runway.html", "reason": "Explore which AI models power each Copilot surface" },
+            { "perspective": "Tower", "page": "tower.html", "reason": "Admin controls, governance policies, and sovereign cloud options" }
+        ]
+    }
+}

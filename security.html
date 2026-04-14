@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security — Copilot Cockpit</title>
+    <meta name="description" content="Security perspective for GitHub Copilot: X-Ray scanner reveals threat models, attack scenarios, and hardening steps for each security control.">
+
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://copilot-cockpit.com/security.html">
+    <meta property="og:title" content="Security — Copilot Cockpit">
+    <meta property="og:description" content="CISO view of GitHub Copilot: threat models, attack scenarios, hardening demos, and compliance mapping.">
+    <meta property="og:image" content="https://copilot-cockpit.com/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Security — Copilot Cockpit">
+    <meta name="twitter:description" content="CISO view of GitHub Copilot: threat models, attack scenarios, hardening demos, and compliance mapping.">
+    <meta name="twitter:image" content="https://copilot-cockpit.com/og-image.png">
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Mermaid for threat model diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="cockpit-header">
+        <div class="cockpit-title">
+            <span class="icon">✈</span>
+            <div>
+                <h1>Security Perspective</h1>
+                <div class="subtitle">Copilot — CISO View</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="this.nextElementSibling.classList.toggle('open')">☰</button>
+            <nav class="header-nav" aria-label="Perspectives">
+                <a href="terminal.html" class="nav-link">Terminal</a>
+                <a href="security.html" class="nav-link active">Security</a>
+                <a href="jet-bridge.html" class="nav-link">Jet Bridge</a>
+                <a href="ramp.html" class="nav-link">Ramp</a>
+                <a href="index.html" class="nav-link">Cockpit</a>
+                <a href="runway.html" class="nav-link">Runway</a>
+                <a href="tower.html" class="nav-link">Tower</a>
+                <span class="nav-separator">·</span>
+                <a href="flight-log.html" class="nav-link">Flight Log</a>
+                <a href="preflight.html" class="nav-link">Pre-Flight</a>
+                <a href="wiring.html" class="nav-link">Wiring</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">DAY</button>
+        </div>
+    </header>
+    <noscript><p style="padding:40px;text-align:center;color:#ffaa00;font-family:monospace;">This page requires JavaScript to render. Please enable JavaScript and reload.</p></noscript>
+
+    <!-- ==================== SECURITY CONTENT ==================== -->
+    <main class="security-main" id="security-main">
+        <section class="security-intro">
+            <h2>⚠ Pre-Flight Security Briefing</h2>
+            <p>Slide a control through the X-Ray Scanner to reveal its threat model, concrete attack scenarios,
+            before/after hardening demos, and blast radius. This is the adversarial view of Copilot —
+            showing what each security feature actually defends against, not just what it does.</p>
+            <button class="print-btn" onclick="window.print()" aria-label="Print this page">🖨 Print / Export PDF</button>
+        </section>
+
+        <!-- ============ X-RAY SCANNER — HERO ============ -->
+        <section class="xray-scanner security-section" aria-label="Security X-Ray Scanner">
+            <h3 class="security-section-title">◉ X-Ray Scanner</h3>
+
+            <!-- Luggage lane: controls to scan -->
+            <div class="luggage-lane" id="luggage-lane" role="tablist" aria-label="Security controls">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Scanner screen -->
+            <div class="scanner-screen" id="scanner-screen">
+                <div class="scanner-content" id="scanner-content" role="tabpanel">
+                    <div style="text-align:center; padding: 60px 0; color: rgba(255,255,255,0.3); font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 2px;">
+                        ◉ INITIALIZING SCANNER…
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ POSTURE SCORE ============ -->
+        <section class="security-section">
+            <h3 class="security-section-title">Security Posture Score</h3>
+            <div class="posture-score-card">
+                <div class="posture-score-display">
+                    <div class="posture-score-value" id="posture-score">0%</div>
+                    <div class="posture-score-label">Posture</div>
+                    <div class="posture-score-status" id="posture-status" style="color: #ff4444;">At Risk</div>
+                </div>
+                <ul class="posture-checklist" id="posture-checklist">
+                    <!-- Populated by JS -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- ============ COMPLIANCE MAPPING ============ -->
+        <section class="security-section">
+            <h3 class="security-section-title">Compliance Mapping</h3>
+            <table class="compliance-table">
+                <thead>
+                    <tr>
+                        <th>Framework</th>
+                        <th>Control</th>
+                        <th>Copilot Feature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="compliance-control">SOC 2</td>
+                        <td>CC6.1 — Logical Access Controls</td>
+                        <td>Feature Policies, Seat Management, SSO integration</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">SOC 2</td>
+                        <td>CC7.2 — System Monitoring</td>
+                        <td>Audit Logs, Usage Metrics</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">SOC 2</td>
+                        <td>CC8.1 — Change Management</td>
+                        <td>Copilot Autofix, Security Scanning, Agent Self-Review</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">GDPR</td>
+                        <td>Art. 5(1)(b) — Purpose Limitation</td>
+                        <td>Content Exclusion, Data Residency (EU)</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">GDPR</td>
+                        <td>Art. 32 — Security of Processing</td>
+                        <td>BYOK, Copilot Instructions (guardrails)</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">GDPR</td>
+                        <td>Art. 30 — Records of Processing</td>
+                        <td>Audit Logs</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">HIPAA</td>
+                        <td>§164.312(a) — Access Control</td>
+                        <td>Feature Policies, Content Exclusion</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">HIPAA</td>
+                        <td>§164.312(b) — Audit Controls</td>
+                        <td>Audit Logs</td>
+                    </tr>
+                    <tr>
+                        <td class="compliance-control">IP / Legal</td>
+                        <td>Third-party code risk</td>
+                        <td>IP Indemnity (Business/Enterprise), Content Exclusion</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+    // ============================================================
+    // SECURITY PERSPECTIVE — X-Ray Scanner
+    // ============================================================
+
+    let instrumentsData = null;
+    let threatsData = null;
+    let frameworksData = null;
+    let currentScanId = null;
+
+    // --- Theme ---
+    function initTheme() {
+        const saved = localStorage.getItem('cockpit-theme');
+        if (saved === 'light') {
+            document.body.classList.add('light-theme');
+            document.getElementById('theme-toggle').textContent = 'NIGHT';
+        }
+    }
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('cockpit-theme', isLight ? 'light' : 'dark');
+        document.getElementById('theme-toggle').textContent = isLight ? 'NIGHT' : 'DAY';
+        // Re-init mermaid with new theme
+        initMermaid();
+        // Re-render current scan to pick up new mermaid theme
+        if (currentScanId) loadScan(currentScanId, { skipAnimation: true });
+    });
+
+    // --- Mermaid init ---
+    function initMermaid() {
+        if (typeof mermaid === 'undefined') return;
+        const isLight = document.body.classList.contains('light-theme');
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'base',
+            themeVariables: isLight ? {
+                primaryColor: '#f0fdf4',
+                primaryTextColor: '#065f46',
+                primaryBorderColor: '#00994d',
+                lineColor: '#00994d',
+                secondaryColor: '#fef3c7',
+                tertiaryColor: '#fee2e2',
+                background: '#ffffff',
+                mainBkg: '#f0fdf4',
+                secondBkg: '#fef3c7',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '12px'
+            } : {
+                primaryColor: '#0d1117',
+                primaryTextColor: '#00ff88',
+                primaryBorderColor: '#00ff88',
+                lineColor: '#00ff88',
+                secondaryColor: '#1a1a2e',
+                tertiaryColor: '#2a1a1a',
+                background: 'transparent',
+                mainBkg: '#0d1117',
+                secondBkg: '#1a1a2e',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '12px'
+            }
+        });
+    }
+
+    // --- Posture checklist items ---
+    const POSTURE_ITEMS = [
+        { id: 'content-exclusion',   name: 'Content Exclusion configured',      desc: 'Sensitive files blocked from Copilot context.' },
+        { id: 'feature-policies',    name: 'Feature Policies enforced',         desc: 'Central control over Copilot features.' },
+        { id: 'ip-indemnity',        name: 'IP Indemnity enabled',              desc: 'Duplication filter on + Business/Enterprise plan.' },
+        { id: 'audit-logs',          name: 'Audit Logs monitored',              desc: 'Copilot events streamed to SIEM.' },
+        { id: 'data-residency',      name: 'Data Residency set',                desc: 'EU or US data residency configured.' },
+        { id: 'copilot-autofix',     name: 'Copilot Autofix enabled',           desc: 'Automatic remediation for Code Scanning alerts.' },
+        { id: 'security-scanning',   name: 'Security Scanning enabled',         desc: 'CodeQL + secret scanning active on all repos.' },
+        { id: 'byok',                name: 'BYOK evaluated',                    desc: 'Bring Your Own Key reviewed for sovereignty.' },
+        { id: 'copilot-instructions', name: 'copilot-instructions.md in place', desc: 'Repo-level guardrails defining constraints.' }
+    ];
+
+    // --- Load data in parallel ---
+    async function loadAllData() {
+        const [inst, threats, frameworks] = await Promise.all([
+            fetch('data/copilot-instruments.json').then(r => r.json()),
+            fetch('data/security-threats.json').then(r => r.json()),
+            fetch('data/security-frameworks.json').then(r => r.json())
+        ]);
+        instrumentsData = inst;
+        threatsData = threats;
+        frameworksData = frameworks;
+        init();
+    }
+
+    // --- Initial render ---
+    function init() {
+        initMermaid();
+        renderLuggageLane();
+        renderPostureChecklist();
+        updatePostureScore();
+
+        // Deep link support
+        const hashMatch = window.location.hash.match(/#scan=([\w-]+)/);
+        const initial = hashMatch ? hashMatch[1] : (
+            localStorage.getItem('cockpit-last-scan') || threatsData.threats[0].instrumentId
+        );
+        const exists = threatsData.threats.find(t => t.instrumentId === initial);
+        loadScan(exists ? initial : threatsData.threats[0].instrumentId, { skipAnimation: true });
+    }
+
+    // --- Luggage lane ---
+    function renderLuggageLane() {
+        const lane = document.getElementById('luggage-lane');
+        lane.innerHTML = threatsData.threats.map(t => {
+            const inst = instrumentsData.instruments.find(i => i.id === t.instrumentId);
+            if (!inst) return '';
+            return `
+                <button class="luggage-item"
+                        role="tab"
+                        data-scan-id="${inst.id}"
+                        aria-label="Scan ${inst.name}">
+                    <span class="luggage-symbol">${inst.symbol}</span>
+                    <span class="luggage-label">${inst.name.split(' ')[0]}</span>
+                </button>
+            `;
+        }).join('');
+
+        lane.querySelectorAll('.luggage-item').forEach(btn => {
+            btn.addEventListener('click', () => loadScan(btn.dataset.scanId));
+        });
+
+        // Keyboard navigation
+        lane.addEventListener('keydown', (e) => {
+            if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+            const items = Array.from(lane.querySelectorAll('.luggage-item'));
+            const activeIdx = items.findIndex(i => i.classList.contains('active'));
+            const nextIdx = e.key === 'ArrowRight'
+                ? (activeIdx + 1) % items.length
+                : (activeIdx - 1 + items.length) % items.length;
+            items[nextIdx].focus();
+            loadScan(items[nextIdx].dataset.scanId);
+            e.preventDefault();
+        });
+    }
+
+    // --- Load a scan into the scanner ---
+    function loadScan(id, opts = {}) {
+        const threat = threatsData.threats.find(t => t.instrumentId === id);
+        if (!threat) return;
+        const inst = instrumentsData.instruments.find(i => i.id === id);
+        if (!inst) return;
+
+        currentScanId = id;
+        localStorage.setItem('cockpit-last-scan', id);
+        history.replaceState(null, '', `#scan=${id}`);
+
+        // Update luggage lane active state
+        document.querySelectorAll('.luggage-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.scanId === id);
+        });
+
+        const screen = document.getElementById('scanner-screen');
+        const content = document.getElementById('scanner-content');
+
+        const doRender = () => {
+            content.innerHTML = renderScannerContent(inst, threat);
+            // Render mermaid diagrams
+            if (typeof mermaid !== 'undefined') {
+                const diagrams = content.querySelectorAll('.mermaid');
+                diagrams.forEach((el, i) => {
+                    try {
+                        mermaid.render(`mmd-${id}-${i}-${Date.now()}`, el.textContent)
+                            .then(({ svg }) => { el.innerHTML = svg; })
+                            .catch(err => {
+                                console.warn('Mermaid render failed:', err);
+                                el.innerHTML = `<pre style="color:#ff8888;font-size:0.6rem;">${el.textContent}</pre>`;
+                            });
+                    } catch (err) {
+                        console.warn('Mermaid error:', err);
+                    }
+                });
+            }
+            content.classList.remove('fading');
+        };
+
+        if (opts.skipAnimation) {
+            doRender();
+        } else {
+            // Trigger scan-line sweep + fade
+            content.classList.add('fading');
+            screen.classList.remove('scanning');
+            // Force reflow to restart animation
+            void screen.offsetWidth;
+            screen.classList.add('scanning');
+            setTimeout(doRender, 200);
+        }
+    }
+
+    // --- Render framework chips (OWASP LLM + ATLAS) as links to official sources ---
+    function renderFrameworksBar(threat) {
+        if (!frameworksData || !threat.frameworks) return '';
+        const fw = threat.frameworks;
+        const owaspIds  = fw.owaspLLM || [];
+        const atlasIds  = fw.atlas    || [];
+        if (owaspIds.length === 0 && atlasIds.length === 0) {
+            return `<div class="frameworks-bar empty">
+                <span class="fw-label">Framework mapping:</span>
+                <span class="fw-none">— (not an adversarial-AI attack class)</span>
+            </div>`;
+        }
+
+        const owaspReg = frameworksData.frameworks.owaspLLM || {};
+        const atlasReg = frameworksData.frameworks.atlas    || {};
+
+        const owaspChips = owaspIds.map(id => {
+            const entry = owaspReg[id];
+            if (!entry) return `<span class="fw-chip owasp broken">${escapeHtml(id)}</span>`;
+            return `<a class="fw-chip owasp"
+                       href="${escapeHtml(entry.url)}"
+                       target="_blank" rel="noopener noreferrer"
+                       title="${escapeHtml(entry.summary || '')}">
+                        <span class="fw-chip-id">${escapeHtml(id)}</span>
+                        <span class="fw-chip-title">${escapeHtml(entry.title)}</span>
+                    </a>`;
+        }).join('');
+
+        const atlasChips = atlasIds.map(id => {
+            const entry = atlasReg[id];
+            if (!entry) return `<span class="fw-chip atlas broken">${escapeHtml(id)}</span>`;
+            return `<a class="fw-chip atlas"
+                       href="${escapeHtml(entry.url)}"
+                       target="_blank" rel="noopener noreferrer"
+                       title="${escapeHtml(entry.summary || '')}">
+                        <span class="fw-chip-id">${escapeHtml(id)}</span>
+                        <span class="fw-chip-title">${escapeHtml(entry.title)}</span>
+                    </a>`;
+        }).join('');
+
+        return `
+            <div class="frameworks-bar">
+                ${owaspChips ? `<div class="fw-group">
+                    <span class="fw-label">OWASP LLM:</span>
+                    ${owaspChips}
+                </div>` : ''}
+                ${atlasChips ? `<div class="fw-group">
+                    <span class="fw-label">ATLAS:</span>
+                    ${atlasChips}
+                </div>` : ''}
+            </div>
+        `;
+    }
+
+    // --- CWE chip builder: resolves to an anchor linking mitre.org definition ---
+    function renderCweChips(cweList) {
+        if (!cweList || cweList.length === 0) return '';
+        const pattern = frameworksData?.cwePattern?.urlTemplate || 'https://cwe.mitre.org/data/definitions/{id}.html';
+        return cweList.map(c => {
+            const num = String(c).replace(/^CWE-/i, '');
+            const url = pattern.replace('{id}', num);
+            return `<a class="cwe-chip"
+                       href="${escapeHtml(url)}"
+                       target="_blank" rel="noopener noreferrer"
+                       title="View ${escapeHtml(c)} on cwe.mitre.org">${escapeHtml(c)}</a>`;
+        }).join('');
+    }
+
+    // --- Render scanner content HTML ---
+    function renderScannerContent(inst, threat) {
+        const s = threat.scenario;
+        const d = threat.demo;
+
+        const cweBadges = renderCweChips(threat.mitigatesCWE);
+
+        return `
+            <div class="scanner-header">
+                <div class="scanner-symbol">${inst.symbol}</div>
+                <div class="scanner-title-group">
+                    <div class="scanner-title">${inst.name}</div>
+                    <div class="scanner-classification">${threat.classification} · ${(threat.cia || []).join(' · ') || 'legal'}</div>
+                </div>
+                <a href="index.html#instrument-${inst.id}" class="scanner-open-cockpit">Open in Cockpit ▸</a>
+            </div>
+
+            ${renderFrameworksBar(threat)}
+
+            <div class="scanner-section">
+                <div class="scanner-section-title">◉ Threat Model</div>
+                <div class="threat-model-diagram">
+                    <div class="mermaid">${threat.threatModel.diagram}</div>
+                </div>
+            </div>
+
+            <div class="scanner-section">
+                <div class="scanner-section-title">⚠ Attack Scenario — ${escapeHtml(threat.threatModel.title)}</div>
+                <div class="scenario-meta">
+                    <span class="severity-badge ${s.severity}">Severity: ${s.severity}</span>
+                    <span class="likelihood-badge">Likelihood: ${s.likelihood}</span>
+                </div>
+                <div class="scenario-narrative">${escapeHtml(s.narrative)}</div>
+            </div>
+
+            <div class="scanner-section">
+                <div class="scanner-section-title">▶ Before / After Demo</div>
+                <div class="demo-comparison">
+                    <div class="demo-panel vulnerable">
+                        <div class="demo-panel-header">
+                            <span>${escapeHtml(d.vulnerable.label)}</span>
+                            <span class="demo-panel-filename">${escapeHtml(d.vulnerable.filename || '')}</span>
+                        </div>
+                        <pre><code>${escapeHtml(d.vulnerable.code)}</code></pre>
+                    </div>
+                    <div class="demo-panel hardened">
+                        <div class="demo-panel-header">
+                            <span>${escapeHtml(d.hardened.label)}</span>
+                            <span class="demo-panel-filename">${escapeHtml(d.hardened.filename || '')}</span>
+                        </div>
+                        <pre><code>${escapeHtml(d.hardened.code)}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scanner-section">
+                <div class="scanner-section-title">⚙ Countermeasures</div>
+                <ul class="countermeasures-list">
+                    ${threat.countermeasures.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
+                </ul>
+            </div>
+
+            <div class="scanner-section">
+                <div class="scanner-section-title">● Blast Radius</div>
+                <div class="blast-radius" data-level="${threat.blastRadius}">
+                    <span class="blast-radius-label">If misconfigured:</span>
+                    <div class="blast-radius-bar">
+                        <div class="blast-radius-segment"></div>
+                        <div class="blast-radius-segment"></div>
+                        <div class="blast-radius-segment"></div>
+                    </div>
+                    <span class="blast-radius-text">${threat.blastRadius}</span>
+                </div>
+                ${cweBadges ? `<div class="cwe-list">Mitigates: ${cweBadges}</div>` : ''}
+            </div>
+        `;
+    }
+
+    function escapeHtml(s) {
+        if (s == null) return '';
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // --- Posture Checklist ---
+    function renderPostureChecklist() {
+        const ul = document.getElementById('posture-checklist');
+        const saved = JSON.parse(localStorage.getItem('cockpit-security-posture') || '{}');
+        ul.innerHTML = POSTURE_ITEMS.map(item => `
+            <li>
+                <input type="checkbox"
+                       class="posture-checkbox"
+                       id="posture-${item.id}"
+                       data-posture-id="${item.id}"
+                       ${saved[item.id] ? 'checked' : ''}>
+                <label class="posture-item-label" for="posture-${item.id}">
+                    <span class="posture-item-name">${item.name}</span>
+                    <span class="posture-item-desc">${item.desc}</span>
+                </label>
+            </li>
+        `).join('');
+
+        ul.querySelectorAll('.posture-checkbox').forEach(cb => {
+            cb.addEventListener('change', () => {
+                const state = JSON.parse(localStorage.getItem('cockpit-security-posture') || '{}');
+                state[cb.dataset.postureId] = cb.checked;
+                localStorage.setItem('cockpit-security-posture', JSON.stringify(state));
+                updatePostureScore();
+            });
+        });
+    }
+
+    function updatePostureScore() {
+        const saved = JSON.parse(localStorage.getItem('cockpit-security-posture') || '{}');
+        const enabled = POSTURE_ITEMS.filter(i => saved[i.id]).length;
+        const pct = Math.round((enabled / POSTURE_ITEMS.length) * 100);
+
+        const valEl = document.getElementById('posture-score');
+        const statusEl = document.getElementById('posture-status');
+        valEl.textContent = `${pct}%`;
+
+        valEl.classList.remove('low', 'mid');
+        if (pct < 40) {
+            valEl.classList.add('low');
+            statusEl.textContent = 'At Risk';
+            statusEl.style.color = '#ff4444';
+        } else if (pct < 75) {
+            valEl.classList.add('mid');
+            statusEl.textContent = 'Improving';
+            statusEl.style.color = 'var(--color-glareshield)';
+        } else {
+            statusEl.textContent = 'Cleared for Flight';
+            statusEl.style.color = 'var(--color-pfd)';
+        }
+    }
+
+    // --- Hash change (browser back/forward) ---
+    window.addEventListener('hashchange', () => {
+        const m = window.location.hash.match(/#scan=([\w-]+)/);
+        if (m && m[1] !== currentScanId) loadScan(m[1]);
+    });
+
+    // --- Init ---
+    initTheme();
+    loadAllData();
+    </script>
+    <!-- ==================== SITE FOOTER ==================== -->
+    <footer class="site-footer">
+        <div class="footer-author">
+            <span class="footer-author-name">Built by Matthias Falland</span>
+            <span class="footer-author-role">Microsoft Data Platform MVP &amp; The Trusted Advisor</span>
+        </div>
+        <nav class="footer-links" aria-label="Author links">
+            <a href="https://www.linkedin.com/in/matthias-falland" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://www.the-trusted-advisor.com/" class="footer-link" target="_blank" rel="noopener">Homepage</a>
+            <a href="https://www.youtube.com/@The-Trusted-Advisor" class="footer-link" target="_blank" rel="noopener">YouTube</a>
+            <a href="https://github.com/TheTrustedAdvisor" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+    </footer>
+    <script src="search.js"></script>
+</body>
+</html>

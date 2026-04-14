@@ -17,10 +17,20 @@ media/casts/
 # Node (if mermaid-cli used locally)
 node_modules/
 
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
 # Python
 __pycache__/
 *.pyc
 .venv/
+
+# Enrichment pipeline cache (tools/enrich/)
+tools/cache/sources/
+tools/cache/parsed/
+tools/cache/merged-candidate.json
 
 # Env files
 .env
