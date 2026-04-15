@@ -150,3 +150,23 @@ test.describe('Jet Bridge — nav promotion', () => {
         await expect(jbLink.locator('.nav-soon')).toHaveCount(0);
     });
 });
+
+test.describe('Jet Bridge — companion callout', () => {
+    test('companion callout is visible with correct structure', async ({ page }) => {
+        await page.goto('/jet-bridge.html');
+        const callout = page.locator('.companion-callout');
+        await expect(callout).toBeVisible();
+        await expect(callout.locator('.companion-callout-label')).toHaveText('Companion Tool');
+        await expect(callout.locator('.companion-callout-title')).toContainText('omg');
+        await expect(callout.locator('.companion-callout-link')).toHaveAttribute('href', /TheTrustedAdvisor/);
+    });
+
+    test('companion callout appears before Next Steps section', async ({ page }) => {
+        await page.goto('/jet-bridge.html');
+        const callout = page.locator('.companion-callout');
+        const nextSteps = page.locator('#next-steps-section');
+        const calloutTop = await callout.boundingBox();
+        const nextStepsTop = await nextSteps.boundingBox();
+        expect(calloutTop.y).toBeLessThan(nextStepsTop.y);
+    });
+});

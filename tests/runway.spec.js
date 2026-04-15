@@ -286,3 +286,20 @@ test.describe('Runway v2 — nav promotion', () => {
         await expect(page.locator('main.runway-main')).toBeVisible();
     });
 });
+
+test.describe('Runway — companion callout', () => {
+    test('companion callout is visible in engine section', async ({ page }) => {
+        await page.goto('/runway.html');
+        const callout = page.locator('.companion-callout');
+        await expect(callout).toBeVisible();
+        await expect(callout.locator('.companion-callout-label')).toHaveText('Companion Tool');
+        await expect(callout.locator('.companion-callout-title')).toContainText('omg');
+    });
+
+    test('companion callout links to omg repo', async ({ page }) => {
+        await page.goto('/runway.html');
+        const link = page.locator('.companion-callout-link');
+        await expect(link).toHaveAttribute('href', /TheTrustedAdvisor/);
+        await expect(link).toContainText('Learn more');
+    });
+});

@@ -146,3 +146,20 @@ test.describe('Ramp — nav promotion', () => {
         await expect(page.locator('main#ramp-main')).toBeVisible();
     });
 });
+
+test.describe('Ramp — companion callout', () => {
+    test('companion callout is visible with correct structure', async ({ page }) => {
+        await page.goto('/ramp.html');
+        const callout = page.locator('.companion-callout');
+        await expect(callout).toBeVisible();
+        await expect(callout.locator('.companion-callout-label')).toHaveText('Companion Tool');
+        await expect(callout.locator('.companion-callout-title')).toContainText('omg');
+        await expect(callout.locator('.companion-callout-link')).toHaveAttribute('href', /TheTrustedAdvisor/);
+    });
+
+    test('companion callout has feature tags', async ({ page }) => {
+        await page.goto('/ramp.html');
+        const tags = page.locator('.companion-callout-tag');
+        await expect(tags).toHaveCount(5);
+    });
+});

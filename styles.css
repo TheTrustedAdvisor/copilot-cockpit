@@ -5563,6 +5563,105 @@ body.light-theme .search-palette-hint { color: rgba(0, 0, 0, 0.25); }
 body.light-theme .search-palette-empty { color: rgba(0, 0, 0, 0.3); }
 
 /* ============================================================
+   COMPANION TOOL CALLOUT — Cross-promotion for author projects
+   ============================================================ */
+.companion-callout {
+    margin: 32px 0;
+    border: 1px solid rgba(0, 180, 255, 0.2);
+    border-left: 3px solid rgba(0, 180, 255, 0.5);
+    border-radius: 6px;
+    padding: 20px 24px;
+    background: rgba(0, 180, 255, 0.03);
+}
+
+.companion-callout-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(0, 180, 255, 0.7);
+    margin-bottom: 8px;
+}
+
+.companion-callout-title {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+    margin-bottom: 6px;
+}
+
+.companion-callout-desc {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.companion-callout-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.companion-callout-tag {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: rgba(0, 180, 255, 0.08);
+    color: rgba(0, 180, 255, 0.7);
+    border: 1px solid rgba(0, 180, 255, 0.15);
+}
+
+.companion-callout-link {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: rgba(0, 180, 255, 0.8);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.companion-callout-link:hover {
+    color: rgba(0, 180, 255, 1);
+    text-decoration: underline;
+}
+
+.companion-callout-byline {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 8px;
+}
+
+/* Light theme */
+body.light-theme .companion-callout {
+    border-color: rgba(0, 120, 200, 0.15);
+    border-left-color: rgba(0, 120, 200, 0.4);
+    background: rgba(0, 120, 200, 0.03);
+}
+body.light-theme .companion-callout-label { color: rgba(0, 120, 200, 0.6); }
+body.light-theme .companion-callout-title { color: rgba(0, 0, 0, 0.85); }
+body.light-theme .companion-callout-desc { color: rgba(0, 0, 0, 0.5); }
+body.light-theme .companion-callout-tag {
+    background: rgba(0, 120, 200, 0.06);
+    color: rgba(0, 120, 200, 0.6);
+    border-color: rgba(0, 120, 200, 0.12);
+}
+body.light-theme .companion-callout-link { color: rgba(0, 120, 200, 0.8); }
+body.light-theme .companion-callout-link:hover { color: rgba(0, 120, 200, 1); }
+body.light-theme .companion-callout-byline { color: rgba(0, 0, 0, 0.25); }
+
+/* Print */
+@media print {
+    .companion-callout { display: none; }
+}
+
+/* ============================================================
    SITE FOOTER — Author attribution
    ============================================================ */
 .site-footer {
