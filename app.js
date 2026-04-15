@@ -218,8 +218,15 @@ function renderEngineZone(zone) {
 }
 
 // --- FMS Zone — special: chain layout with arrows ---
+// Explicit order: repo instructions → personal → prompt files → agent config → custom agents
+const FMS_ORDER = ['copilot-instructions', 'custom-instructions-personal', 'prompt-files', 'copilot-agents-yml', 'custom-agents'];
+
 function renderFmsZone(zone) {
-    const instruments = allInstruments.filter(i => i.zone === 'fms');
+    const fmsInstruments = allInstruments.filter(i => i.zone === 'fms');
+    const instruments = FMS_ORDER
+        .map(id => fmsInstruments.find(i => i.id === id))
+        .filter(Boolean)
+        .concat(fmsInstruments.filter(i => !FMS_ORDER.includes(i.id)));
     const items = instruments.map(i => renderInstrumentCard(i, zone));
     const chain = items.join('<span class="fms-arrow">→</span>');
 

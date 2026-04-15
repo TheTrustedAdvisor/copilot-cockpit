@@ -565,14 +565,26 @@ body::after {
 .zone-glareshield .instrument {
     flex-direction: row; align-items: center; gap: 10px;
     min-width: 150px; padding: 8px 14px;
+    overflow: hidden;
 }
-.zone-glareshield .instrument-symbol { font-size: 0.8rem; }
-.zone-glareshield .instrument-name { font-size: 0.6rem; }
+.zone-glareshield .instrument-symbol { font-size: 0.8rem; flex-shrink: 0; }
+.zone-glareshield .instrument-name {
+    font-size: 0.6rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 .zone-fms .instruments { align-items: center; }
-.fms-chain { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.fms-arrow { color: var(--color-fms); opacity: 0.4; font-size: 0.8rem; }
-.zone-fms .instrument { min-width: 100px; flex: 0 1 auto; }
+.fms-chain {
+    display: flex; align-items: center; gap: 8px;
+    flex-wrap: wrap; justify-content: center;
+}
+.fms-arrow { color: var(--color-fms); opacity: 0.4; font-size: 0.8rem; flex-shrink: 0; }
+.zone-fms .instrument {
+    min-width: 100px; flex: 0 1 auto;
+    text-align: center;
+}
 
 /* --- Engine gauge style --- */
 .engine-cluster { display: flex; flex-direction: column; gap: 6px; }
